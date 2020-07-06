@@ -72,7 +72,12 @@ function PositiveNavigator() {
       <PositiveStack.Screen
         name="PositiveScreen"
         component={PositiveScreen}
-        options={{ headerTitle: "Positive Habits" }}
+        options={{
+          headerTitle: "Positive Habits",
+          headerStyle: {
+            backgroundColor: "#009BE4",
+          },
+        }}
       />
     </PositiveStack.Navigator>
   );
@@ -86,7 +91,12 @@ function NegativeNavigator() {
       <NegativeStack.Screen
         name="NegativeScreen"
         component={NegativeScreen}
-        options={{ headerTitle: "Negative Habits" }}
+        options={{
+          headerTitle: "Negative Habits",
+          headerStyle: {
+            backgroundColor: "#009BE4",
+          },
+        }}
       />
     </NegativeStack.Navigator>
   );
@@ -100,7 +110,12 @@ function OverviewNavigator() {
       <OverviewStack.Screen
         name="OverviewScreen"
         component={OverviewScreen}
-        options={{ headerTitle: "Overview" }}
+        options={{
+          headerTitle: "Overview",
+          headerStyle: {
+            backgroundColor: "#009BE4",
+          },
+        }}
       />
     </OverviewStack.Navigator>
   );

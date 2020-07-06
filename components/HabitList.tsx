@@ -30,43 +30,42 @@ export default class HabitList extends React.Component {
 
   render() {
     var addBtn = (
-      <Button title="Add" onPress={() => this.addItem("New Habit", 0)} />
+      <Button title="Add" onPress={() => this.addItem("New Habit", 0.9)} />
     );
     return (
-      <>
-        <FlatList
-          data={this.state.data}
-          style={styles.scroll}
-          contentContainerStyle={styles.container}
-          renderItem={({ item }) => (
-            <Habit title={item.title} fulfilled={item.fulfilled} />
-          )}
-          keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text>Hello, add plz</Text>}
-          ListFooterComponent={addBtn}
-          ListFooterComponentStyle={styles.add}
-        />
-        <Button
-          title="showlocal"
-          onPress={() =>
-            AsyncStorage.getItem(this.props.dataKey).then((jsonValue) =>
-              console.log(jsonValue)
-            )
-          }
-        />
-      </>
+      <FlatList
+        data={this.state.data}
+        style={styles.scroll}
+        contentContainerStyle={styles.container}
+        renderItem={({ item, index }) => (
+          <Habit
+            title={item.title}
+            fulfilled={item.fulfilled}
+            deleteItem={this.deleteItem.bind(this, index)}
+          />
+        )}
+        keyExtractor={(item) => "id" + item.id}
+        ListEmptyComponent={<Text>Hello, add plz</Text>}
+        ListFooterComponent={addBtn}
+        ListFooterComponentStyle={styles.add}
+      />
     );
   }
 
   addItem(title, fulfilled) {
     let dataCopy = [...this.state.data];
     dataCopy.push({
-      id: "id" + dataCopy.length,
+      id: dataCopy.length,
       title: title,
       fulfilled: fulfilled,
     });
     this.setState({ data: dataCopy });
     this.storeData(dataCopy);
+  }
+
+  deleteItem(idx) {
+    console.log(idx);
+    this.storeData([]);
   }
 
   async storeData(data) {
@@ -81,7 +80,8 @@ export default class HabitList extends React.Component {
 
 const styles = StyleSheet.create({
   scroll: {
-    flex: 1,
+    minWidth: "100%",
+    paddingTop: 10,
   },
   container: {
     alignItems: "center",
