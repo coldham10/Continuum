@@ -1,13 +1,19 @@
-import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
+import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import * as React from "react";
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import PositiveScreen from "../screens/PositiveScreen";
+import NegativeScreen from "../screens/NegativeScreen";
+import OverviewScreen from "../screens/OverviewScreen";
+import {
+  BottomTabParamList,
+  PositiveParamList,
+  NegativeParamList,
+  OverviewParamList,
+} from "../types";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -16,20 +22,34 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      initialRouteName="Positive"
+      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+    >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="Positive"
+        component={PositiveNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-add" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="Negative"
+        component={NegativeNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-remove" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Overview"
+        component={OverviewNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-calendar" color={color} />
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -44,30 +64,44 @@ function TabBarIcon(props: { name: string; color: string }) {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const PositiveStack = createStackNavigator<PositiveParamList>();
 
-function TabOneNavigator() {
+function PositiveNavigator() {
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+    <PositiveStack.Navigator>
+      <PositiveStack.Screen
+        name="PositiveScreen"
+        component={PositiveScreen}
+        options={{ headerTitle: "Positive Habits" }}
       />
-    </TabOneStack.Navigator>
+    </PositiveStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const NegativeStack = createStackNavigator<NegativeParamList>();
 
-function TabTwoNavigator() {
+function NegativeNavigator() {
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+    <NegativeStack.Navigator>
+      <NegativeStack.Screen
+        name="NegativeScreen"
+        component={NegativeScreen}
+        options={{ headerTitle: "Negative Habits" }}
       />
-    </TabTwoStack.Navigator>
+    </NegativeStack.Navigator>
+  );
+}
+
+const OverviewStack = createStackNavigator<OverviewParamList>();
+
+function OverviewNavigator() {
+  return (
+    <OverviewStack.Navigator>
+      <OverviewStack.Screen
+        name="OverviewScreen"
+        component={OverviewScreen}
+        options={{ headerTitle: "Overview" }}
+      />
+    </OverviewStack.Navigator>
   );
 }

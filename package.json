@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
+    "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.6.1",
     "@react-navigation/native": "^5.6.1",
@@ -39,6 +40,7 @@
     "@types/react-native": "~0.62.13",
     "babel-preset-expo": "~8.1.0",
     "jest-expo": "~38.0.0",
+    "reactotron-react-native": "^5.0.0",
     "typescript": "~3.9.5"
   },
   "private": true
