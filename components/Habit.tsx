@@ -8,7 +8,6 @@ export default class Habit extends React.Component {
   constructor(props) {
     super(props);
     this.refresh();
-    console.log(props.status);
   }
 
   render() {
@@ -63,24 +62,24 @@ export default class Habit extends React.Component {
   }
 
   refresh() {
+    let timemachine = 0; //XXX
+
     //Checks activity is up to date, extend activity and historical function as necessary
-    let daysOld = Math.floor(
-      (new Date() - this.props.timeStamp) / (1000 * 60 * 60 * 24) //Full days since morning of creation
-    );
+    let daysOld =
+      Math.floor(
+        (new Date() - this.props.timeStamp) / (1000 * 60 * 60 * 24) //Full days since morning of creation
+      ) + timemachine;
+    let newActivity = [...this.props.activity];
+    let newHist = [...this.props.histValues];
     if (daysOld + 1 > this.props.activity.length) {
-      let newActivity = [...this.props.activity];
       while (newActivity.length < daysOld + 1) {
         newActivity.push(0); //Assume hasnt been done
       }
-      this.props.updateItem({ activity: newActivity });
     }
     if (daysOld + 1 > this.props.histValues.length) {
-      let newHist = this.rewriteHistory(
-        [...this.props.activity],
-        this.props.parameters
-      );
-      this.props.updateItem({ histValues: newHist });
+      newHist = this.rewriteHistory(newActivity, this.props.parameters);
     }
+    this.props.updateItem({ activity: newActivity, histValues: newHist });
   }
 
   rewriteHistory(activity, params) {

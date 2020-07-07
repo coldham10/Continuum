@@ -11,7 +11,6 @@ export default class HabitList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { data: [] };
-    //this.storeData([]);
   }
 
   componentDidMount() {
@@ -61,37 +60,43 @@ export default class HabitList extends React.Component {
   }
 
   addItem(title, fulfilled) {
-    let dataCopy = [...this.state.data];
-    let rightNow = new Date();
-    let today = new Date(
-      rightNow.getFullYear(),
-      rightNow.getMonth(),
-      rightNow.getDate()
-    ); //Set to 00:00 of day created so that new days clock over at midnight
-    dataCopy.push({
-      id: dataCopy.length,
-      title: title,
-      timeStamp: today.getTime(),
-      parameters: { r: 0.5, a: 2, max: 4 }, //For geometric habit function
-      histValues: [], //habit-function vales at end of day every day since timeStamp
-      activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
+    this.setState((prevState) => {
+      let dataCopy = [...prevState.data];
+      let rightNow = new Date();
+      let today = new Date(
+        rightNow.getFullYear(),
+        rightNow.getMonth(),
+        rightNow.getDate()
+      ); //Set to 00:00 of day created so that new days clock over at midnight
+      dataCopy.push({
+        id: dataCopy.length,
+        title: title,
+        timeStamp: today.getTime(),
+        parameters: { r: 0.5, a: 2, max: 4 }, //For geometric habit function
+        histValues: [], //habit-function vales at end of day every day since timeStamp
+        activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
+      });
+      this.storeData(dataCopy);
+      return { data: dataCopy };
     });
-    this.setState({ data: dataCopy });
-    this.storeData(dataCopy);
   }
 
   updateItem(idx, data) {
     //update habit idx by overwiting key-value pairs in 'data'
-    let dataCopy = [...this.state.data];
-    dataCopy[idx] = Object.assign({}, this.state.data[idx], data);
-    this.setState({ data: dataCopy });
-    this.storeData(dataCopy);
+    this.setState((prevState) => {
+      let dataCopy = [...prevState.data];
+      dataCopy[idx] = Object.assign({}, prevState.data[idx], data);
+      this.storeData(dataCopy);
+      return { data: dataCopy };
+    });
   }
 
   deleteItem(idx) {
-    let dataCopy = this.state.data.filter((a, i) => i !== idx); //Remove element to delete
-    this.setState({ data: dataCopy });
-    this.storeData(dataCopy);
+    this.setState((prevState) => {
+      let dataCopy = prevState.data.filter((a, i) => i !== idx); //Remove element to delete
+      this.storeData(dataCopy);
+      return { data: dataCopy };
+    });
   }
 
   async storeData(data) {
