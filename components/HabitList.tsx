@@ -45,17 +45,20 @@ export default class HabitList extends React.Component {
           data={this.state.data}
           style={styles.scroll}
           contentContainerStyle={styles.container}
-          renderItem={({ item, index }) => (
-            <Habit
-              deleteItem={this.deleteItem.bind(this, index)}
-              updateItem={this.updateItem.bind(this, index)}
-              {...item}
-              status={
-                (item.histValues[item.histValues.length - 1] - threshold) /
-                (item.parameters.max - threshold)
-              } //status is fraction of way between threshold and max value (= steady state)
-            />
-          )}
+          renderItem={({ item, index }) => {
+            return (
+              <Habit
+                deleteItem={this.deleteItem.bind(this, index)}
+                updateItem={this.updateItem.bind(this, index)}
+                {...item}
+                status={
+                  (item.histValues[item.histValues.length - 1] - threshold) /
+                  (item.parameters.max - threshold)
+                } //status is fraction of way between threshold and max value (= steady state)
+                openEditor={() => this.setState({ editing: index })}
+              />
+            );
+          }}
           keyExtractor={(item) => "id" + item.id}
           ListEmptyComponent={<Text>No habits added yet</Text>}
           ListFooterComponent={addBtn}
@@ -84,7 +87,7 @@ export default class HabitList extends React.Component {
         id: dataCopy.length,
         title: title,
         timeStamp: today.getTime(),
-        parameters: { r: 0.5, a: 2, max: 4 }, //For geometric habit function
+        parameters: { r: 0.7966, a: 0.4027, max: 1.9797 }, //For geometric habit function
         histValues: [], //habit-function vales at end of day every day since timeStamp
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
       });

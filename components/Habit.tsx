@@ -45,7 +45,7 @@ export default class Habit extends React.Component {
           <Ionicons
             name="md-create"
             style={{ ...statusColors(this.props.status), ...styles.icon }}
-            onPress={() => console.log(this.props)}
+            onPress={() => this.props.openEditor()}
           />
           <Ionicons
             name="ios-trash"
@@ -60,7 +60,7 @@ export default class Habit extends React.Component {
             style={{ ...statusColors(this.props.status), ...styles.subText }}
           >
             {"Momentum: " +
-              Math.max(0, Math.ceil(100 * this.props.status)) +
+              Math.max(0, Math.round(100 * this.props.status)) +
               "%"}
           </Text>
           <Text
