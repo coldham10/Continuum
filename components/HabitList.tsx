@@ -68,7 +68,7 @@ export default class HabitList extends React.Component {
           ListFooterComponentStyle={styles.add}
         />
         <EditModal
-          positive={this.state.positive}
+          positive={this.props.positive}
           editing={this.state.editing}
           data={this.state.data}
           close={() => this.setState({ editing: null })}

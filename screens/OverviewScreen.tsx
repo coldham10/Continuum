@@ -1,16 +1,15 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
+import OverviewCalendar from "../components/OverviewCalendar";
 
 import { Text, View } from "../components/Themed";
 
 export default function OverviewScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Three</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
+      <OverviewCalendar
+        positiveDataKey="positiveList"
+        negativeDataKey="negativeList"
       />
     </View>
   );
