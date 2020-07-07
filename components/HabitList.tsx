@@ -4,13 +4,14 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 import { Text, View, FlatList } from "../components/Themed";
 import Habit from "./Habit";
+import EditModal from "./EditModal";
 
 const threshold = 1;
 
 export default class HabitList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [] };
+    this.state = { data: [], editing: null };
   }
 
   componentDidMount() {
@@ -39,26 +40,34 @@ export default class HabitList extends React.Component {
       />
     );
     return (
-      <FlatList
-        data={this.state.data}
-        style={styles.scroll}
-        contentContainerStyle={styles.container}
-        renderItem={({ item, index }) => (
-          <Habit
-            deleteItem={this.deleteItem.bind(this, index)}
-            updateItem={this.updateItem.bind(this, index)}
-            {...item}
-            status={
-              (item.histValues[item.histValues.length - 1] - threshold) /
-              (item.parameters.max - threshold)
-            } //status is fraction of way between threshold and max value (= steady state)
-          />
-        )}
-        keyExtractor={(item) => "id" + item.id}
-        ListEmptyComponent={<Text>No habits added yet</Text>}
-        ListFooterComponent={addBtn}
-        ListFooterComponentStyle={styles.add}
-      />
+      <>
+        <FlatList
+          data={this.state.data}
+          style={styles.scroll}
+          contentContainerStyle={styles.container}
+          renderItem={({ item, index }) => (
+            <Habit
+              deleteItem={this.deleteItem.bind(this, index)}
+              updateItem={this.updateItem.bind(this, index)}
+              {...item}
+              status={
+                (item.histValues[item.histValues.length - 1] - threshold) /
+                (item.parameters.max - threshold)
+              } //status is fraction of way between threshold and max value (= steady state)
+            />
+          )}
+          keyExtractor={(item) => "id" + item.id}
+          ListEmptyComponent={<Text>No habits added yet</Text>}
+          ListFooterComponent={addBtn}
+          ListFooterComponentStyle={styles.add}
+        />
+        <EditModal
+          editing={this.state.editing}
+          data={this.state.data}
+          close={() => this.setState({ editing: null })}
+          updateItem={(idx, data) => this.updateItem(idx, data)}
+        />
+      </>
     );
   }
 
@@ -80,7 +89,7 @@ export default class HabitList extends React.Component {
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
       });
       this.storeData(dataCopy);
-      return { data: dataCopy };
+      return { data: dataCopy, editing: prevState.data.length };
     });
   }
 

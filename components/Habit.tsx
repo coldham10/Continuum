@@ -82,7 +82,7 @@ export default class Habit extends React.Component {
   }
 
   refresh() {
-    let timemachine = 4; //XXX
+    let timemachine = 0; //XXX
 
     //Checks activity is up to date, extend activity and historical function as necessary
     let daysOld =

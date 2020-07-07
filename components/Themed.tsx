@@ -3,6 +3,7 @@ import {
   Text as DefaultText,
   View as DefaultView,
   FlatList as DefaultFlatList,
+  Modal as DefaultModal,
 } from "react-native";
 
 import Colors from "../constants/Colors";
@@ -30,6 +31,7 @@ type ThemeProps = {
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type FlatListProps = ThemeProps & DefaultFlatList["props"];
+export type ModalProps = ThemeModal & DefaultModal["props"];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -58,4 +60,14 @@ export function FlatList(props: FlatListProps) {
   return (
     <DefaultFlatList style={[{ backgroundColor }, style]} {...otherProps} />
   );
+}
+
+export function Modal(props: ModalProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background"
+  );
+
+  return <DefaultModal style={[{ backgroundColor }, style]} {...otherProps} />;
 }
