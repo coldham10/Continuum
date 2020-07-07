@@ -13,42 +13,62 @@ export default class Habit extends React.Component {
   render() {
     return (
       <View style={{ ...statusColors(this.props.status), ...styles.habit }}>
-        {this.props.activity[this.props.activity.length - 1] ? (
+        <View style={{ ...statusColors(this.props.status), ...styles.topRow }}>
+          {this.props.activity[this.props.activity.length - 1] ? (
+            <Ionicons
+              name="md-checkmark-circle-outline"
+              style={{ ...statusColors(this.props.status), ...styles.checkbox }}
+              onPress={() => this.toggleTodayActivity()}
+            />
+          ) : (
+            <FontAwesome
+              name="circle-thin"
+              style={{
+                ...statusColors(this.props.status),
+                ...styles.checkbox,
+                fontSize: 28,
+              }}
+              onPress={() => this.toggleTodayActivity()}
+            />
+          )}
+          <TouchableHighlight
+            activeOpacity={0.99}
+            style={styles.highlight}
+            onPress={() => this.toggleTodayActivity()}
+          >
+            <Text
+              style={{ ...statusColors(this.props.status), ...styles.title }}
+            >
+              {this.props.title}
+            </Text>
+          </TouchableHighlight>
           <Ionicons
-            name="md-checkmark-circle-outline"
-            style={{ ...statusColors(this.props.status), ...styles.checkbox }}
-            onPress={() => this.toggleTodayActivity()}
+            name="md-create"
+            style={{ ...statusColors(this.props.status), ...styles.icon }}
+            onPress={() => console.log(this.props)}
           />
-        ) : (
-          <FontAwesome
-            name="circle-thin"
-            style={{
-              ...statusColors(this.props.status),
-              ...styles.checkbox,
-              fontSize: 28,
-            }}
-            onPress={() => this.toggleTodayActivity()}
+          <Ionicons
+            name="ios-trash"
+            style={{ ...statusColors(this.props.status), ...styles.icon }}
+            onPress={() => this.props.deleteItem()}
           />
-        )}
-        <TouchableHighlight
-          activeOpacity={0.99}
-          style={styles.highlight}
-          onPress={() => this.toggleTodayActivity()}
+        </View>
+        <View
+          style={{ ...statusColors(this.props.status), ...styles.bottomRow }}
         >
-          <Text style={{ ...statusColors(this.props.status), ...styles.title }}>
-            {this.props.title}
+          <Text
+            style={{ ...statusColors(this.props.status), ...styles.subText }}
+          >
+            {"Momentum: " +
+              Math.max(0, Math.ceil(100 * this.props.status)) +
+              "%"}
           </Text>
-        </TouchableHighlight>
-        <Ionicons
-          name="md-create"
-          style={{ ...statusColors(this.props.status), ...styles.icon }}
-          onPress={() => console.log(this.props)}
-        />
-        <Ionicons
-          name="ios-trash"
-          style={{ ...statusColors(this.props.status), ...styles.icon }}
-          onPress={() => this.props.deleteItem()}
-        />
+          <Text
+            style={{ ...statusColors(this.props.status), ...styles.subText }}
+          >
+            {"Streak: " + this.getStreak() + " days"}
+          </Text>
+        </View>
       </View>
     );
   }
@@ -62,7 +82,7 @@ export default class Habit extends React.Component {
   }
 
   refresh() {
-    let timemachine = 0; //XXX
+    let timemachine = 4; //XXX
 
     //Checks activity is up to date, extend activity and historical function as necessary
     let daysOld =
@@ -89,6 +109,19 @@ export default class Habit extends React.Component {
       newHistory.push(lastVal * params.r + activity[i] * params.a); //Habit function. Each day is last day * r (<1), then optionally adding a if activity performed
     }
     return newHistory;
+  }
+
+  getStreak() {
+    let activity = [...this.props.activity];
+    let streak = 0;
+    while (activity.length > 0) {
+      if (activity.pop() === 1) {
+        streak += 1;
+      } else {
+        break;
+      }
+    }
+    return streak;
   }
 }
 
@@ -122,14 +155,28 @@ function statusColors(status) {
 
 const styles = StyleSheet.create({
   habit: {
-    height: 60,
+    height: 80,
     width: "90%",
-    margin: 5,
-    padding: 10,
+    margin: 10,
+    padding: 5,
     borderRadius: 5,
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  topRow: {
+    width: "100%",
+    padding: 3,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 2,
     flexDirection: "row",
+  },
+  bottomRow: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    flex: 1,
+    width: "100%",
+    padding: 3,
   },
   highlight: {
     flex: 8,
@@ -137,6 +184,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  subText: {
+    fontSize: 14,
   },
   icon: {
     fontSize: 30,

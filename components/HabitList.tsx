@@ -33,7 +33,10 @@ export default class HabitList extends React.Component {
 
   render() {
     var addBtn = (
-      <Button title="Add" onPress={() => this.addItem("New Habit", 1)} />
+      <Button
+        title="Add New Habit"
+        onPress={() => this.addItem("New Habit", 1)}
+      />
     );
     return (
       <FlatList
@@ -52,7 +55,7 @@ export default class HabitList extends React.Component {
           />
         )}
         keyExtractor={(item) => "id" + item.id}
-        ListEmptyComponent={<Text>Hello, add plz</Text>}
+        ListEmptyComponent={<Text>No habits added yet</Text>}
         ListFooterComponent={addBtn}
         ListFooterComponentStyle={styles.add}
       />
@@ -121,6 +124,6 @@ const styles = StyleSheet.create({
   },
   add: {
     margin: 20,
-    borderRadius: 10,
+    borderRadius: 20,
   },
 });
