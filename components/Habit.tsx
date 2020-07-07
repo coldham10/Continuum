@@ -16,7 +16,11 @@ export default class Habit extends React.Component {
         <View style={{ ...statusColors(this.props.status), ...styles.topRow }}>
           {this.props.activity[this.props.activity.length - 1] ? (
             <Ionicons
-              name="md-checkmark-circle-outline"
+              name={
+                this.props.positive
+                  ? "md-checkmark-circle-outline"
+                  : "md-close-circle-outline"
+              }
               style={{ ...statusColors(this.props.status), ...styles.checkbox }}
               onPress={() => this.toggleTodayActivity()}
             />
@@ -66,7 +70,7 @@ export default class Habit extends React.Component {
           <Text
             style={{ ...statusColors(this.props.status), ...styles.subText }}
           >
-            {"Streak: " + this.getStreak() + " days"}
+            {"Streak: " + this.props.getStreak() + " days"}
           </Text>
         </View>
       </View>
@@ -104,24 +108,19 @@ export default class Habit extends React.Component {
 
   rewriteHistory(activity, params) {
     let newHistory = [];
-    for (let i = 0; i < activity.length; i++) {
-      let lastVal = i > 0 ? newHistory[i - 1] : 0;
-      newHistory.push(lastVal * params.r + activity[i] * params.a); //Habit function. Each day is last day * r (<1), then optionally adding a if activity performed
-    }
-    return newHistory;
-  }
-
-  getStreak() {
-    let activity = [...this.props.activity];
-    let streak = 0;
-    while (activity.length > 0) {
-      if (activity.pop() === 1) {
-        streak += 1;
-      } else {
-        break;
+    if (this.props.positive) {
+      for (let i = 0; i < activity.length; i++) {
+        let lastVal = i > 0 ? newHistory[i - 1] : 0;
+        newHistory.push(lastVal * params.r + activity[i] * params.a); //Habit function. Each day is last day * r (<1), then optionally adding a if activity performed
+      }
+    } else {
+      let streak = 0;
+      for (let i = 0; i < activity.length; i++) {
+        streak = activity[i] ? streak + 1 : 0;
+        newHistory.push(1 - Math.exp((-1 * streak) / this.props.parameters.k)); //Asymtotically approaches 1
       }
     }
-    return streak;
+    return newHistory;
   }
 }
 

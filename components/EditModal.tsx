@@ -63,18 +63,22 @@ export default class EditModal extends React.Component {
                     <View style={styles.input}>
                       <Picker
                         style={styles.picker}
-                        selectedValue={this.rToFormDays(
-                          mergedData.parameters.r //Convert from r parameter to number of habit formation days
-                        )}
+                        selectedValue={
+                          this.props.positive
+                            ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
+                            : mergedData.parameters.k
+                        }
                         onValueChange={(val) => {
                           this.setState({
-                            parameters: this.daysToParams(
-                              val,
-                              this.raToLossDays(
-                                mergedData.parameters.r,
-                                mergedData.parameters.a
-                              )
-                            ),
+                            parameters: this.props.positive
+                              ? this.daysToParams(
+                                  val,
+                                  this.raToLossDays(
+                                    mergedData.parameters.r,
+                                    mergedData.parameters.a
+                                  )
+                                )
+                              : { k: val },
                           });
                         }}
                       >
@@ -96,37 +100,39 @@ export default class EditModal extends React.Component {
                       </Picker>
                     </View>
                   </View>
-                  <View style={styles.inputPair}>
-                    <Text style={styles.label}>Habit Loss Time</Text>
-                    <View style={styles.input}>
-                      <Picker
-                        style={styles.picker}
-                        selectedValue={this.raToLossDays(
-                          mergedData.parameters.r,
-                          mergedData.parameters.a
-                        )}
-                        onValueChange={(val) =>
-                          this.setState({
-                            parameters: this.daysToParams(
-                              this.rToFormDays(mergedData.parameters.r),
-                              val
-                            ),
-                          })
-                        }
-                      >
-                        <Picker.Item label="1 Day" value={1} />
-                        <Picker.Item label="2 Days" value={2} />
-                        <Picker.Item label="3 Days (Default)" value={3} />
-                        <Picker.Item label="4 Days" value={4} />
-                        <Picker.Item label="5 Days" value={5} />
-                        <Picker.Item label="6 Days" value={6} />
-                        <Picker.Item label="7 Days" value={7} />
-                        <Picker.Item label="8 Days" value={8} />
-                        <Picker.Item label="9 Days" value={9} />
-                        <Picker.Item label="10 Days" value={10} />
-                      </Picker>
+                  {this.props.positive ? (
+                    <View style={styles.inputPair}>
+                      <Text style={styles.label}>Habit Loss Time</Text>
+                      <View style={styles.input}>
+                        <Picker
+                          style={styles.picker}
+                          selectedValue={this.raToLossDays(
+                            mergedData.parameters.r,
+                            mergedData.parameters.a
+                          )}
+                          onValueChange={(val) =>
+                            this.setState({
+                              parameters: this.daysToParams(
+                                this.rToFormDays(mergedData.parameters.r),
+                                val
+                              ),
+                            })
+                          }
+                        >
+                          <Picker.Item label="1 Day" value={1} />
+                          <Picker.Item label="2 Days" value={2} />
+                          <Picker.Item label="3 Days (Default)" value={3} />
+                          <Picker.Item label="4 Days" value={4} />
+                          <Picker.Item label="5 Days" value={5} />
+                          <Picker.Item label="6 Days" value={6} />
+                          <Picker.Item label="7 Days" value={7} />
+                          <Picker.Item label="8 Days" value={8} />
+                          <Picker.Item label="9 Days" value={9} />
+                          <Picker.Item label="10 Days" value={10} />
+                        </Picker>
+                      </View>
                     </View>
-                  </View>
+                  ) : null}
                 </View>
                 <View style={styles.footer}>
                   <View style={styles.footerButton}>

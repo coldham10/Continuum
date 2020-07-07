@@ -5,5 +5,5 @@ import { Text, View, ScrollView } from "../components/Themed";
 import HabitList from "../components/HabitList";
 
 export default function PositiveScreen() {
-  return <HabitList dataKey="positiveList" />;
+  return <HabitList dataKey="positiveList" positive={true} />;
 }

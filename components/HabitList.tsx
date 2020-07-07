@@ -34,10 +34,7 @@ export default class HabitList extends React.Component {
 
   render() {
     var addBtn = (
-      <Button
-        title="Add New Habit"
-        onPress={() => this.addItem("New Habit", 1)}
-      />
+      <Button title="Add New Habit" onPress={() => this.addItem("New Habit")} />
     );
     return (
       <>
@@ -48,14 +45,20 @@ export default class HabitList extends React.Component {
           renderItem={({ item, index }) => {
             return (
               <Habit
+                positive={this.props.positive}
                 deleteItem={this.deleteItem.bind(this, index)}
                 updateItem={this.updateItem.bind(this, index)}
-                {...item}
+                getStreak={this.getStreak.bind(this, index)}
                 status={
-                  (item.histValues[item.histValues.length - 1] - threshold) /
-                  (item.parameters.max - threshold)
-                } //status is fraction of way between threshold and max value (= steady state)
+                  this.props.positive
+                    ? (item.histValues[item.histValues.length - 1] -
+                        threshold) /
+                      (item.parameters.max - threshold) //status is fraction of way between threshold and max value (= steady state)
+                    : 1 -
+                      Math.exp((-1 * this.getStreak(index)) / item.parameters.k)
+                }
                 openEditor={() => this.setState({ editing: index })}
+                {...item}
               />
             );
           }}
@@ -65,6 +68,7 @@ export default class HabitList extends React.Component {
           ListFooterComponentStyle={styles.add}
         />
         <EditModal
+          positive={this.state.positive}
           editing={this.state.editing}
           data={this.state.data}
           close={() => this.setState({ editing: null })}
@@ -74,7 +78,7 @@ export default class HabitList extends React.Component {
     );
   }
 
-  addItem(title, fulfilled) {
+  addItem(title) {
     this.setState((prevState) => {
       let dataCopy = [...prevState.data];
       let rightNow = new Date();
@@ -87,7 +91,9 @@ export default class HabitList extends React.Component {
         id: dataCopy.length,
         title: title,
         timeStamp: today.getTime(),
-        parameters: { r: 0.7966, a: 0.4027, max: 1.9797 }, //For geometric habit function
+        parameters: this.props.positive
+          ? { r: 0.7966, a: 0.4027, max: 1.9797 } //For geometric habit function (+ve)
+          : { k: 1 }, //For exponential momentum function (-ve)
         histValues: [], //habit-function vales at end of day every day since timeStamp
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
       });
@@ -112,6 +118,19 @@ export default class HabitList extends React.Component {
       this.storeData(dataCopy);
       return { data: dataCopy };
     });
+  }
+
+  getStreak(idx) {
+    let activity = [...this.state.data[idx].activity];
+    let streak = 0;
+    while (activity.length > 0) {
+      if (activity.pop() === 1) {
+        streak += 1;
+      } else {
+        break;
+      }
+    }
+    return streak;
   }
 
   async storeData(data) {
