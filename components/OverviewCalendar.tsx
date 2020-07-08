@@ -57,6 +57,8 @@ export default class OverviewCalendar extends React.Component {
       this.state.positiveData.length > 0
         ? Math.min(...this.state.positiveData.map((item) => item.timeStamp))
         : new Date().getTime();
-    return new Date(Math.min(minNeg, minPos) - 5 * 24 * 60 * 60 * 1000);
+    let returnDate = new Date(Math.min(minNeg, minPos));
+    returnDate.setDate(1);
+    return returnDate;
   }
 }
