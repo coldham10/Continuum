@@ -139,7 +139,6 @@ export default class OverviewScreen extends React.Component {
       this.setState({ negativeData: dataCopy }, () => this.byDate());
       this.storeData("negativeList", dataCopy);
     }
-    //FIXME: selection gets mucked up by checking done
   }
 
   byDate() {

@@ -15,15 +15,17 @@ export default class HabitList extends React.Component {
   }
 
   componentDidMount() {
-    //Load saved data for this list from local storage
-    this._asyncRequest = AsyncStorage.getItem(this.props.dataKey).then(
-      (jsonValue) => {
-        this._asyncRequest = null;
-        this.setState({
-          data: jsonValue !== null ? JSON.parse(jsonValue) : [],
-        });
-      }
-    );
+    //Load saved data for this list from local storage every time focused upon
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this._asyncRequest = AsyncStorage.getItem(this.props.dataKey).then(
+        (jsonValue) => {
+          this._asyncRequest = null;
+          this.setState({
+            data: jsonValue !== null ? JSON.parse(jsonValue) : [],
+          });
+        }
+      );
+    });
   }
 
   componentWillUnmount() {
