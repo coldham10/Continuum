@@ -4,7 +4,6 @@ import {
   View as DefaultView,
   ScrollView as DefaultScrollView,
   FlatList as DefaultFlatList,
-  Modal as DefaultModal,
 } from "react-native";
 
 import Colors from "../constants/Colors";

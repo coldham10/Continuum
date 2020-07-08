@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Text, View } from "../components/Themed";
 import OverviewCalendar from "../components/OverviewCalendar";
+import OverviewModal from "../components/OverviewModal";
 
 export default class OverviewScreen extends React.Component {
   constructor(props) {
@@ -12,31 +13,37 @@ export default class OverviewScreen extends React.Component {
     this.state = {
       positiveData: [],
       negativeData: [],
-      positiveSelected: [],
-      negativeSelected: [],
+      modalVisible: false,
+      dataByDate: {},
     };
   }
 
   componentDidMount() {
     //Load saved data for this list from local storage
     this._unsubscribe = this.props.navigation.addListener("focus", () => {
-      console.log("focused overview");
       this._asyncRequest = AsyncStorage.getItem("positiveList").then(
         (jsonValue) => {
           this._asyncRequest = null;
-          this.setState({
-            positiveData: jsonValue !== null ? JSON.parse(jsonValue) : [],
-          });
+          this.setState(
+            {
+              positiveData: jsonValue !== null ? JSON.parse(jsonValue) : [],
+            },
+            () => this.byDate()
+          );
         }
       );
       this._asyncRequest = AsyncStorage.getItem("negativeList").then(
         (jsonValue) => {
           this._asyncRequest = null;
-          this.setState({
-            negativeData: jsonValue !== null ? JSON.parse(jsonValue) : [],
-          });
+          this.setState(
+            {
+              negativeData: jsonValue !== null ? JSON.parse(jsonValue) : [],
+            },
+            () => this.byDate()
+          );
         }
       );
+      this.setState({ modalVisible: false });
     });
   }
 
@@ -56,6 +63,7 @@ export default class OverviewScreen extends React.Component {
             maxDate={this.getMaxDate()}
             positiveData={this.state.positiveData}
             negativeData={this.state.negativeData}
+            dataByDate={this.state.dataByDate}
           />
         </View>
         <View style={styles.footer}>
@@ -65,26 +73,120 @@ export default class OverviewScreen extends React.Component {
                 name="md-checkmark-circle-outline"
                 style={{ fontSize: 15 }}
               />
-              <Text style={styles.statusTxt}>x positive habits selected</Text>
+              <Text style={styles.statusTxt}>
+                {this.state.positiveData.reduce(
+                  (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
+                  0
+                ) || "No"}{" "}
+                positive habits selected
+              </Text>
             </View>
             <View style={styles.statusLine}>
               <Ionicons
                 name="md-close-circle-outline"
                 style={{ fontSize: 15 }}
               />
-              <Text style={styles.statusTxt}>y negative habits selected</Text>
+              <Text style={styles.statusTxt}>
+                {this.state.negativeData.reduce(
+                  (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
+                  0
+                ) || "No"}{" "}
+                negative habits selected
+              </Text>
             </View>
           </View>
           <View style={styles.edit}>
             <Ionicons
               name="md-create"
               style={styles.icon}
-              onPress={() => console.log("m")}
+              onPress={() => this.setState({ modalVisible: true })}
             />
           </View>
         </View>
+        <OverviewModal
+          visible={this.state.modalVisible}
+          close={() => this.setState({ modalVisible: false })}
+          positiveData={this.state.positiveData}
+          negativeData={this.state.negativeData}
+          toggleSelected={(id) => this.toggleSelected(id)}
+        />
       </View>
     );
+  }
+
+  toggleSelected(id) {
+    let dataCopy;
+    if (this.state.positiveData.filter((habit) => habit.id === id).length > 0) {
+      //Positive
+      dataCopy = this.state.positiveData.map((habit) => {
+        let newHabit = { ...habit };
+        if (habit.id === id) {
+          newHabit.selected = !habit.selected;
+        }
+        return newHabit;
+      });
+      this.setState({ positiveData: dataCopy }, () => this.byDate());
+      this.storeData("positiveList", dataCopy);
+    } else {
+      //Negative
+      dataCopy = this.state.negativeData.map((habit) => {
+        let newHabit = { ...habit };
+        if (habit.id === id) {
+          newHabit.selected = !habit.selected;
+        }
+        return newHabit;
+      });
+      this.setState({ negativeData: dataCopy }, () => this.byDate());
+      this.storeData("negativeList", dataCopy);
+    }
+    //FIXME: selection gets mucked up by checking done
+  }
+
+  byDate() {
+    let dataByDate = {};
+    let dateString = (date) =>
+      new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+        .toISOString()
+        .split("T")[0];
+    this.state.positiveData.forEach((pHabit) => {
+      let date = new Date(pHabit.timeStamp);
+      pHabit.histValues.forEach((val) => {
+        if (typeof dataByDate[dateString(date)] === "undefined") {
+          dataByDate[dateString(date)] = [];
+        }
+        dataByDate[dateString(date)].push({
+          id: pHabit.id,
+          status: Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+          data: pHabit,
+        });
+        date.setDate(date.getDate() + 1);
+      });
+    });
+    this.state.negativeData.forEach((nHabit) => {
+      let date = new Date(nHabit.timeStamp);
+      nHabit.histValues.forEach((val) => {
+        if (typeof dataByDate[dateString(date)] === "undefined") {
+          dataByDate[dateString(date)] = [];
+        }
+        dataByDate[dateString(date)].push({
+          id: nHabit.id,
+          status: val,
+          data: nHabit,
+        });
+        date.setDate(date.getDate() + 1);
+      });
+    });
+    this.setState({ dataByDate: dataByDate });
+  }
+
+  async storeData(key, data) {
+    //Local storage on device
+    try {
+      const jsonValue = JSON.stringify(data);
+      await AsyncStorage.setItem(key, jsonValue);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   getMinDate() {

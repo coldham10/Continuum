@@ -3,7 +3,8 @@ import { StyleSheet, TextInput, Button } from "react-native";
 
 import { Picker } from "@react-native-community/picker";
 
-import { Text, View, Modal, ScrollView } from "../components/Themed";
+import { Text, View, ScrollView } from "../components/Themed";
+import Modal from "react-native-modal";
 
 export default class EditModal extends React.Component {
   constructor(props) {
@@ -34,119 +35,124 @@ export default class EditModal extends React.Component {
       );
       return (
         <Modal
-          transparent={true}
-          animationType="slide"
-          visible={this.props.editing !== null}
-          onRequestClose={() => this.props.close()}
+          isVisible={this.props.editing !== null}
+          onBackButtonPress={() => this.props.close()}
+          useNativeDriver={true}
+          animationInTiming={500}
+          animationOutTiming={500}
         >
-          <ScrollView style={styles.scroller}>
-            <View style={styles.modalView}>
-              <View style={styles.modalContent}>
-                <Text style={styles.title}>{"Habit: " + mergedData.title}</Text>
-                <View style={styles.body}>
-                  <View style={styles.inputPair}>
-                    <Text style={styles.label}>Name</Text>
-                    <TextInput
-                      style={styles.input}
-                      defaultValue={mergedData.title}
-                      onChangeText={(title) => this.setState({ title: title })}
-                    />
+          <ScrollView
+            style={styles.modalView}
+            contentContainerstyle={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View style={styles.modalContent}>
+              <Text style={styles.title}>{"Habit: " + mergedData.title}</Text>
+              <View style={styles.body}>
+                <View style={styles.inputPair}>
+                  <Text style={styles.label}>Name</Text>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={mergedData.title}
+                    onChangeText={(title) => this.setState({ title: title })}
+                  />
+                </View>
+                <View style={styles.inputPair}>
+                  <Text style={styles.label}>Habit Formation Time</Text>
+                  <View style={styles.input}>
+                    <Picker
+                      style={styles.picker}
+                      selectedValue={
+                        this.props.positive
+                          ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
+                          : mergedData.parameters.k
+                      }
+                      onValueChange={(val) => {
+                        this.setState({
+                          parameters: this.props.positive
+                            ? this.daysToParams(
+                                val,
+                                this.raToLossDays(
+                                  mergedData.parameters.r,
+                                  mergedData.parameters.a
+                                )
+                              )
+                            : { k: val },
+                        });
+                      }}
+                    >
+                      <Picker.Item label="1 Day" value={1} />
+                      <Picker.Item label="2 Days" value={2} />
+                      <Picker.Item label="3 Days" value={3} />
+                      <Picker.Item label="4 Days" value={4} />
+                      <Picker.Item label="5 Days" value={5} />
+                      <Picker.Item label="6 Days" value={6} />
+                      <Picker.Item label="7 Days (Default)" value={7} />
+                      <Picker.Item label="8 Days" value={8} />
+                      <Picker.Item label="9 Days" value={9} />
+                      <Picker.Item label="10 Days" value={10} />
+                      <Picker.Item label="11 Days" value={11} />
+                      <Picker.Item label="12 Days" value={12} />
+                      <Picker.Item label="13 Days" value={13} />
+                      <Picker.Item label="14 Days" value={14} />
+                      <Picker.Item label="15 Days" value={15} />
+                    </Picker>
                   </View>
+                </View>
+                {this.props.positive ? (
                   <View style={styles.inputPair}>
-                    <Text style={styles.label}>Habit Formation Time</Text>
+                    <Text style={styles.label}>Habit Loss Time</Text>
                     <View style={styles.input}>
                       <Picker
                         style={styles.picker}
-                        selectedValue={
-                          this.props.positive
-                            ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
-                            : mergedData.parameters.k
-                        }
-                        onValueChange={(val) => {
+                        selectedValue={this.raToLossDays(
+                          mergedData.parameters.r,
+                          mergedData.parameters.a
+                        )}
+                        onValueChange={(val) =>
                           this.setState({
-                            parameters: this.props.positive
-                              ? this.daysToParams(
-                                  val,
-                                  this.raToLossDays(
-                                    mergedData.parameters.r,
-                                    mergedData.parameters.a
-                                  )
-                                )
-                              : { k: val },
-                          });
-                        }}
+                            parameters: this.daysToParams(
+                              this.rToFormDays(mergedData.parameters.r),
+                              val
+                            ),
+                          })
+                        }
                       >
                         <Picker.Item label="1 Day" value={1} />
                         <Picker.Item label="2 Days" value={2} />
-                        <Picker.Item label="3 Days" value={3} />
+                        <Picker.Item label="3 Days (Default)" value={3} />
                         <Picker.Item label="4 Days" value={4} />
                         <Picker.Item label="5 Days" value={5} />
                         <Picker.Item label="6 Days" value={6} />
-                        <Picker.Item label="7 Days (Default)" value={7} />
+                        <Picker.Item label="7 Days" value={7} />
                         <Picker.Item label="8 Days" value={8} />
                         <Picker.Item label="9 Days" value={9} />
                         <Picker.Item label="10 Days" value={10} />
-                        <Picker.Item label="11 Days" value={11} />
-                        <Picker.Item label="12 Days" value={12} />
-                        <Picker.Item label="13 Days" value={13} />
-                        <Picker.Item label="14 Days" value={14} />
-                        <Picker.Item label="15 Days" value={15} />
                       </Picker>
                     </View>
                   </View>
-                  {this.props.positive ? (
-                    <View style={styles.inputPair}>
-                      <Text style={styles.label}>Habit Loss Time</Text>
-                      <View style={styles.input}>
-                        <Picker
-                          style={styles.picker}
-                          selectedValue={this.raToLossDays(
-                            mergedData.parameters.r,
-                            mergedData.parameters.a
-                          )}
-                          onValueChange={(val) =>
-                            this.setState({
-                              parameters: this.daysToParams(
-                                this.rToFormDays(mergedData.parameters.r),
-                                val
-                              ),
-                            })
-                          }
-                        >
-                          <Picker.Item label="1 Day" value={1} />
-                          <Picker.Item label="2 Days" value={2} />
-                          <Picker.Item label="3 Days (Default)" value={3} />
-                          <Picker.Item label="4 Days" value={4} />
-                          <Picker.Item label="5 Days" value={5} />
-                          <Picker.Item label="6 Days" value={6} />
-                          <Picker.Item label="7 Days" value={7} />
-                          <Picker.Item label="8 Days" value={8} />
-                          <Picker.Item label="9 Days" value={9} />
-                          <Picker.Item label="10 Days" value={10} />
-                        </Picker>
-                      </View>
-                    </View>
-                  ) : null}
+                ) : null}
+              </View>
+              <View style={styles.footer}>
+                <View style={styles.footerButton}>
+                  <Button
+                    title="Cancel"
+                    onPress={() => {
+                      this.clearState();
+                      this.props.close();
+                    }}
+                  />
                 </View>
-                <View style={styles.footer}>
-                  <View style={styles.footerButton}>
-                    <Button
-                      title="Cancel"
-                      onPress={() => {
-                        this.clearState();
-                        this.props.close();
-                      }}
-                    />
-                  </View>
-                  <View style={styles.footerButton}>
-                    <Button
-                      title="Save"
-                      onPress={() => {
-                        this.submitChanges();
-                        this.props.close();
-                      }}
-                    />
-                  </View>
+                <View style={styles.footerButton}>
+                  <Button
+                    title="Save"
+                    onPress={() => {
+                      this.submitChanges();
+                      this.props.close();
+                    }}
+                  />
                 </View>
               </View>
             </View>
@@ -217,17 +223,9 @@ export default class EditModal extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  scroller: {
-    marginLeft: "5%",
-    marginTop: "5%",
-    width: "90%",
-    minHeight: "90%",
-  },
   modalView: {
     borderRadius: 5,
     borderWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   modalContent: {
     margin: 20,
