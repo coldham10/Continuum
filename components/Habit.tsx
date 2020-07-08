@@ -36,7 +36,7 @@ export default class Habit extends React.Component {
             />
           )}
           <TouchableHighlight
-            activeOpacity={0.99}
+            activeOpacity={0.95}
             style={styles.highlight}
             onPress={() => this.toggleTodayActivity()}
           >
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
   },
   highlight: {
     flex: 8,
+    borderRadius: 5,
   },
   title: {
     fontSize: 20,

@@ -88,12 +88,12 @@ export default class HabitList extends React.Component {
         rightNow.getDate()
       ); //Set to 00:00 of day created so that new days clock over at midnight
       dataCopy.push({
-        id: dataCopy.length,
+        id: Date.now() % 1000000, //Random enough, only to keep FlatList happy
         title: title,
         timeStamp: today.getTime(),
         parameters: this.props.positive
           ? { r: 0.7966, a: 0.4027, max: 1.9797 } //For geometric habit function (+ve)
-          : { k: 1 }, //For exponential momentum function (-ve)
+          : { k: 7 }, //For exponential momentum function (-ve)
         histValues: [], //habit-function vales at end of day every day since timeStamp
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
       });

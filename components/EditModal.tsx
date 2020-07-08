@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  StyleSheet,
-  TouchableHighlight,
-  TextInput,
-  Button,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, TextInput, Button } from "react-native";
 
 import { Picker } from "@react-native-community/picker";
 
-import { Text, View, Modal } from "../components/Themed";
+import { Text, View, Modal, ScrollView } from "../components/Themed";
 
 export default class EditModal extends React.Component {
   constructor(props) {
