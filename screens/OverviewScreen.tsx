@@ -241,8 +241,6 @@ export default class OverviewScreen extends React.Component {
             }
             return newHabit;
           });
-
-          console.log(dataCopy);
           this.storeData("positiveList", dataCopy);
           return { positiveData: dataCopy };
         },
