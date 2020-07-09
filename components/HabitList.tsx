@@ -21,6 +21,7 @@ export default class HabitList extends React.Component {
   componentDidMount() {
     //Load saved data for this list from local storage every time focused upon
     this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       this._asyncRequest = AsyncStorage.getItem(this.props.dataKey).then(
         (jsonValue) => {
           this._asyncRequest = null;
@@ -37,7 +38,10 @@ export default class HabitList extends React.Component {
             activeOpacity={0.6}
             underlayColor="#aaa8"
             style={{ borderRadius: 10 }}
-            onPress={() => this.setState({ help: true })}
+            onPress={() => {
+              this.setState({ help: true });
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }}
           >
             <FontAwesome
               style={{ margin: 5 }}

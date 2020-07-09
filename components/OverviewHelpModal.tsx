@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Button } from "react-native";
 import { View, Text, ScrollView } from "../components/Themed";
 import Modal from "react-native-modal";
+import * as Haptics from "expo-haptics";
 
 export default function OverviewHelpModal(props) {
   return (
@@ -60,7 +61,13 @@ export default function OverviewHelpModal(props) {
             </ScrollView>
           </View>
           <View style={styles.footer}>
-            <Button title="Close" onPress={() => props.close()} />
+            <Button
+              title="Close"
+              onPress={() => {
+                props.close();
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }}
+            />
           </View>
         </View>
       </View>
