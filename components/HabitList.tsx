@@ -1,19 +1,21 @@
 import * as React from "react";
-import { StyleSheet, Button } from "react-native";
+import { StyleSheet, Button, TouchableHighlight } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Haptics from "expo-haptics";
+import { FontAwesome } from "@expo/vector-icons";
 
 import { Text, View, FlatList } from "../components/Themed";
 import Habit from "./Habit";
 import EditModal from "./EditModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import HabitHelpModal from "./HabitHelpModal";
 
 const threshold = 1;
 
 export default class HabitList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [], editing: null, toDelete: null };
+    this.state = { data: [], editing: null, toDelete: null, help: false };
   }
 
   componentDidMount() {
@@ -27,6 +29,25 @@ export default class HabitList extends React.Component {
           });
         }
       );
+    });
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <View style={{ backgroundColor: "#0000" }}>
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor="#aaa8"
+            style={{ borderRadius: 10 }}
+            onPress={() => this.setState({ help: true })}
+          >
+            <FontAwesome
+              style={{ margin: 5 }}
+              name="question-circle-o"
+              size={24}
+              color="black"
+            />
+          </TouchableHighlight>
+        </View>
+      ),
     });
   }
 
@@ -82,6 +103,10 @@ export default class HabitList extends React.Component {
           visible={this.state.toDelete !== null}
           confirm={() => this.deleteItem(this.state.toDelete)}
           close={() => this.setState({ toDelete: null })}
+        />
+        <HabitHelpModal
+          visible={this.state.help}
+          close={() => this.setState({ help: false })}
         />
       </>
     );
