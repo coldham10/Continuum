@@ -1,6 +1,7 @@
 import * as React from "react";
 import { StyleSheet, Button } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import * as Haptics from "expo-haptics";
 
 import { Text, View, FlatList } from "../components/Themed";
 import Habit from "./Habit";
@@ -104,6 +105,7 @@ export default class HabitList extends React.Component {
       this.storeData(dataCopy);
       return { data: dataCopy, editing: prevState.data.length };
     });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   }
 
   updateItem(idx, data) {

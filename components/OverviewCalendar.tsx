@@ -16,6 +16,9 @@ export default function OverviewCalendar(props) {
       firstDay={1}
       showScrollIndicator={true}
       markingType={"period"}
+      onDayPress={(day) => {
+        props.selectDay(day);
+      }}
     />
   );
 }

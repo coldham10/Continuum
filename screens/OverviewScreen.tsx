@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text, View } from "../components/Themed";
 import OverviewCalendar from "../components/OverviewCalendar";
 import OverviewModal from "../components/OverviewModal";
+import DayModal from "../components/DayModal";
 
 export default class OverviewScreen extends React.Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export default class OverviewScreen extends React.Component {
       positiveData: [],
       negativeData: [],
       modalVisible: false,
+      daySelected: null,
       dataByDate: {},
     };
   }
@@ -64,6 +66,7 @@ export default class OverviewScreen extends React.Component {
             positiveData={this.state.positiveData}
             negativeData={this.state.negativeData}
             dataByDate={this.state.dataByDate}
+            selectDay={(day) => this.setState({ daySelected: day })}
           />
         </View>
         <View style={styles.footer}>
@@ -110,8 +113,55 @@ export default class OverviewScreen extends React.Component {
           negativeData={this.state.negativeData}
           toggleSelected={(id) => this.toggleSelected(id)}
         />
+        <DayModal
+          day={this.state.daySelected}
+          close={() => this.setState({ daySelected: null })}
+          data={this.state.dataByDate}
+          toggleActivity={(id, dateString) =>
+            this.toggleActivity(id, dateString)
+          }
+        />
       </View>
     );
+  }
+
+  byDate() {
+    let dataByDate = {};
+    let dateString = (date) =>
+      new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+        .toISOString()
+        .split("T")[0];
+    this.state.positiveData.forEach((pHabit) => {
+      let date = new Date(pHabit.timeStamp);
+      pHabit.histValues.forEach((val, index) => {
+        if (typeof dataByDate[dateString(date)] === "undefined") {
+          dataByDate[dateString(date)] = [];
+        }
+        dataByDate[dateString(date)].push({
+          id: pHabit.id,
+          status: Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+          completed: pHabit.activity[index],
+          data: pHabit,
+        });
+        date.setDate(date.getDate() + 1);
+      });
+    });
+    this.state.negativeData.forEach((nHabit) => {
+      let date = new Date(nHabit.timeStamp);
+      nHabit.histValues.forEach((val, index) => {
+        if (typeof dataByDate[dateString(date)] === "undefined") {
+          dataByDate[dateString(date)] = [];
+        }
+        dataByDate[dateString(date)].push({
+          id: nHabit.id,
+          status: val,
+          completed: nHabit.activity[index],
+          data: nHabit,
+        });
+        date.setDate(date.getDate() + 1);
+      });
+    });
+    this.setState({ dataByDate: dataByDate });
   }
 
   toggleSelected(id) {
@@ -151,41 +201,81 @@ export default class OverviewScreen extends React.Component {
     }
   }
 
-  byDate() {
-    let dataByDate = {};
-    let dateString = (date) =>
-      new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-        .toISOString()
-        .split("T")[0];
-    this.state.positiveData.forEach((pHabit) => {
-      let date = new Date(pHabit.timeStamp);
-      pHabit.histValues.forEach((val) => {
-        if (typeof dataByDate[dateString(date)] === "undefined") {
-          dataByDate[dateString(date)] = [];
-        }
-        dataByDate[dateString(date)].push({
-          id: pHabit.id,
-          status: Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
-          data: pHabit,
-        });
-        date.setDate(date.getDate() + 1);
-      });
-    });
-    this.state.negativeData.forEach((nHabit) => {
-      let date = new Date(nHabit.timeStamp);
-      nHabit.histValues.forEach((val) => {
-        if (typeof dataByDate[dateString(date)] === "undefined") {
-          dataByDate[dateString(date)] = [];
-        }
-        dataByDate[dateString(date)].push({
-          id: nHabit.id,
-          status: val,
-          data: nHabit,
-        });
-        date.setDate(date.getDate() + 1);
-      });
-    });
-    this.setState({ dataByDate: dataByDate });
+  toggleActivity(id, dateString) {
+    let today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    let toChange = new Date(
+      dateString.split("-")[0],
+      dateString.split("-")[1] - 1,
+      dateString.split("-")[2]
+    );
+    let dataCopy;
+    if (this.state.positiveData.filter((habit) => habit.id === id).length > 0) {
+      //Positive
+      this.setState(
+        (prevState) => {
+          dataCopy = prevState.positiveData.map((habit) => {
+            let newHabit = { ...habit };
+            if (habit.id === id) {
+              let daysAgo = Math.round(
+                (today - toChange) / (1000 * 60 * 60 * 24)
+              );
+              newHabit.activity[habit.activity.length - daysAgo - 1] =
+                habit.activity[habit.activity.length - daysAgo - 1] ^ 1; //Toggle the correct day's activity
+              //rewrite the historical values
+
+              let newHistory = [];
+              for (let i = 0; i < habit.activity.length; i++) {
+                let lastVal = i > 0 ? newHistory[i - 1] : 0;
+                newHistory.push(
+                  lastVal * habit.parameters.r +
+                    habit.activity[i] * habit.parameters.a
+                ); //Habit function. Each day is last day * r (<1), then optionally adding a if activity performed
+              }
+              newHabit.histValues = newHistory;
+            }
+            return newHabit;
+          });
+
+          console.log(dataCopy);
+          this.storeData("positiveList", dataCopy);
+          return { positiveData: dataCopy };
+        },
+        () => this.byDate()
+      );
+    } else {
+      //Negative
+      this.setState(
+        (prevState) => {
+          dataCopy = prevState.negativeData.map((habit) => {
+            let newHabit = { ...habit };
+            if (habit.id === id) {
+              let daysAgo = Math.round(
+                (today - toChange) / (1000 * 60 * 60 * 24)
+              );
+              newHabit.activity[habit.activity.length - daysAgo - 1] =
+                habit.activity[habit.activity.length - daysAgo - 1] ^ 1; //Toggle the correct day's activity
+              //rewrite the histValues
+              let newHistory = [];
+              let streak = 0;
+              for (let i = 0; i < habit.activity.length; i++) {
+                streak = habit.activity[i] ? streak + 1 : 0;
+                newHistory.push(
+                  1 - Math.exp((-1 * streak) / habit.parameters.k)
+                ); //Asymtotically approaches 1
+              }
+              newHabit.histValues = newHistory;
+            }
+
+            return newHabit;
+          });
+          this.storeData("negativeList", dataCopy);
+          return { negativeData: dataCopy };
+        },
+        () => this.byDate()
+      );
+    }
   }
 
   async storeData(key, data) {

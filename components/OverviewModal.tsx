@@ -126,7 +126,6 @@ function SectionHeader(props) {
       )}
     </View>
   );
-  return null;
 }
 
 function allSelected(data) {

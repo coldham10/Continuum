@@ -1,6 +1,7 @@
 import * as React from "react";
 import { StyleSheet, TouchableHighlight } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
 import { Text, View } from "../components/Themed";
 
@@ -49,12 +50,20 @@ export default class Habit extends React.Component {
           <Ionicons
             name="md-create"
             style={{ ...statusColors(this.props.status), ...styles.icon }}
-            onPress={() => this.props.openEditor()}
+            onPress={() => {
+              this.props.openEditor();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }}
           />
           <Ionicons
             name="ios-trash"
             style={{ ...statusColors(this.props.status), ...styles.icon }}
-            onPress={() => this.props.deleteItem()}
+            onPress={() => {
+              this.props.deleteItem();
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Warning
+              );
+            }}
           />
         </View>
         <View
@@ -83,6 +92,7 @@ export default class Habit extends React.Component {
       this.props.activity[this.props.activity.length - 1] ^ 1; //bitwise xor toggles between 0 and 1
     let newHist = this.rewriteHistory([...newActivity], this.props.parameters);
     this.props.updateItem({ activity: newActivity, histValues: newHist });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   }
 
   refresh() {
@@ -117,7 +127,7 @@ export default class Habit extends React.Component {
       let streak = 0;
       for (let i = 0; i < activity.length; i++) {
         streak = activity[i] ? streak + 1 : 0;
-        newHistory.push(1 - Math.exp((-1 * streak) / this.props.parameters.k)); //Asymtotically approaches 1
+        newHistory.push(1 - Math.exp((-1 * streak) / params.k)); //Asymtotically approaches 1
       }
     }
     return newHistory;
