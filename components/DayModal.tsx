@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, SectionList, TouchableHighlight } from "react-native";
 import { View, Text, FlatList } from "../components/Themed";
 import Modal from "react-native-modal";
 
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
+import EditConfirmModal from "../components/EditConfirmModal";
+
 export default function DayModal(props) {
+  const [confirm, setConfirm] = useState(null);
+
   return (
     <Modal
       isVisible={props.day !== null}
@@ -21,6 +25,7 @@ export default function DayModal(props) {
       animationOutTiming={500}
       scrollOffset={200}
       style={{ flex: 1 }}
+      propagateSwipe={confirm !== null}
     >
       <View style={styles.container}>
         <View style={styles.oval} />
@@ -47,11 +52,10 @@ export default function DayModal(props) {
                   status={item.status}
                   day={props.day}
                   positive={item.data.positive}
-                  edit={props.toggleActivity.bind(
-                    null,
-                    item.id,
-                    props.day.dateString
-                  )}
+                  edit={setConfirm.bind(null, {
+                    id: item.id,
+                    dateString: props.day.dateString,
+                  })}
                 />
               )}
               keyExtractor={(item) => "id" + item.id}
@@ -82,6 +86,11 @@ export default function DayModal(props) {
           </View>
         </View>
       </View>
+      <EditConfirmModal
+        visible={confirm !== null}
+        close={() => setConfirm(null)}
+        confirm={() => props.toggleActivity(confirm.id, confirm.dateString)}
+      />
     </Modal>
   );
 }
