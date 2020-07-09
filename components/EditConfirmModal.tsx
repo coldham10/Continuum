@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Button } from "react-native";
 import { View, Text } from "../components/Themed";
 import Modal from "react-native-modal";
+import * as Haptics from "expo-haptics";
 
 export default function EditConfirmModal(props) {
   return (
@@ -41,6 +42,7 @@ export default function EditConfirmModal(props) {
                 title="Confirm"
                 onPress={() => {
                   props.confirm();
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   props.close();
                 }}
               />

@@ -2,6 +2,7 @@ import * as React from "react";
 import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
 import { Text, View } from "../components/Themed";
 import OverviewCalendar from "../components/OverviewCalendar";
@@ -102,7 +103,10 @@ export default class OverviewScreen extends React.Component {
             <Ionicons
               name="md-create"
               style={styles.icon}
-              onPress={() => this.setState({ modalVisible: true })}
+              onPress={() => {
+                this.setState({ modalVisible: true });
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }}
             />
           </View>
         </View>

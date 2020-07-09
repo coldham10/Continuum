@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, TextInput, Button } from "react-native";
+import * as Haptics from "expo-haptics";
 
 import { Picker } from "@react-native-community/picker";
 
@@ -142,6 +143,7 @@ export default class EditModal extends React.Component {
                     onPress={() => {
                       this.clearState();
                       this.props.close();
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     }}
                   />
                 </View>
@@ -151,6 +153,7 @@ export default class EditModal extends React.Component {
                     onPress={() => {
                       this.submitChanges();
                       this.props.close();
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     }}
                   />
                 </View>

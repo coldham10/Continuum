@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, SectionList, TouchableHighlight } from "react-native";
 import { View, Text, FlatList } from "../components/Themed";
 import Modal from "react-native-modal";
+import * as Haptics from "expo-haptics";
 
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
@@ -116,7 +117,10 @@ function ListItem(props) {
         <TouchableHighlight
           activeOpacity={0.6}
           underlayColor="#aaa8"
-          onPress={() => props.edit()}
+          onPress={() => {
+            props.edit();
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+          }}
           style={{
             flex: 1,
             alignItems: "center",

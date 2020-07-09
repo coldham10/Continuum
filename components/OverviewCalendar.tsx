@@ -1,5 +1,6 @@
 import React from "react";
 import { CalendarList } from "react-native-calendars";
+import * as Haptics from "expo-haptics";
 
 export default function OverviewCalendar(props) {
   return (
@@ -18,6 +19,7 @@ export default function OverviewCalendar(props) {
       markingType={"period"}
       onDayPress={(day) => {
         props.selectDay(day);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
     />
   );
