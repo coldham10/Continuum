@@ -36,8 +36,12 @@ export default function OverviewModal(props) {
                 { title: "Negative", data: props.negativeData },
               ]}
               keyExtractor={(item, index) => item + index}
-              renderSectionHeader={({ section: { title } }) => (
-                <Text style={styles.secHeader}>{title}</Text>
+              renderSectionHeader={({ section: { title, data } }) => (
+                <SectionHeader
+                  title={title}
+                  data={data}
+                  toggleSelected={(id) => props.toggleSelected(id)}
+                />
               )}
               renderItem={({ item }) => (
                 <ListItem
@@ -61,7 +65,7 @@ function ListItem(props) {
   return (
     <View style={styles.li}>
       <TouchableHighlight
-        style={styles.lihL}
+        style={styles.liHL}
         activeOpacity={0.6}
         underlayColor="#aaa8"
         onPress={() => props.toggleSelected(props.item.id)}
@@ -83,6 +87,50 @@ function ListItem(props) {
       )}
     </View>
   );
+}
+
+function SectionHeader(props) {
+  const toggleAll = (data) => {
+    if (allSelected(props.data)) {
+      props.data.forEach((habit) => props.toggleSelected(habit.id));
+    } else {
+      props.data.forEach((habit) => {
+        if (!habit.selected) {
+          props.toggleSelected(habit.id);
+        }
+      });
+    }
+  };
+  return (
+    <View style={styles.secHeader}>
+      <TouchableHighlight
+        style={styles.shHL}
+        activeOpacity={0.6}
+        underlayColor="#aaa8"
+        onPress={() => toggleAll(props.data)}
+      >
+        <Text style={styles.shTxt}>{props.title}</Text>
+      </TouchableHighlight>
+      {allSelected(props.data) ? (
+        <Ionicons
+          name="md-checkmark-circle-outline"
+          style={styles.checkBox}
+          onPress={() => toggleAll(props.data)}
+        />
+      ) : (
+        <FontAwesome
+          name="circle-thin"
+          style={styles.checkBox}
+          onPress={() => toggleAll(props.data)}
+        />
+      )}
+    </View>
+  );
+  return null;
+}
+
+function allSelected(data) {
+  return data.every((habit) => habit.selected);
 }
 
 const styles = StyleSheet.create({
@@ -130,12 +178,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   secHeader: {
-    fontSize: 20,
-    fontWeight: "bold",
+    flexDirection: "row",
     marginBottom: 15,
     borderBottomWidth: 1,
     marginLeft: 10,
     marginRight: 5,
+  },
+  shHL: {
+    flex: 1,
+    borderRadius: 2,
+  },
+  shTxt: {
+    fontSize: 20,
+    fontWeight: "bold",
   },
   li: {
     flexDirection: "row",
@@ -145,7 +200,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: "center",
   },
-  lihL: {
+  liHL: {
     flex: 1,
     borderRadius: 2,
   },

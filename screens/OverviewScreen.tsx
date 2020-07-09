@@ -118,26 +118,36 @@ export default class OverviewScreen extends React.Component {
     let dataCopy;
     if (this.state.positiveData.filter((habit) => habit.id === id).length > 0) {
       //Positive
-      dataCopy = this.state.positiveData.map((habit) => {
-        let newHabit = { ...habit };
-        if (habit.id === id) {
-          newHabit.selected = !habit.selected;
-        }
-        return newHabit;
-      });
-      this.setState({ positiveData: dataCopy }, () => this.byDate());
-      this.storeData("positiveList", dataCopy);
+      this.setState(
+        (prevState) => {
+          dataCopy = prevState.positiveData.map((habit) => {
+            let newHabit = { ...habit };
+            if (habit.id === id) {
+              newHabit.selected = !habit.selected;
+            }
+            return newHabit;
+          });
+          this.storeData("positiveList", dataCopy);
+          return { positiveData: dataCopy };
+        },
+        () => this.byDate()
+      );
     } else {
       //Negative
-      dataCopy = this.state.negativeData.map((habit) => {
-        let newHabit = { ...habit };
-        if (habit.id === id) {
-          newHabit.selected = !habit.selected;
-        }
-        return newHabit;
-      });
-      this.setState({ negativeData: dataCopy }, () => this.byDate());
-      this.storeData("negativeList", dataCopy);
+      this.setState(
+        (prevState) => {
+          dataCopy = prevState.negativeData.map((habit) => {
+            let newHabit = { ...habit };
+            if (habit.id === id) {
+              newHabit.selected = !habit.selected;
+            }
+            return newHabit;
+          });
+          this.storeData("negativeList", dataCopy);
+          return { negativeData: dataCopy };
+        },
+        () => this.byDate()
+      );
     }
   }
 

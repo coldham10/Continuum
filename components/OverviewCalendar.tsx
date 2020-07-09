@@ -15,6 +15,7 @@ export default function OverviewCalendar(props) {
       )}
       firstDay={1}
       showScrollIndicator={true}
+      markingType={"period"}
     />
   );
 }
@@ -46,9 +47,8 @@ function getMarkings(dataByDate) {
         Math.round(255 * score)
           .toString(16)
           .padStart(2, "0");
-      markings[dateStr] = { selected: true, selectedColor: color };
+      markings[dateStr] = { color: color };
     }
   });
-
   return markings;
 }
