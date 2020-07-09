@@ -6,13 +6,14 @@ import * as Haptics from "expo-haptics";
 import { Text, View, FlatList } from "../components/Themed";
 import Habit from "./Habit";
 import EditModal from "./EditModal";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 
 const threshold = 1;
 
 export default class HabitList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: [], editing: null };
+    this.state = { data: [], editing: null, toDelete: null };
   }
 
   componentDidMount() {
@@ -49,7 +50,7 @@ export default class HabitList extends React.Component {
             return (
               <Habit
                 positive={this.props.positive}
-                deleteItem={this.deleteItem.bind(this, index)}
+                deleteItem={this.setState.bind(this, { toDelete: index })}
                 updateItem={this.updateItem.bind(this, index)}
                 getStreak={this.getStreak.bind(this, index)}
                 status={
@@ -76,6 +77,11 @@ export default class HabitList extends React.Component {
           data={this.state.data}
           close={() => this.setState({ editing: null })}
           updateItem={(idx, data) => this.updateItem(idx, data)}
+        />
+        <DeleteConfirmModal
+          visible={this.state.toDelete !== null}
+          confirm={() => this.deleteItem(this.state.toDelete)}
+          close={() => this.setState({ toDelete: null })}
         />
       </>
     );
