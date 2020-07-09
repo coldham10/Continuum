@@ -3,7 +3,7 @@ import { StyleSheet, Button } from "react-native";
 import { View, Text, ScrollView } from "../components/Themed";
 import Modal from "react-native-modal";
 
-export default function HabitHelpModal(props) {
+export default function OverviewHelpModal(props) {
   return (
     <Modal
       isVisible={props.visible}
@@ -24,54 +24,37 @@ export default function HabitHelpModal(props) {
         <View style={styles.oval} />
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Habit Help</Text>
+            <Text style={styles.title}>Overview Help</Text>
           </View>
           <View style={styles.body}>
             <ScrollView persistentScrollbar={true}>
               <View style={styles.pgph}>
                 <Text style={styles.pgphTxt}>
-                  Add habits by pressing the "Add New Habit" button, which can
-                  be found at the bottom of the "Positive Habits" and "Negative
-                  Habits" screens.
+                  The Overview page gives you general and detailed feedback on
+                  how your habits are going. Use the pencil button at the bottom
+                  of the page to select one, many or all of your habits.
                 </Text>
               </View>
               <View style={styles.pgph}>
                 <Text style={styles.pgphTxt}>
-                  Tap the habit name to toggle how you did with that habit
-                  today. Positive habits get a check mark next to them when you
-                  have successfully performed the habit today. Negative habits
-                  get a cross when you successfully abstain for a day.
+                  The progress of all the selected habits will be shown on the
+                  calendar by colors (red: most selected habits have low
+                  momentum; blue: you're doing great!).
                 </Text>
               </View>
               <View style={styles.pgph}>
                 <Text style={styles.pgphTxt}>
-                  Positive Habits have two options as well as a name. "Habit
-                  Formation Time" is how difficult it is to "get into" a habit.
-                  "Habit Loss time" is how quickly you can "get out of the
-                  habit" if you stop for a while.
+                  You can press the days in the calendar to see a summary of
+                  that day. For each of your habits you can see if you
+                  completed/abstained that day and the momentum you had.
                 </Text>
               </View>
               <View style={styles.pgph}>
                 <Text style={styles.pgphTxt}>
-                  If a habit has a long formation time or a very short loss
-                  time, it may take a few days of dilligence before you see any
-                  "momentum."
-                </Text>
-              </View>
-              <View style={styles.pgph}>
-                <Text style={styles.pgphTxt}>
-                  All negative habits have only a "Formation Time". The day you
-                  fail to abstain, you immediately fall back to 0 momentum and
-                  need to start building back up again.
-                </Text>
-              </View>
-              <View style={styles.pgph}>
-                <Text style={styles.pgphTxt}>
-                  If you need to retroactively change a habit's completion
-                  status for a missed day, click on that day in the calendar in
-                  the "Overview" tab. Note that you cannot extend habits back
-                  before the date you created them. Press the help button in the
-                  overview tab for more information
+                  You can also press the edit button for each habit to
+                  retroactively change whether you achieved/abstained that day
+                  or not. This is helpful if you're logging your habits after
+                  not using the app for a couple of days.
                 </Text>
               </View>
             </ScrollView>

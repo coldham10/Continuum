@@ -1,12 +1,13 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableHighlight } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 import { Text, View } from "../components/Themed";
 import OverviewCalendar from "../components/OverviewCalendar";
 import OverviewModal from "../components/OverviewModal";
+import OverviewHelpModal from "../components/OverviewHelpModal";
 import DayModal from "../components/DayModal";
 
 export default class OverviewScreen extends React.Component {
@@ -18,6 +19,7 @@ export default class OverviewScreen extends React.Component {
       modalVisible: false,
       daySelected: null,
       dataByDate: {},
+      help: false,
     };
   }
 
@@ -47,6 +49,25 @@ export default class OverviewScreen extends React.Component {
         }
       );
       this.setState({ modalVisible: false });
+    });
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <View style={{ backgroundColor: "#0000" }}>
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor="#aaa8"
+            style={{ borderRadius: 10 }}
+            onPress={() => this.setState({ help: true })}
+          >
+            <FontAwesome
+              style={{ margin: 5 }}
+              name="question-circle-o"
+              size={24}
+              color="black"
+            />
+          </TouchableHighlight>
+        </View>
+      ),
     });
   }
 
@@ -124,6 +145,10 @@ export default class OverviewScreen extends React.Component {
           toggleActivity={(id, dateString) =>
             this.toggleActivity(id, dateString)
           }
+        />
+        <OverviewHelpModal
+          visible={this.state.help}
+          close={() => this.setState({ help: false })}
         />
       </View>
     );
