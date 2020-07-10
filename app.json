@@ -4,12 +4,12 @@
     "slug": "Continuum",
     "version": "1.0.0",
     "description": "A simple, configurable daily habit tracking app. Add positive or negative habits, log each day and analyze your progress.",
-    "owner": "Christopher Oldham",
+    "owner": "coldham10",
     "privacy": "public",
     "githubUrl": "https://github.com/coldham10/Continuum",
     "primaryColor": "#009BE4",
     "orientation": "portrait",
-    "icon": "./assets/images/bigc.png",
+    "icon": "./assets/images/continuum.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -22,15 +22,20 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tripconey.continuum"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "android": {
-      "package": "com.namaslu.continuum",
+      "package": "com.tripconey.continuum",
       "versionCode": 1,
-      "permissions": ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"]
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ]
     }
   }
 }

@@ -20,8 +20,7 @@ export default class HabitList extends React.Component {
 
   componentDidMount() {
     //Load saved data for this list from local storage every time focused upon
-    this._unsubscribe = this.props.navigation.addListener("focus", () => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const loadData = () => {
       this._asyncRequest = AsyncStorage.getItem(this.props.dataKey).then(
         (jsonValue) => {
           this._asyncRequest = null;
@@ -30,7 +29,12 @@ export default class HabitList extends React.Component {
           });
         }
       );
+    };
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      loadData();
     });
+    loadData();
     this.props.navigation.setOptions({
       headerRight: () => (
         <View style={{ backgroundColor: "#0000" }}>
@@ -135,7 +139,7 @@ export default class HabitList extends React.Component {
           : { k: 7 }, //For exponential momentum function (-ve)
         histValues: [], //habit-function vales at end of day every day since timeStamp
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
-        selected: false, //Is selected in overview pane?
+        selected: true, //Is selected in overview pane?
       });
       this.storeData(dataCopy);
       return { data: dataCopy, editing: prevState.data.length };

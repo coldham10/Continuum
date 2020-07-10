@@ -57,6 +57,7 @@ export default class EditModal extends React.Component {
                   <TextInput
                     style={styles.input}
                     defaultValue={mergedData.title}
+                    placeHolder={"New Habit"}
                     onChangeText={(title) => this.setState({ title: title })}
                   />
                 </View>

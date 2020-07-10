@@ -25,8 +25,7 @@ export default class OverviewScreen extends React.Component {
 
   componentDidMount() {
     //Load saved data for this list from local storage
-    this._unsubscribe = this.props.navigation.addListener("focus", () => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const loadData = () => {
       this._asyncRequest = AsyncStorage.getItem("positiveList").then(
         (jsonValue) => {
           this._asyncRequest = null;
@@ -49,8 +48,15 @@ export default class OverviewScreen extends React.Component {
           );
         }
       );
+    };
+    loadData();
+    //When this tab is focused, reload the data
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      loadData();
       this.setState({ modalVisible: false });
     });
+    //Add help icon to top navigation pane
     this.props.navigation.setOptions({
       headerRight: () => (
         <View style={{ backgroundColor: "#0000" }}>
