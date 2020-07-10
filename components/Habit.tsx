@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TouchableHighlight } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
@@ -13,76 +13,93 @@ export default class Habit extends React.Component {
 
   render() {
     return (
-      <View style={{ ...statusColors(this.props.status), ...styles.habit }}>
-        <View style={{ ...statusColors(this.props.status), ...styles.topRow }}>
-          {this.props.activity[this.props.activity.length - 1] ? (
+      <TouchableOpacity
+        style={{ ...statusColors(this.props.status), ...styles.habitHL }}
+        activeOpacity={0.8}
+        onPress={() => this.toggleTodayActivity()}
+      >
+        <View style={{ ...statusColors(this.props.status), ...styles.habit }}>
+          <View
+            style={{ ...statusColors(this.props.status), ...styles.topRow }}
+          >
+            {this.props.activity[this.props.activity.length - 1] ? (
+              <Ionicons
+                name={
+                  this.props.positive
+                    ? "md-checkmark-circle-outline"
+                    : "md-close-circle-outline"
+                }
+                style={{
+                  ...statusColors(this.props.status),
+                  ...styles.checkbox,
+                }}
+                onPress={() => this.toggleTodayActivity()}
+              />
+            ) : (
+              <FontAwesome
+                name="circle-thin"
+                style={{
+                  ...statusColors(this.props.status),
+                  ...styles.checkbox,
+                  fontSize: 28,
+                }}
+                onPress={() => this.toggleTodayActivity()}
+              />
+            )}
+            <View style={styles.highlight}>
+              <Text
+                style={{ ...statusColors(this.props.status), ...styles.title }}
+              >
+                {this.props.title}
+              </Text>
+            </View>
             <Ionicons
-              name={
-                this.props.positive
-                  ? "md-checkmark-circle-outline"
-                  : "md-close-circle-outline"
-              }
-              style={{ ...statusColors(this.props.status), ...styles.checkbox }}
-              onPress={() => this.toggleTodayActivity()}
-            />
-          ) : (
-            <FontAwesome
-              name="circle-thin"
-              style={{
-                ...statusColors(this.props.status),
-                ...styles.checkbox,
-                fontSize: 28,
+              name="md-create"
+              style={{ ...statusColors(this.props.status), ...styles.icon }}
+              onPress={() => {
+                this.props.openEditor();
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               }}
-              onPress={() => this.toggleTodayActivity()}
             />
-          )}
-          <TouchableHighlight
-            activeOpacity={0.95}
-            style={styles.highlight}
-            onPress={() => this.toggleTodayActivity()}
+            <Ionicons
+              name="ios-trash"
+              style={{ ...statusColors(this.props.status), ...styles.icon }}
+              onPress={() => {
+                this.props.deleteItem();
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Warning
+                );
+              }}
+            />
+          </View>
+
+          <View
+            style={{
+              ...statusColors(this.props.status),
+              ...styles.bottomRow,
+            }}
           >
             <Text
-              style={{ ...statusColors(this.props.status), ...styles.title }}
+              style={{
+                ...statusColors(this.props.status),
+                ...styles.subText,
+              }}
             >
-              {this.props.title}
+              {"Momentum: " +
+                Math.max(0, Math.round(100 * this.props.status)) +
+                "%"}
             </Text>
-          </TouchableHighlight>
-          <Ionicons
-            name="md-create"
-            style={{ ...statusColors(this.props.status), ...styles.icon }}
-            onPress={() => {
-              this.props.openEditor();
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }}
-          />
-          <Ionicons
-            name="ios-trash"
-            style={{ ...statusColors(this.props.status), ...styles.icon }}
-            onPress={() => {
-              this.props.deleteItem();
-              Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Warning
-              );
-            }}
-          />
+            <Text
+              style={{
+                ...statusColors(this.props.status),
+                ...styles.subText,
+              }}
+            >
+              {"Streak: " + this.props.getStreak() + " days"}
+            </Text>
+          </View>
         </View>
-        <View
-          style={{ ...statusColors(this.props.status), ...styles.bottomRow }}
-        >
-          <Text
-            style={{ ...statusColors(this.props.status), ...styles.subText }}
-          >
-            {"Momentum: " +
-              Math.max(0, Math.round(100 * this.props.status)) +
-              "%"}
-          </Text>
-          <Text
-            style={{ ...statusColors(this.props.status), ...styles.subText }}
-          >
-            {"Streak: " + this.props.getStreak() + " days"}
-          </Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -163,14 +180,20 @@ function statusColors(status) {
 }
 
 const styles = StyleSheet.create({
-  habit: {
+  habitHL: {
     height: 80,
     width: "90%",
     margin: 10,
-    padding: 5,
     borderRadius: 5,
+  },
+  habit: {
+    flex: 1,
+    width: "100%",
+    padding: 5,
     justifyContent: "space-between",
     alignItems: "center",
+    borderRadius: 5,
+    backgroundColor: "#0000",
   },
   topRow: {
     width: "100%",
@@ -179,6 +202,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 2,
     flexDirection: "row",
+  },
+  bottomHL: {
+    flex: 1,
+    width: "100%",
   },
   bottomRow: {
     flexDirection: "row",
@@ -201,7 +228,13 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 30,
     flex: 1,
-    margin: 5,
+    padding: 5,
+    paddingLeft: 10,
   },
-  checkbox: { fontSize: 30, flex: 1, margin: 5, paddingRight: 3 },
+  checkbox: {
+    fontSize: 30,
+    flex: 1,
+    margin: 5,
+    paddingRight: 3,
+  },
 });
