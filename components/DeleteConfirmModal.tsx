@@ -25,7 +25,7 @@ export default function DeleteConfirmModal(props) {
         <View style={styles.oval} />
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Confirm Delete</Text>
+            <Text style={styles.title}>Confirm Delete: {props.name}</Text>
           </View>
           <View style={styles.body}>
             <View style={styles.buttonContainer}>

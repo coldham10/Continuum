@@ -15,7 +15,7 @@ export default class Habit extends React.Component {
     return (
       <TouchableOpacity
         style={{ ...statusColors(this.props.status), ...styles.habitHL }}
-        activeOpacity={0.8}
+        activeOpacity={0.9}
         onPress={() => this.toggleTodayActivity()}
       >
         <View style={{ ...statusColors(this.props.status), ...styles.habit }}>

@@ -109,6 +109,11 @@ export default class HabitList extends React.Component {
         />
         <DeleteConfirmModal
           visible={this.state.toDelete !== null}
+          name={
+            this.state.toDelete !== null
+              ? this.state.data[this.state.toDelete].title
+              : ""
+          }
           confirm={() => this.deleteItem(this.state.toDelete)}
           close={() => this.setState({ toDelete: null })}
         />

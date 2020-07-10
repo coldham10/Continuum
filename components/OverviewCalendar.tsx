@@ -45,13 +45,16 @@ function getMarkings(dataByDate) {
       let score = daySummary.sum / daySummary.n;
       let color =
         "#" +
-        Math.round(255 * (1 - score))
+        Math.round(255 * (1 - score)) //r
           .toString(16)
           .padStart(2, "0") +
-        "20" +
-        Math.round(255 * score)
+        Math.round(10 + 170 * Math.pow(score, 1.5)) //g
           .toString(16)
-          .padStart(2, "0");
+          .padStart(2, "0") +
+        Math.round(255 * score) //b
+          .toString(16)
+          .padStart(2, "0") +
+        "c0"; //a
       markings[dateStr] = { color: color };
     }
   });
