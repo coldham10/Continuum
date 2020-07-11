@@ -11,14 +11,10 @@ export default function OverviewHelpModal(props) {
       onBackButtonPress={() => props.close()}
       backdropOpacity={0.5}
       hasBackdrop={true}
-      swipeDirection="down"
-      swipeThreshold={100}
-      onSwipeComplete={() => props.close()}
       onBackdropPress={() => props.close()}
       useNativeDriver={true}
       animationInTiming={500}
       animationOutTiming={500}
-      scrollOffset={300}
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
@@ -84,7 +80,7 @@ const styles = StyleSheet.create({
   oval: {
     width: 15,
     height: 4,
-    backgroundColor: "#aaa8",
+    backgroundColor: "#aaa0",
     margin: 4,
     borderRadius: 3,
   },
