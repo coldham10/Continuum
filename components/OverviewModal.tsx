@@ -79,12 +79,12 @@ function ListItem(props) {
           onPress={() => props.toggleSelected(props.item.id)}
         />
       ) : (
-        <FontAwesome
-          name="circle-thin"
-          style={styles.checkBox}
-          onPress={() => props.toggleSelected(props.item.id)}
-        />
-      )}
+          <FontAwesome
+            name="circle-thin"
+            style={styles.checkBox}
+            onPress={() => props.toggleSelected(props.item.id)}
+          />
+        )}
     </View>
   );
 }
@@ -118,12 +118,12 @@ function SectionHeader(props) {
           onPress={() => toggleAll(props.data)}
         />
       ) : (
-        <FontAwesome
-          name="circle-thin"
-          style={styles.checkBox}
-          onPress={() => toggleAll(props.data)}
-        />
-      )}
+          <FontAwesome
+            name="circle-thin"
+            style={styles.checkBox}
+            onPress={() => toggleAll(props.data)}
+          />
+        )}
     </View>
   );
 }

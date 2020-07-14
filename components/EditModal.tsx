@@ -84,12 +84,12 @@ export default class EditModal extends React.Component {
                           this.setState({
                             parameters: this.props.positive
                               ? this.daysToParams(
-                                  val,
-                                  this.raToLossDays(
-                                    mergedData.parameters.r,
-                                    mergedData.parameters.a
-                                  )
+                                val,
+                                this.raToLossDays(
+                                  mergedData.parameters.r,
+                                  mergedData.parameters.a
                                 )
+                              )
                               : { k: val },
                           });
                         }}
@@ -111,56 +111,56 @@ export default class EditModal extends React.Component {
                         <Picker.Item label="15 Days" value={15} />
                       </Picker>
                     ) : (
-                      <TouchableOpacity
-                        onPress={() =>
-                          ActionSheetIOS.showActionSheetWithOptions(
-                            {
-                              options: [
-                                "Cancel",
-                                "1 Day",
-                                "2 Days",
-                                "3 Days",
-                                "4 Days",
-                                "5 Days",
-                                "6 Days",
-                                "7 Days (Default)",
-                                "8 Days",
-                                "9 Days",
-                                "10 Days",
-                                "11 Days",
-                                "12 Days",
-                                "13 Days",
-                                "14 Days",
-                                "15 Days",
-                              ],
-                              cancelButtonIndex: 0,
-                            },
-                            (btnIdx) => {
-                              if (btnIdx !== 0) {
-                                this.setState({
-                                  parameters: this.props.positive
-                                    ? this.daysToParams(
+                        <TouchableOpacity
+                          onPress={() =>
+                            ActionSheetIOS.showActionSheetWithOptions(
+                              {
+                                options: [
+                                  "Cancel",
+                                  "1 Day",
+                                  "2 Days",
+                                  "3 Days",
+                                  "4 Days",
+                                  "5 Days",
+                                  "6 Days",
+                                  "7 Days (Default)",
+                                  "8 Days",
+                                  "9 Days",
+                                  "10 Days",
+                                  "11 Days",
+                                  "12 Days",
+                                  "13 Days",
+                                  "14 Days",
+                                  "15 Days",
+                                ],
+                                cancelButtonIndex: 0,
+                              },
+                              (btnIdx) => {
+                                if (btnIdx !== 0) {
+                                  this.setState({
+                                    parameters: this.props.positive
+                                      ? this.daysToParams(
                                         btnIdx,
                                         this.raToLossDays(
                                           mergedData.parameters.r,
                                           mergedData.parameters.a
                                         )
                                       )
-                                    : { k: btnIdx },
-                                });
+                                      : { k: btnIdx },
+                                  });
+                                }
                               }
-                            }
-                          )
-                        }
-                      >
-                        <Text style={styles.IOSpicker}>
-                          {this.props.positive
-                            ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
-                            : mergedData.parameters.k}{" "}
-                          Days
+                            )
+                          }
+                        >
+                          <Text style={styles.IOSpicker}>
+                            {this.props.positive
+                              ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
+                              : mergedData.parameters.k}{" "}
+                            Days
                         </Text>
-                      </TouchableOpacity>
-                    )}
+                        </TouchableOpacity>
+                      )}
                   </View>
                 </View>
                 {this.props.positive ? (
@@ -195,47 +195,47 @@ export default class EditModal extends React.Component {
                           <Picker.Item label="10 Days" value={10} />
                         </Picker>
                       ) : (
-                        <TouchableOpacity
-                          onPress={() =>
-                            ActionSheetIOS.showActionSheetWithOptions(
-                              {
-                                options: [
-                                  "Cancel",
-                                  "1 Day",
-                                  "2 Days",
-                                  "3 Days (Default)",
-                                  "4 Days",
-                                  "5 Days",
-                                  "6 Days",
-                                  "7 Days",
-                                  "8 Days",
-                                  "9 Days",
-                                  "10 Days",
-                                ],
-                                cancelButtonIndex: 0,
-                              },
-                              (btnIdx) => {
-                                if (btnIdx !== 0) {
-                                  this.setState({
-                                    parameters: this.daysToParams(
-                                      this.rToFormDays(mergedData.parameters.r),
-                                      btnIdx
-                                    ),
-                                  });
+                          <TouchableOpacity
+                            onPress={() =>
+                              ActionSheetIOS.showActionSheetWithOptions(
+                                {
+                                  options: [
+                                    "Cancel",
+                                    "1 Day",
+                                    "2 Days",
+                                    "3 Days (Default)",
+                                    "4 Days",
+                                    "5 Days",
+                                    "6 Days",
+                                    "7 Days",
+                                    "8 Days",
+                                    "9 Days",
+                                    "10 Days",
+                                  ],
+                                  cancelButtonIndex: 0,
+                                },
+                                (btnIdx) => {
+                                  if (btnIdx !== 0) {
+                                    this.setState({
+                                      parameters: this.daysToParams(
+                                        this.rToFormDays(mergedData.parameters.r),
+                                        btnIdx
+                                      ),
+                                    });
+                                  }
                                 }
-                              }
-                            )
-                          }
-                        >
-                          <Text style={styles.IOSpicker}>
-                            {this.raToLossDays(
-                              mergedData.parameters.r,
-                              mergedData.parameters.a
-                            )}{" "}
-                            Days
+                              )
+                            }
+                          >
+                            <Text style={styles.IOSpicker}>
+                              {this.raToLossDays(
+                                mergedData.parameters.r,
+                                mergedData.parameters.a
+                              )}{" "}
+                              Days
                           </Text>
-                        </TouchableOpacity>
-                      )}
+                          </TouchableOpacity>
+                        )}
                     </View>
                   </View>
                 ) : null}

@@ -36,16 +36,16 @@ export default class Habit extends React.Component {
                 onPress={() => this.toggleTodayActivity()}
               />
             ) : (
-              <FontAwesome
-                name="circle-thin"
-                style={{
-                  ...statusColors(this.props.status),
-                  ...styles.checkbox,
-                  fontSize: 28,
-                }}
-                onPress={() => this.toggleTodayActivity()}
-              />
-            )}
+                <FontAwesome
+                  name="circle-thin"
+                  style={{
+                    ...statusColors(this.props.status),
+                    ...styles.checkbox,
+                    fontSize: 28,
+                  }}
+                  onPress={() => this.toggleTodayActivity()}
+                />
+              )}
             <View style={styles.highlight}>
               <Text
                 style={{ ...statusColors(this.props.status), ...styles.title }}

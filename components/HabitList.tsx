@@ -85,10 +85,10 @@ export default class HabitList extends React.Component {
                 status={
                   this.props.positive
                     ? (item.histValues[item.histValues.length - 1] -
-                        threshold) /
-                      (item.parameters.max - threshold) //status is fraction of way between threshold and max value (= steady state)
+                      threshold) /
+                    (item.parameters.max - threshold) //status is fraction of way between threshold and max value (= steady state)
                     : 1 -
-                      Math.exp((-1 * this.getStreak(index)) / item.parameters.k)
+                    Math.exp((-1 * this.getStreak(index)) / item.parameters.k)
                 }
                 openEditor={() => this.setState({ editing: index })}
                 {...item}
