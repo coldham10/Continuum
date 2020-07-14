@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, SectionList, TouchableHighlight, Button, Platform } from "react-native";
+import {
+  StyleSheet,
+  SectionList,
+  TouchableHighlight,
+  Button,
+  Platform,
+} from "react-native";
 import { View, Text, FlatList } from "../components/Themed";
 import Modal from "react-native-modal";
 import * as Haptics from "expo-haptics";
@@ -85,7 +91,9 @@ export default function DayModal(props) {
               }
             />
           </View>
-        {Platform.OS === "ios" ? <Button title="Close" onPress={()=>props.close()}/>: null}
+          {Platform.OS === "ios" ? (
+            <Button title="Close" onPress={() => props.close()} />
+          ) : null}
         </View>
       </View>
       <EditConfirmModal

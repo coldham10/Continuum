@@ -168,70 +168,75 @@ export default class EditModal extends React.Component {
                   <View style={styles.inputPair}>
                     <Text style={styles.label}>Habit Loss Time</Text>
                     <View style={styles.input}>
-		      {Platform.OS !== "ios" ? (
-                      <Picker
-                        style={styles.picker}
-                        selectedValue={this.raToLossDays(
-                          mergedData.parameters.r,
-                          mergedData.parameters.a
-                        )}
-                        onValueChange={(val) =>
-                          this.setState({
-                            parameters: this.daysToParams(
-                              this.rToFormDays(mergedData.parameters.r),
-                              val
-                            ),
-                          })
-                        }
-                      >
-                        <Picker.Item label="1 Day" value={1} />
-                        <Picker.Item label="2 Days" value={2} />
-                        <Picker.Item label="3 Days (Default)" value={3} />
-                        <Picker.Item label="4 Days" value={4} />
-                        <Picker.Item label="5 Days" value={5} />
-                        <Picker.Item label="6 Days" value={6} />
-                        <Picker.Item label="7 Days" value={7} />
-                        <Picker.Item label="8 Days" value={8} />
-                        <Picker.Item label="9 Days" value={9} />
-                        <Picker.Item label="10 Days" value={10} />
-                      </Picker>
-			) : (<TouchableOpacity onPress={() =>
-                          ActionSheetIOS.showActionSheetWithOptions(
-                            {
-                              options: [
-                                "Cancel",
-                                "1 Day",
-                                "2 Days",
-                                "3 Days (Default)",
-                                "4 Days",
-                                "5 Days",
-                                "6 Days",
-                                "7 Days",
-                                "8 Days",
-                                "9 Days",
-                                "10 Days",
-                              ],
-                              cancelButtonIndex: 0,
-                            },
-                            (btnIdx) => {
-                              if (btnIdx !== 0) {
-                          this.setState({
-                            parameters: this.daysToParams(
-                              this.rToFormDays(mergedData.parameters.r),
-				btnIdx
-                            ),
-                          })
-			}
-			}
-			)}
-			>
-                        <Text style={styles.IOSpicker}>
-			{this.raToLossDays(
-                          mergedData.parameters.r,
-                          mergedData.parameters.a
-                        )} Days
-			</Text>
-			</TouchableOpacity>)}
+                      {Platform.OS !== "ios" ? (
+                        <Picker
+                          style={styles.picker}
+                          selectedValue={this.raToLossDays(
+                            mergedData.parameters.r,
+                            mergedData.parameters.a
+                          )}
+                          onValueChange={(val) =>
+                            this.setState({
+                              parameters: this.daysToParams(
+                                this.rToFormDays(mergedData.parameters.r),
+                                val
+                              ),
+                            })
+                          }
+                        >
+                          <Picker.Item label="1 Day" value={1} />
+                          <Picker.Item label="2 Days" value={2} />
+                          <Picker.Item label="3 Days (Default)" value={3} />
+                          <Picker.Item label="4 Days" value={4} />
+                          <Picker.Item label="5 Days" value={5} />
+                          <Picker.Item label="6 Days" value={6} />
+                          <Picker.Item label="7 Days" value={7} />
+                          <Picker.Item label="8 Days" value={8} />
+                          <Picker.Item label="9 Days" value={9} />
+                          <Picker.Item label="10 Days" value={10} />
+                        </Picker>
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() =>
+                            ActionSheetIOS.showActionSheetWithOptions(
+                              {
+                                options: [
+                                  "Cancel",
+                                  "1 Day",
+                                  "2 Days",
+                                  "3 Days (Default)",
+                                  "4 Days",
+                                  "5 Days",
+                                  "6 Days",
+                                  "7 Days",
+                                  "8 Days",
+                                  "9 Days",
+                                  "10 Days",
+                                ],
+                                cancelButtonIndex: 0,
+                              },
+                              (btnIdx) => {
+                                if (btnIdx !== 0) {
+                                  this.setState({
+                                    parameters: this.daysToParams(
+                                      this.rToFormDays(mergedData.parameters.r),
+                                      btnIdx
+                                    ),
+                                  });
+                                }
+                              }
+                            )
+                          }
+                        >
+                          <Text style={styles.IOSpicker}>
+                            {this.raToLossDays(
+                              mergedData.parameters.r,
+                              mergedData.parameters.a
+                            )}{" "}
+                            Days
+                          </Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   </View>
                 ) : null}
