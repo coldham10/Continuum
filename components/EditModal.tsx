@@ -72,7 +72,7 @@ export default class EditModal extends React.Component {
                 <View style={styles.inputPair}>
                   <Text style={styles.label}>Habit Formation Time</Text>
                   <View style={styles.input}>
-                    {Platform.OS === "ios" ? (
+                    {Platform.OS !== "ios" ? (
                       <Picker
                         style={styles.picker}
                         selectedValue={
