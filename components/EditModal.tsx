@@ -1,8 +1,14 @@
 import React from "react";
-import { StyleSheet, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  Button,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import * as Haptics from "expo-haptics";
 
-import { Picker } from "@react-native-community/picker";
+import { Picker, ActionSheetIOS } from "@react-native-community/picker";
 
 import { Text, View, ScrollView } from "../components/Themed";
 import Modal from "react-native-modal";
@@ -66,43 +72,95 @@ export default class EditModal extends React.Component {
                 <View style={styles.inputPair}>
                   <Text style={styles.label}>Habit Formation Time</Text>
                   <View style={styles.input}>
-                    <Picker
-                      style={styles.picker}
-                      selectedValue={
-                        this.props.positive
-                          ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
-                          : mergedData.parameters.k
-                      }
-                      onValueChange={(val) => {
-                        this.setState({
-                          parameters: this.props.positive
-                            ? this.daysToParams(
-                                val,
-                                this.raToLossDays(
-                                  mergedData.parameters.r,
-                                  mergedData.parameters.a
+                    {Platform.OS === "ios" ? (
+                      <Picker
+                        style={styles.picker}
+                        selectedValue={
+                          this.props.positive
+                            ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
+                            : mergedData.parameters.k
+                        }
+                        onValueChange={(val) => {
+                          this.setState({
+                            parameters: this.props.positive
+                              ? this.daysToParams(
+                                  val,
+                                  this.raToLossDays(
+                                    mergedData.parameters.r,
+                                    mergedData.parameters.a
+                                  )
                                 )
-                              )
-                            : { k: val },
-                        });
-                      }}
-                    >
-                      <Picker.Item label="1 Day" value={1} />
-                      <Picker.Item label="2 Days" value={2} />
-                      <Picker.Item label="3 Days" value={3} />
-                      <Picker.Item label="4 Days" value={4} />
-                      <Picker.Item label="5 Days" value={5} />
-                      <Picker.Item label="6 Days" value={6} />
-                      <Picker.Item label="7 Days (Default)" value={7} />
-                      <Picker.Item label="8 Days" value={8} />
-                      <Picker.Item label="9 Days" value={9} />
-                      <Picker.Item label="10 Days" value={10} />
-                      <Picker.Item label="11 Days" value={11} />
-                      <Picker.Item label="12 Days" value={12} />
-                      <Picker.Item label="13 Days" value={13} />
-                      <Picker.Item label="14 Days" value={14} />
-                      <Picker.Item label="15 Days" value={15} />
-                    </Picker>
+                              : { k: val },
+                          });
+                        }}
+                      >
+                        <Picker.Item label="1 Day" value={1} />
+                        <Picker.Item label="2 Days" value={2} />
+                        <Picker.Item label="3 Days" value={3} />
+                        <Picker.Item label="4 Days" value={4} />
+                        <Picker.Item label="5 Days" value={5} />
+                        <Picker.Item label="6 Days" value={6} />
+                        <Picker.Item label="7 Days (Default)" value={7} />
+                        <Picker.Item label="8 Days" value={8} />
+                        <Picker.Item label="9 Days" value={9} />
+                        <Picker.Item label="10 Days" value={10} />
+                        <Picker.Item label="11 Days" value={11} />
+                        <Picker.Item label="12 Days" value={12} />
+                        <Picker.Item label="13 Days" value={13} />
+                        <Picker.Item label="14 Days" value={14} />
+                        <Picker.Item label="15 Days" value={15} />
+                      </Picker>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() =>
+                          ActionSheetIOS.showActionSheetWithOptions(
+                            {
+                              options: [
+                                "Cancel",
+                                "1 Day",
+                                "2 Days",
+                                "3 Days",
+                                "4 Days",
+                                "5 Days",
+                                "6 Days",
+                                "7 Days (Default)",
+                                "8 Days",
+                                "9 Days",
+                                "10 Days",
+                                "11 Days",
+                                "12 Days",
+                                "13 Days",
+                                "14 Days",
+                                "15 Days",
+                              ],
+                              cancelButtonIndex: 0,
+                            },
+                            (btnIdx) => {
+                              if (btnIdx !== 0) {
+                                this.setState({
+                                  parameters: this.props.positive
+                                    ? this.daysToParams(
+                                        btnIdx,
+                                        this.raToLossDays(
+                                          mergedData.parameters.r,
+                                          mergedData.parameters.a
+                                        )
+                                      )
+                                    : { k: btnIdx },
+                                });
+                              }
+                            }
+                          )
+                        }
+                      >
+                        <Text style={styles.IOSpicker}>
+                          {this.props.positive
+                            ? this.rToFormDays(mergedData.parameters.r) //Convert from r parameter to number of habit formation days
+                            : mergedData.parameters.k}{" "}
+                          Days
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
                 {this.props.positive ? (
@@ -271,6 +329,12 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     fontSize: 15,
     height: 24,
+  },
+  IOSpicker: {
+    minWidth: "100%",
+    fontSize: 15,
+    height: 24,
+    marginLeft: 5,
   },
   footer: {
     flex: 1,

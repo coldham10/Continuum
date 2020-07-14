@@ -9,7 +9,6 @@
     "githubUrl": "https://github.com/coldham10/Continuum",
     "primaryColor": "#009BE4",
     "orientation": "portrait",
-    "icon": "./assets/images/continuum.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
