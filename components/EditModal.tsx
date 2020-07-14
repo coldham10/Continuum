@@ -5,10 +5,11 @@ import {
   Button,
   Platform,
   TouchableOpacity,
+  ActionSheetIOS,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 
-import { Picker, ActionSheetIOS } from "@react-native-community/picker";
+import { Picker } from "@react-native-community/picker";
 
 import { Text, View, ScrollView } from "../components/Themed";
 import Modal from "react-native-modal";
@@ -167,6 +168,7 @@ export default class EditModal extends React.Component {
                   <View style={styles.inputPair}>
                     <Text style={styles.label}>Habit Loss Time</Text>
                     <View style={styles.input}>
+		      {Platform.OS !== "ios" ? (
                       <Picker
                         style={styles.picker}
                         selectedValue={this.raToLossDays(
@@ -193,6 +195,43 @@ export default class EditModal extends React.Component {
                         <Picker.Item label="9 Days" value={9} />
                         <Picker.Item label="10 Days" value={10} />
                       </Picker>
+			) : (<TouchableOpacity onPress={() =>
+                          ActionSheetIOS.showActionSheetWithOptions(
+                            {
+                              options: [
+                                "Cancel",
+                                "1 Day",
+                                "2 Days",
+                                "3 Days (Default)",
+                                "4 Days",
+                                "5 Days",
+                                "6 Days",
+                                "7 Days",
+                                "8 Days",
+                                "9 Days",
+                                "10 Days",
+                              ],
+                              cancelButtonIndex: 0,
+                            },
+                            (btnIdx) => {
+                              if (btnIdx !== 0) {
+                          this.setState({
+                            parameters: this.daysToParams(
+                              this.rToFormDays(mergedData.parameters.r),
+				btnIdx
+                            ),
+                          })
+			}
+			}
+			)}
+			>
+                        <Text style={styles.IOSpicker}>
+			{this.raToLossDays(
+                          mergedData.parameters.r,
+                          mergedData.parameters.a
+                        )} Days
+			</Text>
+			</TouchableOpacity>)}
                     </View>
                   </View>
                 ) : null}
@@ -288,6 +327,8 @@ export default class EditModal extends React.Component {
 
 const styles = StyleSheet.create({
   modalView: {
+    marginTop: 25,
+    marginBottom: 25,
     borderRadius: 5,
     borderWidth: 1,
   },
