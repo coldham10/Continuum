@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 5,
     alignItems: "center",
+    marginTop: 25,
+    marginBottom: 25,
   },
   oval: {
     width: 15,

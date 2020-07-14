@@ -73,6 +73,8 @@ export default function OverviewHelpModal(props) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 25,
+    marginBottom: 25, 
     flex: 1,
     borderRadius: 5,
     alignItems: "center",

@@ -52,7 +52,6 @@ export default class EditModal extends React.Component {
           <ScrollView
             style={styles.modalView}
             contentContainerstyle={{
-              justifyContent: "center",
               alignItems: "center",
             }}
           >
@@ -332,8 +331,8 @@ export default class EditModal extends React.Component {
 
 const styles = StyleSheet.create({
   modalView: {
-    marginTop: 25,
-    marginBottom: 25,
+    marginTop: 50,
+    marginBottom: 50,
     borderRadius: 5,
     borderWidth: 1,
   },
