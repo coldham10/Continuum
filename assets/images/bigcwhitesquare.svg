@@ -12,8 +12,11 @@
    viewBox="0 0 210 210"
    height="210mm"
    width="210mm"
-   sodipodi:docname="bigc.svg"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+   sodipodi:docname="bigcwhitesquare.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   inkscape:export-filename="/home/oldham/Projects/Continuum/assets/images/bigc.png"
+   inkscape:export-xdpi="123.86"
+   inkscape:export-ydpi="123.86">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -28,13 +31,13 @@
      id="namedview75"
      showgrid="false"
      inkscape:pagecheckerboard="true"
-     inkscape:zoom="1.0558135"
-     inkscape:cx="561.17866"
-     inkscape:cy="396.85039"
+     inkscape:zoom="0.52790675"
+     inkscape:cx="563.41683"
+     inkscape:cy="172.79855"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer2" />
   <defs
      id="defs2" />
   <metadata
@@ -49,6 +52,19 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="white"
+     style="display:inline">
+    <rect
+       style="fill:#f5f5f3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect107"
+       width="211.21959"
+       height="212.19785"
+       x="-0.088599302"
+       y="0.33264062" />
+  </g>
   <g
      transform="translate(0,-87)"
      id="layer1">

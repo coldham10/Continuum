@@ -23,7 +23,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.tripconey.continuum"
+      "bundleIdentifier": "com.tripconey.continuum",
+      "icon": "./assets/images/bigcwhitesquare.png"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -35,7 +36,12 @@
         "WRITE_EXTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
         "VIBRATE"
-      ]
+      ],
+      "icon": "./assets/images/bigcwhitesquare.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/bigc.png",
+        "backgroundColor": "#FFFFFF"
+      }
     }
   }
 }
