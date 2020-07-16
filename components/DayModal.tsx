@@ -90,15 +90,15 @@ export default function DayModal(props) {
           {Platform.OS === "ios" ? (
             <Button title="Close" onPress={() => props.close()} />
           ) : null}
-        </View>
-        <View style={styles.footer}>
-          <Button
-            title="Close"
-            onPress={() => {
-              props.close();
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }}
-          />
+          <View style={styles.footer}>
+            <Button
+              title="Close"
+              onPress={() => {
+                props.close();
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              }}
+            />
+          </View>
         </View>
       </View>
       <EditConfirmModal
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   oval: {
     width: 15,
     height: 4,
-    backgroundColor: "#aaa8",
+    backgroundColor: "#aaa0",
     margin: 4,
     borderRadius: 3,
   },

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, AppState } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
@@ -8,7 +8,15 @@ import { Text, View } from "../components/Themed";
 export default class Habit extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
     this.refresh();
+    AppState.addEventListener("change", this.refresh);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener("change", this.refresh);
   }
 
   render() {
@@ -36,16 +44,16 @@ export default class Habit extends React.Component {
                 onPress={() => this.toggleTodayActivity()}
               />
             ) : (
-                <FontAwesome
-                  name="circle-thin"
-                  style={{
-                    ...statusColors(this.props.status),
-                    ...styles.checkbox,
-                    fontSize: 28,
-                  }}
-                  onPress={() => this.toggleTodayActivity()}
-                />
-              )}
+              <FontAwesome
+                name="circle-thin"
+                style={{
+                  ...statusColors(this.props.status),
+                  ...styles.checkbox,
+                  fontSize: 28,
+                }}
+                onPress={() => this.toggleTodayActivity()}
+              />
+            )}
             <View style={styles.highlight}>
               <Text
                 style={{ ...statusColors(this.props.status), ...styles.title }}
@@ -113,13 +121,10 @@ export default class Habit extends React.Component {
   }
 
   refresh() {
-    let timemachine = 0; //XXX
-
     //Checks activity is up to date, extend activity and historical function as necessary
-    let daysOld =
-      Math.floor(
-        (new Date() - this.props.timeStamp) / (1000 * 60 * 60 * 24) //Full days since morning of creation
-      ) + timemachine;
+    let daysOld = Math.floor(
+      (new Date() - this.props.timeStamp) / (1000 * 60 * 60 * 24) //Full days since morning of creation
+    );
     let newActivity = [...this.props.activity];
     let newHist = [...this.props.histValues];
     if (daysOld + 1 > this.props.activity.length) {
