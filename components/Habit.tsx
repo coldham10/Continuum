@@ -8,15 +8,17 @@ import { Text, View } from "../components/Themed";
 export default class Habit extends React.Component {
   constructor(props) {
     super(props);
+    this.refresh();
   }
 
   componentDidMount() {
-    this.refresh();
-    AppState.addEventListener("change", this.refresh);
+    this._unsubscribe = this.props.navigation.addListener("focus", () =>
+      this.refresh()
+    );
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener("change", this.refresh);
+    this._unsubscribe();
   }
 
   render() {
