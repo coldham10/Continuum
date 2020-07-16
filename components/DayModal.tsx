@@ -23,14 +23,10 @@ export default function DayModal(props) {
       onBackButtonPress={() => props.close()}
       backdropOpacity={0.5}
       hasBackdrop={true}
-      swipeDirection="down"
-      swipeThreshold={200}
-      onSwipeComplete={() => props.close()}
       onBackdropPress={() => props.close()}
       useNativeDriver={true}
       animationInTiming={500}
       animationOutTiming={500}
-      scrollOffset={200}
       style={{ flex: 1 }}
       propagateSwipe={confirm !== null}
     >
@@ -94,6 +90,15 @@ export default function DayModal(props) {
           {Platform.OS === "ios" ? (
             <Button title="Close" onPress={() => props.close()} />
           ) : null}
+        </View>
+        <View style={styles.footer}>
+          <Button
+            title="Close"
+            onPress={() => {
+              props.close();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }}
+          />
         </View>
       </View>
       <EditConfirmModal
@@ -261,5 +266,12 @@ const styles = StyleSheet.create({
   },
   emptyTxt: {
     fontSize: 17,
+  },
+  footer: {
+    flex: 1,
+    minWidth: "100%",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
 });
