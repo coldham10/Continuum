@@ -194,14 +194,12 @@ export default class HabitList extends React.Component {
     ); //90% of status is fraction of way between threshold and max value (= steady state)
   }
 
-  async storeData(data) {
+  storeData(data) {
     //Local storage on device
-    try {
-      const jsonValue = JSON.stringify(data);
-      await AsyncStorage.setItem(this.props.dataKey, jsonValue);
-    } catch (e) {
-      console.log(e);
-    }
+    const jsonValue = JSON.stringify(data);
+    AsyncStorage.setItem(this.props.dataKey, jsonValue).catch((e) =>
+      console.log(e)
+    );
   }
 }
 

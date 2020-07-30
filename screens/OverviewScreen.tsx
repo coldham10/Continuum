@@ -179,7 +179,7 @@ export default class OverviewScreen extends React.Component {
         dataByDate[dateString(date)].push({
           id: pHabit.id,
           status:
-            0.1 * Math.min(1, val / threshold) +
+            0.1 * Math.min(1, val) +
             0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
           completed: pHabit.activity[index],
           data: pHabit,

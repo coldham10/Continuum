@@ -15,6 +15,7 @@ export default class Habit extends React.Component {
     this._unsubscribe = this.props.navigation.addListener("focus", () =>
       this.refresh()
     );
+    this.refresh();
   }
 
   componentWillUnmount() {
