@@ -109,6 +109,10 @@ export default class OverviewScreen extends React.Component {
                 style={{ fontSize: 15 }}
               />
               <Text style={styles.statusTxt}>
+                {this.state.positiveData.every((item) => item.selected) &&
+                this.state.positiveData.length > 0
+                  ? "All "
+                  : ""}
                 {this.state.positiveData.reduce(
                   (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
                   0
@@ -122,6 +126,10 @@ export default class OverviewScreen extends React.Component {
                 style={{ fontSize: 15 }}
               />
               <Text style={styles.statusTxt}>
+                {this.state.negativeData.every((item) => item.selected) &&
+                this.state.negativeData.length > 0
+                  ? "All "
+                  : ""}
                 {this.state.negativeData.reduce(
                   (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
                   0
