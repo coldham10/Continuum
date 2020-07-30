@@ -84,9 +84,11 @@ export default class HabitList extends React.Component {
                 getStreak={this.getStreak.bind(this, index)}
                 status={
                   this.props.positive
-                    ? (item.histValues[item.histValues.length - 1] -
-                        threshold) /
-                      (item.parameters.max - threshold) //status is fraction of way between threshold and max value (= steady state)
+                    ? this.positiveStatus(
+                        item.histValues[item.histValues.length - 1],
+                        item.parameters.max,
+                        threshold
+                      )
                     : 1 -
                       Math.exp((-1 * this.getStreak(index)) / item.parameters.k)
                 }
@@ -182,6 +184,14 @@ export default class HabitList extends React.Component {
       }
     }
     return streak;
+  }
+
+  positiveStatus(lastVal, max, thresh) {
+    //Calculate status/momentum for a positive habits
+    return (
+      0.1 * Math.max(1, lastVal / thresh) + //up to 10% until hit threshold
+      0.9 * Math.min(0, (lastVal - thresh) / (max - thresh))
+    ); //90% of status is fraction of way between threshold and max value (= steady state)
   }
 
   async storeData(data) {

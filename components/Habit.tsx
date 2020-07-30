@@ -159,26 +159,27 @@ export default class Habit extends React.Component {
 }
 
 function statusColors(status) {
-  //status is based on the habit function, with a maximum value of 1, minimum value less than 0
-  //status = (currentValue - threshold)/(maxValue - threshold)
-  //A negative status therefore indicates slipping below the threshold
-  if (status > 0) {
+  //status is based on the habit function, with a maximum value of 1, minimum value of 0
+  //status = 0.1* max(1, (currentValue /threhold)) + 0.9 * min(0, (currentValue - threshold)/(maxValue - threshold))
+  //A status below 0.1 status therefore indicates slipping below the threshold
+  if (status > 0.1) {
+    let tstat = (status - 0.1) / 0.9; //status above the threshold
     return {
       backgroundColor:
         "rgb(" +
-        Math.max(0, Math.round(255 * (1 - 2 * status))) +
+        Math.max(0, Math.round(255 * (1 - 2 * tstat))) +
         "," +
-        Math.round(55 + (1 - status) * 200) +
+        Math.round(55 + (1 - tstat) * 200) +
         "," +
-        Math.round(200 + 55 * (1 - status)) +
+        Math.round(200 + 55 * (1 - tstat)) +
         ")",
       color:
         "rgb(" +
-        Math.round(200 * (1 - status) + (status < 0.6 ? -70 : 160)) +
+        Math.round(200 * (1 - tstat) + (tstat < 0.6 ? -70 : 160)) +
         "," +
-        Math.round(200 * (1 - status) + (status < 0.6 ? -70 : 160)) +
+        Math.round(200 * (1 - tstat) + (tstat < 0.6 ? -70 : 160)) +
         "," +
-        Math.round(200 * (1 - status) + (status < 0.6 ? -70 : 160)) +
+        Math.round(200 * (1 - tstat) + (tstat < 0.6 ? -70 : 160)) +
         ")",
     };
   } else {
