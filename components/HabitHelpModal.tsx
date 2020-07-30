@@ -6,10 +6,6 @@ import Modal from "react-native-modal";
 import * as Haptics from "expo-haptics";
 
 export default function HabitHelpModal(props) {
-  /*swipeDirection="down"
-  swipeThreshold={100}
-  onSwipeComplete={() => props.close()}
-  scrollOffset={300}*/
   return (
     <Modal
       isVisible={props.visible}
@@ -41,8 +37,8 @@ export default function HabitHelpModal(props) {
                 <Text style={styles.pgphTxt}>
                   Tap the habit name to toggle how you did with that habit
                   today. Positive habits get a check mark next to them when you
-                  have successfully performed the habit today. Negative habits
-                  get a cross when you successfully abstain for a day.
+                  have successfully performed the habit. Negative habits get a
+                  cross when you successfully abstain for a day.
                 </Text>
               </View>
               <View style={styles.pgph}>
@@ -51,13 +47,6 @@ export default function HabitHelpModal(props) {
                   Formation Time" is how difficult it is to "get into" a habit.
                   "Habit Loss time" is how quickly you can "get out of the
                   habit" if you stop for a while.
-                </Text>
-              </View>
-              <View style={styles.pgph}>
-                <Text style={styles.pgphTxt}>
-                  If a habit has a long formation time or a very short loss
-                  time, it may take a few days of dilligence before you see any
-                  "momentum."
                 </Text>
               </View>
               <View style={styles.pgph}>

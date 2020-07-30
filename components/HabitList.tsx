@@ -189,8 +189,8 @@ export default class HabitList extends React.Component {
   positiveStatus(lastVal, max, thresh) {
     //Calculate status/momentum for a positive habits
     return (
-      0.1 * Math.max(1, lastVal / thresh) + //up to 10% until hit threshold
-      0.9 * Math.min(0, (lastVal - thresh) / (max - thresh))
+      0.1 * Math.min(1, lastVal / thresh) + //up to 10% until hit threshold
+      0.9 * Math.max(0, (lastVal - thresh) / (max - thresh))
     ); //90% of status is fraction of way between threshold and max value (= steady state)
   }
 
