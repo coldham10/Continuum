@@ -38,7 +38,7 @@
       ],
       "icon": "./assets/images/bigcwhiterounded.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/bigc.png",
+        "foregroundImage": "./assets/images/littlec.png",
         "backgroundColor": "#FFFFFF"
       }
     }

@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     padding: 3,
+    marginBottom: 1,
   },
   highlight: {
     flex: 8,
@@ -233,6 +234,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     fontSize: 14,
+    padding: 1,
   },
   icon: {
     fontSize: 30,
