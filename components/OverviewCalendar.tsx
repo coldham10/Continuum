@@ -3,6 +3,10 @@ import { CalendarList } from "react-native-calendars";
 import * as Haptics from "expo-haptics";
 
 export default function OverviewCalendar(props) {
+  /*futureScrollRange={1}
+  pastScrollRange={Math.ceil(
+    (Date.now() - props.minDate) / (1000 * 60 * 60 * 24 * 30.4)
+  )}*/
   return (
     <CalendarList
       minDate={props.minDate}
@@ -10,10 +14,6 @@ export default function OverviewCalendar(props) {
       markedDates={getMarkings(props.dataByDate)}
       horizontal={true}
       pagingEnabled={true}
-      futureScrollRange={1}
-      pastScrollRange={Math.ceil(
-        (Date.now() - props.minDate) / (1000 * 60 * 60 * 24 * 30.4)
-      )}
       firstDay={1}
       showScrollIndicator={true}
       markingType={"period"}
@@ -21,6 +21,11 @@ export default function OverviewCalendar(props) {
         props.selectDay(day);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
+      futureScrollRange={3}
+      pastScrollRange={Math.max(
+        12,
+        Math.ceil((Date.now() - props.minDate) / (1000 * 60 * 60 * 24 * 30.4))
+      )}
     />
   );
 }
