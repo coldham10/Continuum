@@ -11,15 +11,10 @@ export default class Habit extends React.Component {
     this.refresh();
   }
 
-  componentDidMount() {
-    this._unsubscribe = this.props.navigation.addListener("focus", () =>
-      this.refresh()
-    );
-    this.refresh();
-  }
-
-  componentWillUnmount() {
-    this._unsubscribe();
+  componentDidUpdate(prevProps) {
+    if (this.props.dirty) {
+      this.refresh();
+    }
   }
 
   render() {
@@ -138,7 +133,11 @@ export default class Habit extends React.Component {
     if (daysOld + 1 > this.props.histValues.length) {
       newHist = this.rewriteHistory(newActivity, this.props.parameters);
     }
-    this.props.updateItem({ activity: newActivity, histValues: newHist });
+    this.props.updateItem({
+      activity: newActivity,
+      histValues: newHist,
+      dirty: false,
+    });
   }
 
   rewriteHistory(activity, params) {

@@ -24,8 +24,19 @@ export default class HabitList extends React.Component {
       this._asyncRequest = AsyncStorage.getItem(this.props.dataKey).then(
         (jsonValue) => {
           this._asyncRequest = null;
+          let data = JSON.parse(jsonValue);
+          if (Array.isArray(data)) {
+            data.forEach((element) => {
+              let daysOld = Math.floor(
+                (new Date() - element.timeStamp) / (1000 * 60 * 60 * 24) //Full days since morning of creation
+              );
+              if (daysOld + 1 > element.activity.length) {
+                element.dirty = true;
+              }
+            });
+          }
           this.setState({
-            data: jsonValue !== null ? JSON.parse(jsonValue) : [],
+            data: jsonValue !== null ? data : [],
           });
         }
       );
@@ -147,7 +158,8 @@ export default class HabitList extends React.Component {
           : { k: 7 }, //For exponential momentum function (-ve)
         histValues: [], //habit-function vales at end of day every day since timeStamp
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
-        selected: true, //Is selected in overview pane?
+        selected: true, //Is selected in overview pane?,
+        dirty: false, //Does it need to be refreshed?
       });
       this.storeData(dataCopy);
       return { data: dataCopy, editing: prevState.data.length };
