@@ -8,7 +8,9 @@ import { Text, View } from "../components/Themed";
 export default class Habit extends React.Component {
   constructor(props) {
     super(props);
-    this.refresh();
+    if (props.dirty) {
+      this.refresh();
+    }
   }
 
   componentDidUpdate(prevProps) {

@@ -27,7 +27,7 @@ export default function OverviewModal(props) {
         <View style={styles.oval} />
         <View style={styles.body}>
           <View style={styles.header}>
-            <Text style={styles.title}>Select Habits</Text>
+            <Text style={styles.title}>Displayed Habits</Text>
           </View>
           <View style={styles.listContainer}>
             <SectionList
@@ -79,12 +79,12 @@ function ListItem(props) {
           onPress={() => props.toggleSelected(props.item.id)}
         />
       ) : (
-          <FontAwesome
-            name="circle-thin"
-            style={styles.checkBox}
-            onPress={() => props.toggleSelected(props.item.id)}
-          />
-        )}
+        <FontAwesome
+          name="circle-thin"
+          style={styles.checkBox}
+          onPress={() => props.toggleSelected(props.item.id)}
+        />
+      )}
     </View>
   );
 }
@@ -118,12 +118,12 @@ function SectionHeader(props) {
           onPress={() => toggleAll(props.data)}
         />
       ) : (
-          <FontAwesome
-            name="circle-thin"
-            style={styles.checkBox}
-            onPress={() => toggleAll(props.data)}
-          />
-        )}
+        <FontAwesome
+          name="circle-thin"
+          style={styles.checkBox}
+          onPress={() => toggleAll(props.data)}
+        />
+      )}
     </View>
   );
 }

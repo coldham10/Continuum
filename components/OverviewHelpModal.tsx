@@ -51,7 +51,7 @@ export default function OverviewHelpModal(props) {
                   You can also press the edit button for each habit to
                   retroactively change whether you achieved/abstained that day
                   or not. This is helpful if you're logging your habits after
-                  not using the app for a couple of days.
+                  not using the app for a day or two.
                 </Text>
               </View>
             </ScrollView>

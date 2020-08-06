@@ -117,7 +117,7 @@ export default class OverviewScreen extends React.Component {
                   (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
                   0
                 ) || "No"}{" "}
-                positive habits selected
+                positive habits displayed
               </Text>
             </View>
             <View style={styles.statusLine}>
@@ -134,7 +134,7 @@ export default class OverviewScreen extends React.Component {
                   (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
                   0
                 ) || "No"}{" "}
-                negative habits selected
+                negative habits displayed
               </Text>
             </View>
           </View>
