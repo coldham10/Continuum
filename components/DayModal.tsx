@@ -70,8 +70,12 @@ export default function DayModal(props) {
                     </Text>
                   </View>
                   <View style={{ flex: 2, alignItems: "center" }}>
-                    <Text style={{ fontSize: 17 }}>Achieved/</Text>
-                    <Text style={{ fontSize: 17 }}>Momentum</Text>
+                    <Text adjustsFontSizeToFit style={{ fontSize: 17 }}>
+                      Achieved/
+                    </Text>
+                    <Text adjustsFontSizeToFit style={{ fontSize: 17 }}>
+                      Momentum
+                    </Text>
                   </View>
                   <View style={{ flex: 1, alignItems: "flex-end" }}>
                     <Text style={{ fontSize: 17, paddingRight: 5 }}>Edit</Text>
