@@ -156,7 +156,7 @@ export default class HabitList extends React.Component {
         parameters: this.props.positive
           ? { r: 0.7966, a: 0.4027, max: 1.9797 } //For geometric habit function (+ve)
           : { k: 7 }, //For exponential momentum function (-ve)
-        histValues: [], //habit-function vales at end of day every day since timeStamp
+        histValues: [0], //habit-function values at end of day every day since timeStamp
         activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
         selected: true, //Is selected in overview pane?,
         dirty: false, //Does it need to be refreshed?
