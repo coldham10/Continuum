@@ -2,7 +2,7 @@
   "expo": {
     "name": "Continuum",
     "slug": "Continuum",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A simple, configurable daily habit tracking app. Add positive or negative habits, log each day and analyze your progress.",
     "owner": "coldham10",
     "privacy": "public",
@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.tripconey.continuum",
-      "versionCode": 1,
+      "versionCode": 2,
       "permissions": [
         "WRITE_EXTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
