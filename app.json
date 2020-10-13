@@ -19,7 +19,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.tripconey.continuum",
@@ -41,6 +43,7 @@
         "foregroundImage": "./assets/images/littlec.png",
         "backgroundColor": "#FFFFFF"
       }
-    }
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
