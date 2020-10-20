@@ -1,46 +1,4 @@
 {
-  "expo": {
-    "name": "Continuum",
-    "slug": "Continuum",
-    "version": "1.0.1",
-    "description": "A simple, configurable daily habit tracking app. Add positive or negative habits, log each day and analyze your progress.",
-    "owner": "coldham10",
-    "privacy": "public",
-    "githubUrl": "https://github.com/coldham10/Continuum",
-    "primaryColor": "#009BE4",
-    "orientation": "portrait",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/continuum.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.tripconey.continuum",
-      "icon": "./assets/images/bigcwhitesquare.png"
-    },
-    "web": {
-      "favicon": "./assets/images/favicon.png"
-    },
-    "android": {
-      "package": "com.tripconey.continuum",
-      "versionCode": 2,
-      "permissions": [
-        "WRITE_EXTERNAL_STORAGE",
-        "READ_EXTERNAL_STORAGE",
-        "VIBRATE"
-      ],
-      "icon": "./assets/images/bigcwhiterounded.png",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/littlec.png",
-        "backgroundColor": "#FFFFFF"
-      }
-    }
-  }
+  "name": "Continuum",
+  "displayName": "Continuum"
 }
