@@ -39,7 +39,7 @@ export default function Navigator() {
         name="Overview"
         options={{
           tabBarIcon: ({color, size}) => (
-            <Icon name="calendar-o" color={color} size={size} />
+            <Ionicons name="ios-calendar" color={color} size={size} />
           ),
         }}
         component={OverviewScreen}

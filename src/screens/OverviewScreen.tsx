@@ -105,7 +105,7 @@ export default class OverviewScreen extends React.Component {
           <View style={styles.status}>
             <View style={styles.statusLine}>
               <Ionicons
-                name="checkmark-circle-outline"
+                name="md-checkmark-circle-outline"
                 style={{fontSize: 15}}
               />
               <Text style={styles.statusTxt}>
@@ -121,7 +121,7 @@ export default class OverviewScreen extends React.Component {
               </Text>
             </View>
             <View style={styles.statusLine}>
-              <Ionicons name="close-circle-outline" style={{fontSize: 15}} />
+              <Ionicons name="md-close-circle-outline" style={{fontSize: 15}} />
               <Text style={styles.statusTxt}>
                 {this.state.negativeData.every((item) => item.selected) &&
                 this.state.negativeData.length > 0
@@ -137,7 +137,7 @@ export default class OverviewScreen extends React.Component {
           </View>
           <View style={styles.edit}>
             <Ionicons
-              name="ios-pencil"
+              name="md-create"
               style={styles.icon}
               onPress={() => {
                 this.setState({modalVisible: true});

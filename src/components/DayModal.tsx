@@ -121,7 +121,7 @@ function ListItem(props) {
     <View style={styles.li}>
       <Text style={styles.liTxt}>{props.title}</Text>
       {props.completed ? (
-        <Ionicon
+        <Ionicons
           name={
             props.positive
               ? 'md-checkmark-circle-outline'
@@ -156,7 +156,7 @@ function ListItem(props) {
               alignItems: 'center',
             }}>
             {props.completed ? (
-              <Ionicon
+              <Ionicons
                 name={
                   props.positive
                     ? 'md-checkmark-circle-outline'
@@ -168,7 +168,7 @@ function ListItem(props) {
             ) : (
               <Icon name="circle-thin" style={{flex: 1}} size={12} />
             )}
-            <Ionicon
+            <Ionicons
               name="ios-arrow-round-forward"
               style={{flex: 1}}
               size={17}
@@ -176,7 +176,7 @@ function ListItem(props) {
             {props.completed ? (
               <Icon name="circle-thin" style={{flex: 1}} size={12} />
             ) : (
-              <Icon
+              <Ionicons
                 name={
                   props.positive
                     ? 'md-checkmark-circle-outline'

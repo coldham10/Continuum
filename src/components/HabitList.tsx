@@ -65,7 +65,6 @@ export default class HabitList extends React.Component {
             <Icon
               style={{margin: 5}}
               name="question-circle-o"
-              type="font-awesome"
               size={24}
               color="black"
             />
