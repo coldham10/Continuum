@@ -8,7 +8,6 @@ import * as Haptics from '../utils/Haptics';
 
 import OverviewCalendar from '../components/OverviewCalendar';
 import OverviewModal from '../components/OverviewModal';
-import OverviewHelpModal from '../components/OverviewHelpModal';
 import DayModal from '../components/DayModal';
 
 export default class OverviewScreen extends React.Component {
@@ -20,7 +19,6 @@ export default class OverviewScreen extends React.Component {
       modalVisible: false,
       daySelected: null,
       dataByDate: {},
-      help: false,
     };
   }
 
@@ -66,7 +64,7 @@ export default class OverviewScreen extends React.Component {
             underlayColor="#aaa8"
             style={{borderRadius: 10}}
             onPress={() => {
-              this.setState({help: true});
+              this.props.navigation.navigate('OverviewHelp');
               Haptics.impactAsync();
             }}>
             <Icon
@@ -160,10 +158,6 @@ export default class OverviewScreen extends React.Component {
           toggleActivity={(id, dateString) =>
             this.toggleActivity(id, dateString)
           }
-        />
-        <OverviewHelpModal
-          visible={this.state.help}
-          close={() => this.setState({help: false})}
         />
       </View>
     );
