@@ -7,6 +7,8 @@ import OverviewScreen from '../screens/OverviewScreen';
 import PositiveScreen from '../screens/PositiveScreen';
 import NegativeScreen from '../screens/NegativeScreen';
 
+import HabitHelpModal from '../components/HabitHelpModal';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -117,6 +119,19 @@ export default function RootNavigator() {
         name="BTNav"
         component={BTNavigator}
         options={{headerShown: false}}
+      />
+      <RootNav.Screen
+        name="HabitHelp"
+        component={HabitHelpModal}
+        mode="modal"
+        options={{
+          headerTitle: 'Habit Help',
+          headerStyle: {
+            backgroundColor: '#eee',
+            borderBottomWidth: 1,
+            borderBottomColor: '#888',
+          },
+        }}
       />
     </RootNav.Navigator>
   );

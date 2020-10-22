@@ -17,14 +17,13 @@ import * as Haptics from '../utils/Haptics';
 import Habit from './Habit';
 import EditModal from './EditModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
-import HabitHelpModal from './HabitHelpModal';
 
 const threshold = 1;
 
 export default class HabitList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: [], editing: null, toDelete: null, help: false};
+    this.state = {data: [], editing: null, toDelete: null};
   }
 
   componentDidMount() {
@@ -63,7 +62,7 @@ export default class HabitList extends React.Component {
             underlayColor="#aaa8"
             style={{borderRadius: 10}}
             onPress={() => {
-              this.setState({help: true});
+              this.props.navigation.navigate('HabitHelp');
               Haptics.impactAsync();
             }}>
             <Icon
@@ -138,10 +137,6 @@ export default class HabitList extends React.Component {
           }
           confirm={() => this.deleteItem(this.state.toDelete)}
           close={() => this.setState({toDelete: null})}
-        />
-        <HabitHelpModal
-          visible={this.state.help}
-          close={() => this.setState({help: false})}
         />
       </>
     );
