@@ -12,9 +12,69 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Colors from '../utils/Colors';
 
+//Start with one stack navigator per screen
+
+const PositiveStack = createStackNavigator<PositiveParamList>();
+
+function PositiveNavigator() {
+  return (
+    <PositiveStack.Navigator>
+      <PositiveStack.Screen
+        name="PositiveScreen"
+        component={PositiveScreen}
+        options={{
+          headerTitle: 'Positive Habits',
+          headerStyle: {
+            backgroundColor: '#009BE4',
+          },
+        }}
+      />
+    </PositiveStack.Navigator>
+  );
+}
+
+const NegativeStack = createStackNavigator<NegativeParamList>();
+
+function NegativeNavigator() {
+  return (
+    <NegativeStack.Navigator>
+      <NegativeStack.Screen
+        name="NegativeScreen"
+        component={NegativeScreen}
+        options={{
+          headerTitle: 'Negative Habits',
+          headerStyle: {
+            backgroundColor: '#009BE4',
+          },
+        }}
+      />
+    </NegativeStack.Navigator>
+  );
+}
+
+const OverviewStack = createStackNavigator<OverviewParamList>();
+
+function OverviewNavigator() {
+  return (
+    <OverviewStack.Navigator>
+      <OverviewStack.Screen
+        name="OverviewScreen"
+        component={OverviewScreen}
+        options={{
+          headerTitle: 'Overview',
+          headerStyle: {
+            backgroundColor: '#009BE4',
+          },
+        }}
+      />
+    </OverviewStack.Navigator>
+  );
+}
+
+//All stack navigators in one Tab navigator
 const BTNav = createBottomTabNavigator();
 
-export default function Navigator() {
+function BTNavigator() {
   return (
     <BTNav.Navigator>
       <BTNav.Screen
@@ -24,7 +84,7 @@ export default function Navigator() {
             <Ionicons name="ios-add" color={color} size={size} />
           ),
         }}
-        component={PositiveScreen}
+        component={PositiveNavigator}
       />
       <BTNav.Screen
         name="Negative"
@@ -33,7 +93,7 @@ export default function Navigator() {
             <Ionicons name="ios-remove" color={color} size={size} />
           ),
         }}
-        component={NegativeScreen}
+        component={NegativeNavigator}
       />
       <BTNav.Screen
         name="Overview"
@@ -42,8 +102,22 @@ export default function Navigator() {
             <Ionicons name="ios-calendar" color={color} size={size} />
           ),
         }}
-        component={OverviewScreen}
+        component={OverviewNavigator}
       />
     </BTNav.Navigator>
+  );
+}
+
+const RootNav = createStackNavigator();
+
+export default function RootNavigator() {
+  return (
+    <RootNav.Navigator>
+      <RootNav.Screen
+        name="BTNav"
+        component={BTNavigator}
+        options={{headerShown: false}}
+      />
+    </RootNav.Navigator>
   );
 }

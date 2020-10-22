@@ -8,6 +8,10 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import * as Haptics from '../utils/Haptics';
 
 import Habit from './Habit';

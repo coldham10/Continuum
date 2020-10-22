@@ -5,13 +5,13 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {StatusBar} from 'react-native';
 import Colors from './src/utils/Colors';
 
-import Navigator from './src/navigation/BottomTabNavigator';
+import RootNavigator from './src/navigation/BottomTabNavigator';
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Navigator />
+        <RootNavigator />
         <StatusBar backgroundColor={Colors.tint} />
       </NavigationContainer>
     </SafeAreaProvider>
