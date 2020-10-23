@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Button, View, Text} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 
 import Modal from 'react-native-modal';
 
@@ -28,21 +28,21 @@ export default function DeleteConfirmModal(props) {
           </View>
           <View style={styles.body}>
             <View style={styles.buttonContainer}>
-              <Button
-                style={styles.btn}
-                title="Cancel"
+              <TouchableOpacity
+                style={styles.cancel}
                 onPress={() => {
                   props.close();
-                }}
-              />
-              <Button
-                style={styles.btn}
-                title="Confirm"
+                }}>
+                <Text style={styles.cancelTxt}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.del}
                 onPress={() => {
                   props.confirm();
                   props.close();
-                }}
-              />
+                }}>
+                <Text style={styles.delTxt}>Delete</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     flex: 3,
     borderRadius: 5,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   oval: {
     width: 15,
@@ -90,8 +91,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-  btn: {
-    flex: 1,
-    padding: 10,
+  cancel: {
+    padding: 12,
+    borderRadius: 5,
+    backgroundColor: '#ccc',
+  },
+  cancelTxt: {
+    color: 'black',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  del: {
+    padding: 12,
+    borderRadius: 5,
+    backgroundColor: '#c00d',
+  },
+  delTxt: {
+    color: 'black',
+    fontSize: 17,
+    fontWeight: 'bold',
   },
 });
