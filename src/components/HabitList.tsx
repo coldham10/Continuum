@@ -15,7 +15,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Haptics from '../utils/Haptics';
 
 import Habit from './Habit';
-import EditModal from './EditModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
 const threshold = 1;
@@ -23,7 +22,7 @@ const threshold = 1;
 export default class HabitList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: [], editing: null, toDelete: null};
+    this.state = {data: [], toDelete: null, newAddition: false, dirty: false};
   }
 
   componentDidMount() {
@@ -77,6 +76,19 @@ export default class HabitList extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    //Handle the addition of a new
+    if (this.state.newAddition) {
+      this.setState({newAddition: false});
+      this.storeData(this.state.data).then(() => {
+        this.props.navigation.navigate('EditModal', {
+          positive: this.props.positive,
+          editing: this.state.data.length - 1,
+        });
+      });
+    }
+  }
+
   componentWillUnmount() {
     if (this._asyncRequest) {
       this._asyncRequest.cancel();
@@ -110,7 +122,12 @@ export default class HabitList extends React.Component {
                     : 1 -
                       Math.exp((-1 * this.getStreak(index)) / item.parameters.k)
                 }
-                openEditor={() => this.setState({editing: index})}
+                openEditor={() =>
+                  this.props.navigation.navigate('EditModal', {
+                    positive: this.props.positive,
+                    editing: index,
+                  })
+                }
                 navigation={this.props.navigation}
                 {...item}
               />
@@ -120,13 +137,6 @@ export default class HabitList extends React.Component {
           ListEmptyComponent={<Text>No habits added yet</Text>}
           ListFooterComponent={addBtn}
           ListFooterComponentStyle={styles.add}
-        />
-        <EditModal
-          positive={this.props.positive}
-          editing={this.state.editing}
-          data={this.state.data}
-          close={() => this.setState({editing: null})}
-          updateItem={(idx, data) => this.updateItem(idx, data)}
         />
         <DeleteConfirmModal
           visible={this.state.toDelete !== null}
@@ -143,30 +153,32 @@ export default class HabitList extends React.Component {
   }
 
   addItem(title) {
-    this.setState((prevState) => {
-      let dataCopy = [...prevState.data];
-      let rightNow = new Date();
-      let today = new Date(
-        rightNow.getFullYear(),
-        rightNow.getMonth(),
-        rightNow.getDate(),
-      ); //Set to 00:00 of day created so that new days clock over at midnight
-      dataCopy.push({
-        positive: this.props.positive,
-        id: Date.now() % 1000000, //Random enough, only to keep FlatList happy
-        title: title,
-        timeStamp: today.getTime(),
-        parameters: this.props.positive
-          ? {r: 0.7966, a: 0.4027, max: 1.9797} //For geometric habit function (+ve)
-          : {k: 7}, //For exponential momentum function (-ve)
-        histValues: [0], //habit-function values at end of day every day since timeStamp
-        activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
-        selected: true, //Is selected in overview pane?,
-        dirty: false, //Does it need to be refreshed?
-      });
-      this.storeData(dataCopy);
-      return {data: dataCopy, editing: prevState.data.length};
-    });
+    this.setState(
+      //setState updater function - create new data
+      (prevState) => {
+        let dataCopy = [...prevState.data];
+        let rightNow = new Date();
+        let today = new Date(
+          rightNow.getFullYear(),
+          rightNow.getMonth(),
+          rightNow.getDate(),
+        ); //Set to 00:00 of day created so that new days clock over at midnight
+        dataCopy.push({
+          positive: this.props.positive,
+          id: Date.now() % 1000000, //Random enough, only to keep FlatList happy
+          title: title,
+          timeStamp: today.getTime(),
+          parameters: this.props.positive
+            ? {r: 0.7966, a: 0.4027, max: 1.9797} //For geometric habit function (+ve)
+            : {k: 7}, //For exponential momentum function (-ve)
+          histValues: [0], //habit-function values at end of day every day since timeStamp
+          activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
+          selected: true, //Is selected in overview pane?,
+          dirty: false, //Does it need to be refreshed?
+        });
+        return {data: dataCopy, newAddition: true};
+      },
+    );
     Haptics.impactAsync();
   }
 
@@ -211,10 +223,15 @@ export default class HabitList extends React.Component {
 
   storeData(data) {
     //Local storage on device
-    const jsonValue = JSON.stringify(data);
-    AsyncStorage.setItem(this.props.dataKey, jsonValue).catch((e) =>
-      console.log(e),
-    );
+    return new Promise((resolve, reject) => {
+      const jsonValue = JSON.stringify(data);
+      AsyncStorage.setItem(this.props.dataKey, jsonValue)
+        .then(() => resolve())
+        .catch((e) => {
+          console.log(e);
+          reject(e);
+        });
+    });
   }
 }
 
