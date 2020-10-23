@@ -84,6 +84,7 @@ export default class HabitList extends React.Component {
         this.props.navigation.navigate('EditModal', {
           positive: this.props.positive,
           editing: this.state.data.length - 1,
+          new: true,
         });
       });
     }
@@ -126,6 +127,7 @@ export default class HabitList extends React.Component {
                   this.props.navigation.navigate('EditModal', {
                     positive: this.props.positive,
                     editing: index,
+                    new: false,
                   })
                 }
                 navigation={this.props.navigation}

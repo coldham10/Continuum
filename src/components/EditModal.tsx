@@ -2,7 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   TextInput,
-  Button,
   Keyboard,
   Platform,
   TouchableOpacity,
@@ -14,6 +13,8 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from '../utils/Haptics';
 import {Picker} from '@react-native-community/picker';
+
+import Colors from '../utils/Colors';
 
 export default class EditModal extends React.Component {
   constructor(props) {
@@ -44,10 +45,34 @@ export default class EditModal extends React.Component {
         data: JSON.parse(jsonValue)[this.props.route.params.editing],
       });
     });
+
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            Haptics.impactAsync();
+            this.save();
+          }}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            Haptics.impactAsync();
+            this.cancel();
+          }}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      ),
+    });
   }
 
   componentWillUnmount() {
-    Keyboard.removeAllListeners('keyboardDidShow', 'keyboardDidHide');
+    Keyboard.removeListener('keyboardDidShow');
+    Keyboard.removeListener('keyboardDidHide');
   }
 
   render() {
@@ -61,7 +86,9 @@ export default class EditModal extends React.Component {
           alignItems: 'center',
         }}>
         <View style={styles.modalContent}>
-          <Text style={styles.title}>{'Habit: ' + this.state.data.title}</Text>
+          <Text style={styles.title}>
+            {'Editing: ' + this.state.data.title}
+          </Text>
           <View style={styles.body}>
             <View style={styles.inputPair}>
               <Text style={styles.label}>Name</Text>
@@ -264,26 +291,6 @@ export default class EditModal extends React.Component {
               </View>
             ) : null}
           </View>
-          <View style={styles.footer}>
-            <View style={styles.footerButton}>
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  Haptics.impactAsync();
-                  this.cancel();
-                }}
-              />
-            </View>
-            <View style={styles.footerButton}>
-              <Button
-                title="Save"
-                onPress={() => {
-                  this.save();
-                  Haptics.impactAsync();
-                }}
-              />
-            </View>
-          </View>
         </View>
       </ScrollView>
     );
@@ -351,22 +358,32 @@ export default class EditModal extends React.Component {
   }
 
   cancel() {
-    //TODO do nothing if not new, just navigate back. If new delete new. TODO add back button custom functionality
     let lastPage = this.props.route.params.positive
       ? 'PositiveScreen'
       : 'NegativeScreen';
-    this.props.navigation.navigate(lastPage);
+    if (this.props.route.params.new) {
+      let dataList = this.props.route.params.positive
+        ? 'positiveList'
+        : 'negativeList';
+      AsyncStorage.getItem(dataList).then((jsonList) => {
+        let data = JSON.parse(jsonList);
+        data.pop();
+        AsyncStorage.setItem(dataList, JSON.stringify(data)).then(() =>
+          this.props.navigation.navigate(lastPage),
+        );
+      });
+    } else {
+      this.props.navigation.navigate(lastPage);
+    }
   }
 }
 
 const styles = StyleSheet.create({
   modalView: {
-    marginTop: 50,
-    borderRadius: 5,
-    borderWidth: 1,
+    marginTop: 20,
   },
   modalContent: {
-    margin: 20,
+    margin: 22,
     alignItems: 'center',
   },
   title: {
@@ -376,6 +393,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   body: {
+    marginTop: 10,
     flex: 6,
     padding: 5,
     justifyContent: 'space-evenly',
@@ -395,6 +413,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 15,
     padding: 2,
+    marginBottom: 10,
     borderRadius: 2,
     borderWidth: 1,
     minWidth: '100%',
@@ -410,14 +429,11 @@ const styles = StyleSheet.create({
     height: 24,
     marginLeft: 5,
   },
-  footer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+  button: {
+    padding: 15,
   },
-  footerButton: {
-    flex: 1,
-    padding: 10,
+  buttonText: {
+    fontSize: 16.5,
+    color: Colors.tint,
   },
 });

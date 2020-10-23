@@ -152,7 +152,7 @@ export default function RootNavigator() {
         name="EditModal"
         component={EditModal}
         options={{
-          headerTitle: 'Editing: FIXME',
+          headerTitle: '',
           headerStyle: {
             backgroundColor: '#eee',
             borderBottomWidth: 1,
