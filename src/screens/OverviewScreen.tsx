@@ -17,7 +17,6 @@ export default class OverviewScreen extends React.Component {
       positiveData: [],
       negativeData: [],
       modalVisible: false,
-      daySelected: null,
       dataByDate: {},
     };
   }
@@ -25,28 +24,19 @@ export default class OverviewScreen extends React.Component {
   componentDidMount() {
     //Load saved data for this list from local storage
     const loadData = () => {
-      this._asyncRequest = AsyncStorage.getItem('positiveList').then(
-        (jsonValue) => {
-          this._asyncRequest = null;
-          this.setState(
-            {
-              positiveData: jsonValue !== null ? JSON.parse(jsonValue) : [],
-            },
-            () => this.byDate(),
-          );
-        },
-      );
-      this._asyncRequest = AsyncStorage.getItem('negativeList').then(
-        (jsonValue) => {
-          this._asyncRequest = null;
-          this.setState(
-            {
-              negativeData: jsonValue !== null ? JSON.parse(jsonValue) : [],
-            },
-            () => this.byDate(),
-          );
-        },
-      );
+      Promise.all([
+        AsyncStorage.getItem(positiveListName).then((jsonValue) => {
+          return jsonValue !== null ? JSON.parse(jsonValue) : [];
+        }),
+        AsyncStorage.getItem(negativeListName).then((jsonValue) => {
+          return jsonValue !== null ? JSON.parse(jsonValue) : [];
+        }),
+      ]).then((bothData) => {
+        this.setState(
+          {positiveData: bothData[0], negativeData: bothData[1]},
+          () => this.byDate(),
+        );
+      });
     };
     loadData();
     //When this tab is focused, reload the data
@@ -80,9 +70,6 @@ export default class OverviewScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this._asyncRequest) {
-      this._asyncRequest.cancel();
-    }
     this._unsubscribe();
   }
 
@@ -93,10 +80,10 @@ export default class OverviewScreen extends React.Component {
           <OverviewCalendar
             minDate={this.getMinDate()}
             maxDate={this.getMaxDate()}
-            positiveData={this.state.positiveData}
-            negativeData={this.state.negativeData}
             dataByDate={this.state.dataByDate}
-            selectDay={(day) => this.setState({daySelected: day})}
+            selectDay={(day) =>
+              this.props.navigation.navigate('DayModal', {day: day})
+            }
           />
         </View>
         <View style={styles.footer}>
@@ -151,14 +138,6 @@ export default class OverviewScreen extends React.Component {
           negativeData={this.state.negativeData}
           toggleSelected={(id) => this.toggleSelected(id)}
         />
-        <DayModal
-          day={this.state.daySelected}
-          close={() => this.setState({daySelected: null})}
-          data={this.state.dataByDate}
-          toggleActivity={(id, dateString) =>
-            this.toggleActivity(id, dateString)
-          }
-        />
       </View>
     );
   }
@@ -169,6 +148,8 @@ export default class OverviewScreen extends React.Component {
       new Date(date.getTime() - date.getTimezoneOffset() * 60000)
         .toISOString()
         .split('T')[0];
+    console.log(this.state.positiveData);
+
     this.state.positiveData.forEach((pHabit) => {
       let date = new Date(pHabit.timeStamp);
       pHabit.histValues.forEach((val, index) => {
@@ -198,7 +179,6 @@ export default class OverviewScreen extends React.Component {
           completed: nHabit.activity[index],
           data: nHabit,
         });
-        date.setDate(date.getDate() + 1);
       });
     });
     this.setState({dataByDate: dataByDate});
@@ -217,7 +197,7 @@ export default class OverviewScreen extends React.Component {
             }
             return newHabit;
           });
-          this.storeData('positiveList', dataCopy);
+          this.storeData(positiveListName, dataCopy);
           return {positiveData: dataCopy};
         },
         () => this.byDate(),
@@ -233,96 +213,11 @@ export default class OverviewScreen extends React.Component {
             }
             return newHabit;
           });
-          this.storeData('negativeList', dataCopy);
+          this.storeData(negativeListName, dataCopy);
           return {negativeData: dataCopy};
         },
         () => this.byDate(),
       );
-    }
-  }
-
-  toggleActivity(id, dateString) {
-    let today = new Date();
-    today.setHours(0);
-    today.setMinutes(0);
-    let toChange = new Date(
-      dateString.split('-')[0],
-      dateString.split('-')[1] - 1,
-      dateString.split('-')[2],
-    );
-    let dataCopy;
-    if (this.state.positiveData.filter((habit) => habit.id === id).length > 0) {
-      //Positive
-      this.setState(
-        (prevState) => {
-          dataCopy = prevState.positiveData.map((habit) => {
-            let newHabit = {...habit};
-            if (habit.id === id) {
-              let daysAgo = Math.round(
-                (today - toChange) / (1000 * 60 * 60 * 24),
-              );
-              newHabit.activity[habit.activity.length - daysAgo - 1] =
-                habit.activity[habit.activity.length - daysAgo - 1] ^ 1; //Toggle the correct day's activity
-              //rewrite the historical values
-
-              let newHistory = [];
-              for (let i = 0; i < habit.activity.length; i++) {
-                let lastVal = i > 0 ? newHistory[i - 1] : 0;
-                newHistory.push(
-                  lastVal * habit.parameters.r +
-                    habit.activity[i] * habit.parameters.a,
-                ); //Habit function. Each day is last day * r (<1), then optionally adding a if activity performed
-              }
-              newHabit.histValues = newHistory;
-            }
-            return newHabit;
-          });
-          this.storeData('positiveList', dataCopy);
-          return {positiveData: dataCopy};
-        },
-        () => this.byDate(),
-      );
-    } else {
-      //Negative
-      this.setState(
-        (prevState) => {
-          dataCopy = prevState.negativeData.map((habit) => {
-            let newHabit = {...habit};
-            if (habit.id === id) {
-              let daysAgo = Math.round(
-                (today - toChange) / (1000 * 60 * 60 * 24),
-              );
-              newHabit.activity[habit.activity.length - daysAgo - 1] =
-                habit.activity[habit.activity.length - daysAgo - 1] ^ 1; //Toggle the correct day's activity
-              //rewrite the histValues
-              let newHistory = [];
-              let streak = 0;
-              for (let i = 0; i < habit.activity.length; i++) {
-                streak = habit.activity[i] ? streak + 1 : 0;
-                newHistory.push(
-                  1 - Math.exp((-1 * streak) / habit.parameters.k),
-                ); //Asymtotically approaches 1
-              }
-              newHabit.histValues = newHistory;
-            }
-
-            return newHabit;
-          });
-          this.storeData('negativeList', dataCopy);
-          return {negativeData: dataCopy};
-        },
-        () => this.byDate(),
-      );
-    }
-  }
-
-  async storeData(key, data) {
-    //Local storage on device
-    try {
-      const jsonValue = JSON.stringify(data);
-      await AsyncStorage.setItem(key, jsonValue);
-    } catch (e) {
-      console.log(e);
     }
   }
 

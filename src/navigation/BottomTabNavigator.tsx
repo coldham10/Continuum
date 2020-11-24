@@ -161,6 +161,18 @@ export default function RootNavigator() {
           },
         }}
       />
+      <RootNav.Screen
+        name="DayModal"
+        component={DayModal}
+        options={{
+          headerTitle: '',
+          headerStyle: {
+            backgroundColor: '#eee',
+            borderBottomWidth: 1,
+            borderBottomColor: '#888',
+          },
+        }}
+      />
     </RootNav.Navigator>
   );
 }

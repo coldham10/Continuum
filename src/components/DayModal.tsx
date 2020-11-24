@@ -10,110 +10,173 @@ import {
   FlatList,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from '../utils/Haptics';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import {positiveListName, negativeListName} from '../utils/Constants';
 import EditConfirmModal from '../components/EditConfirmModal';
 
-export default function DayModal(props) {
-  const [confirm, setConfirm] = useState(null);
-
-  return (
-    <Modal
-      isVisible={props.day !== null}
-      onBackButtonPress={() => props.close()}
-      backdropOpacity={0.5}
-      hasBackdrop={true}
-      onBackdropPress={() => props.close()}
-      useNativeDriver={true}
-      animationInTiming={500}
-      animationOutTiming={500}
-      style={{flex: 1}}
-      propagateSwipe={confirm !== null}>
-      <View style={styles.container}>
-        <View style={styles.oval} />
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>
-              {props.day === null
-                ? ''
-                : 'Overview of ' +
-                  new Date(
-                    props.day.year,
-                    props.day.month - 1,
-                    props.day.day,
-                  ).toDateString()}
-            </Text>
-          </View>
-          <View style={styles.body}>
-            <FlatList
-              data={props.day ? props.data[props.day.dateString] : []}
-              renderItem={({item}) => (
-                <ListItem
-                  title={item.data.title}
-                  completed={item.completed}
-                  status={item.status}
-                  day={props.day}
-                  positive={item.data.positive}
-                  edit={setConfirm.bind(null, {
-                    id: item.id,
-                    dateString: props.day.dateString,
-                  })}
-                />
-              )}
-              keyExtractor={(item) => 'id' + item.id}
-              ListHeaderComponent={
-                <View style={styles.listHdr}>
-                  <View style={{flex: 3, alignItems: 'center'}}>
-                    <Text style={{fontSize: 20, paddingRight: '10%'}}>
-                      Title
+export default class DayModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {confirm: null, day: this.props.route.params.day, data: null};
+    this.loadDayData(this.props.route.params.day);
+  }
+  render() {
+    return (
+      <>
+        <View style={styles.container}>
+          <View style={styles.oval} />
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Text style={styles.title}>
+                {this.state.day === null
+                  ? ''
+                  : 'Overview of ' +
+                    new Date(
+                      this.state.day.year,
+                      this.state.day.month - 1,
+                      this.state.day.day,
+                    ).toDateString()}
+              </Text>
+            </View>
+            <View style={styles.body}>
+              <FlatList
+                data={this.state.data}
+                renderItem={({item}) => (
+                  <ListItem
+                    title={item.title}
+                    completed={item.completed}
+                    status={item.status}
+                    day={this.state.day}
+                    positive={item.positive}
+                    edit={() =>
+                      this.setState({
+                        confirm: {
+                          id: item.id,
+                          dateString: this.state.day.dateString,
+                          positive: item.positive,
+                        },
+                      })
+                    }
+                  />
+                )}
+                keyExtractor={(item) => 'id' + item.id}
+                ListHeaderComponent={
+                  <View style={styles.listHdr}>
+                    <View style={{flex: 3, alignItems: 'center'}}>
+                      <Text style={{fontSize: 20, paddingRight: '10%'}}>
+                        Title
+                      </Text>
+                    </View>
+                    <View style={{flex: 2, alignItems: 'center'}}>
+                      <Text adjustsFontSizeToFit style={{fontSize: 17}}>
+                        Achieved/
+                      </Text>
+                      <Text adjustsFontSizeToFit style={{fontSize: 17}}>
+                        Momentum
+                      </Text>
+                    </View>
+                    <View style={{flex: 1, alignItems: 'flex-end'}}>
+                      <Text style={{fontSize: 17, paddingRight: 5}}>Edit</Text>
+                    </View>
+                  </View>
+                }
+                ListEmptyComponent={
+                  <View style={styles.empty}>
+                    <Text style={styles.emptyTxt}>
+                      No habits available for this day
                     </Text>
                   </View>
-                  <View style={{flex: 2, alignItems: 'center'}}>
-                    <Text adjustsFontSizeToFit style={{fontSize: 17}}>
-                      Achieved/
-                    </Text>
-                    <Text adjustsFontSizeToFit style={{fontSize: 17}}>
-                      Momentum
-                    </Text>
-                  </View>
-                  <View style={{flex: 1, alignItems: 'flex-end'}}>
-                    <Text style={{fontSize: 17, paddingRight: 5}}>Edit</Text>
-                  </View>
-                </View>
-              }
-              ListEmptyComponent={
-                <View style={styles.empty}>
-                  <Text style={styles.emptyTxt}>
-                    No habits available for this day
-                  </Text>
-                </View>
-              }
-            />
-          </View>
-          {Platform.OS === 'ios' ? (
-            <Button title="Close" onPress={() => props.close()} />
-          ) : null}
-          <View style={styles.footer}>
-            <Button
-              title="Close"
-              onPress={() => {
-                props.close();
-                Haptics.impactAsync();
-              }}
-            />
+                }
+              />
+            </View>
+            {Platform.OS === 'ios' ? (
+              <Button
+                title="Close"
+                onPress={() => this.props.navigation.navigate('OverviewScreen')}
+              />
+            ) : null}
+            <View style={styles.footer}>
+              <Button
+                title="Close"
+                onPress={() => {
+                  Haptics.impactAsync();
+                  this.props.navigation.navigate('OverviewScreen');
+                }}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <EditConfirmModal
-        visible={confirm !== null}
-        close={() => setConfirm(null)}
-        confirm={() => props.toggleActivity(confirm.id, confirm.dateString)}
-      />
-    </Modal>
-  );
+        <EditConfirmModal
+          visible={this.state.confirm !== null}
+          close={() => this.setState({confirm: null})}
+          data={this.state.confirm}
+        />
+      </>
+    );
+  }
+
+  loadDayData(day) {
+    let viewingDate = new Date(day.year, day.month - 1, day.day);
+    Promise.all([
+      //Get and process positive data
+      AsyncStorage.getItem(positiveListName).then((jsonData) => {
+        return JSON.parse(jsonData)
+          .filter((pHabit) => {
+            //Select habits that had been created by viewingDate
+            let dateCreated = new Date(pHabit.timeStamp);
+            return dateCreated <= viewingDate;
+          })
+          .map((pHabit) => {
+            let dateCreated = new Date(pHabit.timeStamp);
+            let index = Math.round(
+              (viewingDate - dateCreated) / (1000 * 60 * 60 * 24),
+            );
+            let val = pHabit.histValues[index];
+            return {
+              id: pHabit.id,
+              title: pHabit.title,
+              positive: true,
+              status:
+                0.1 * Math.min(1, val) +
+                0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+              completed: pHabit.activity[index],
+            };
+          });
+      }),
+      //Get and process negative data
+      AsyncStorage.getItem(negativeListName).then((jsonData) => {
+        return JSON.parse(jsonData)
+          .filter((nHabit) => {
+            //Select habits that had been created by viewingDate
+            let dateCreated = new Date(nHabit.timeStamp);
+            return dateCreated <= viewingDate;
+          })
+          .map((nHabit) => {
+            let dateCreated = new Date(nHabit.timeStamp);
+            let index = Math.round(
+              (viewingDate - dateCreated) / (1000 * 60 * 60 * 24),
+            );
+            let val = nHabit.histValues[index];
+            return {
+              id: nHabit.id,
+              title: nHabit.title,
+              positive: false,
+              status: val,
+              completed: nHabit.activity[index],
+            };
+          });
+      }),
+    ]).then((dataList) => {
+      this.setState({data: dataList[0].concat(dataList[1])});
+    });
+
+    return null;
+  }
 }
 
 function ListItem(props) {

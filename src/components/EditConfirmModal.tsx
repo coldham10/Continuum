@@ -1,7 +1,9 @@
 import React from 'react';
 import {StyleSheet, Button, View, Text} from 'react-native';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from '../utils/Haptics';
+import {positiveListName, negativeListName} from '../utils/Constants';
 
 export default function EditConfirmModal(props) {
   return (
@@ -39,7 +41,7 @@ export default function EditConfirmModal(props) {
                 style={styles.btn}
                 title="Confirm"
                 onPress={() => {
-                  props.confirm();
+                  toggle(props.data);
                   Haptics.impactAsync();
                   props.close();
                 }}
@@ -53,6 +55,42 @@ export default function EditConfirmModal(props) {
   );
 }
 
+function toggle(data) {
+  if (data === null) {
+    return;
+  }
+  let listName = data.positive ? positiveListName : negativeListName;
+  let dateToChange = new Date(
+    data.dateString.split('-')[0],
+    data.dateString.split('-')[1] - 1,
+    data.dateString.split('-')[2],
+  );
+  AsyncStorage.getItem(listName)
+    .then((jsonData) => {
+      let listData = JSON.parse(jsonData);
+      let modifiedData = listData.map((habit) => {
+        if (habit.id === data.id) {
+          //Found habit to change, all others remain the same.
+          let indexToChange = Math.round(
+            (dateToChange - new Date(habit.timeStamp)) / (1000 * 60 * 60 * 24),
+          );
+          habit.activity = habit.activity.map((val, idx) => {
+            if (idx === indexToChange) {
+              val = 1 - val; //Flip the bit
+            }
+            return val; //Create new activity values with toggled day
+          });
+        }
+        return habit; //Create new habit list with one modified habit
+      });
+      //TODO RECALCULATE staus
+      return JSON.stringify(modifiedData);
+    })
+    .then((jsonData) => {
+      AsyncStorage.setItem(listName, jsonData);
+    });
+}
+
 const styles = StyleSheet.create({
   spacer: {
     flex: 3,
@@ -62,6 +100,7 @@ const styles = StyleSheet.create({
     flex: 3,
     borderRadius: 5,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   oval: {
     width: 15,
