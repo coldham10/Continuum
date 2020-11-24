@@ -154,6 +154,7 @@ export default class HabitList extends React.Component {
     );
   }
 
+  //TODO: remove after using redux.
   addItem(title) {
     this.setState(
       //setState updater function - create new data
