@@ -10,11 +10,12 @@ import NegativeScreen from '../screens/NegativeScreen';
 import HabitHelpModal from '../components/HabitHelpModal';
 import OverviewHelpModal from '../components/OverviewHelpModal';
 import EditModal from '../components/EditModal';
+import DayModal from '../components/DayModal';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Colors from '../utils/Colors';
+import {Colors} from '../utils/Constants';
 
 //Start with one stack navigator per screen
 

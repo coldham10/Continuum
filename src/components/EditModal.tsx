@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from '../utils/Haptics';
 import {Picker} from '@react-native-community/picker';
 
-import Colors from '../utils/Colors';
+import {Colors} from '../utils/Constants';
 import {positiveListName, negativeListName} from '../utils/Constants';
 
 export default class EditModal extends React.Component {

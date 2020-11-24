@@ -5,10 +5,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as Haptics from '../utils/Haptics';
+import {positiveListName, negativeListName} from '../utils/Constants';
 
 import OverviewCalendar from '../components/OverviewCalendar';
 import OverviewModal from '../components/OverviewModal';
-import DayModal from '../components/DayModal';
 
 export default class OverviewScreen extends React.Component {
   constructor(props) {
