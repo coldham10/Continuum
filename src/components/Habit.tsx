@@ -2,152 +2,87 @@ import * as React from 'react';
 import {StyleSheet, TouchableOpacity, AppState, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
 import * as Haptics from '../utils/Haptics';
 
-export default class Habit extends React.Component {
-  constructor(props) {
-    super(props);
-    if (props.dirty) {
-      this.refresh();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.dirty) {
-      this.refresh();
-    }
-  }
-
-  render() {
-    return (
-      <TouchableOpacity
-        style={{...statusColors(this.props.status), ...styles.habitHL}}
-        activeOpacity={0.9}
-        onPress={() => this.toggleTodayActivity()}>
-        <View style={{...statusColors(this.props.status), ...styles.habit}}>
-          <View style={{...statusColors(this.props.status), ...styles.topRow}}>
-            {this.props.activity[this.props.activity.length - 1] ? (
-              <Ionicons
-                name={
-                  this.props.positive
-                    ? 'md-checkmark-circle-outline'
-                    : 'md-close-circle-outline'
-                }
-                style={{
-                  ...statusColors(this.props.status),
-                  ...styles.checkbox,
-                }}
-                onPress={() => this.toggleTodayActivity()}
-              />
-            ) : (
-              <Icon
-                name="circle-thin"
-                style={{
-                  ...statusColors(this.props.status),
-                  ...styles.checkbox,
-                  fontSize: 28,
-                }}
-                onPress={() => this.toggleTodayActivity()}
-              />
-            )}
-            <View style={styles.highlight}>
-              <Text
-                style={{...statusColors(this.props.status), ...styles.title}}>
-                {this.props.title}
-              </Text>
-            </View>
+function Habit(props) {
+  return (
+    <TouchableOpacity
+      style={{...statusColors(props.status), ...styles.habitHL}}
+      activeOpacity={0.9}
+      onPress={() => props.toggleTodayActivity()}>
+      <View style={{...statusColors(props.status), ...styles.habit}}>
+        <View style={{...statusColors(props.status), ...styles.topRow}}>
+          {props.activity[props.activity.length - 1] ? (
             <Ionicons
-              name="md-create"
-              style={{...statusColors(this.props.status), ...styles.icon}}
-              onPress={() => {
-                this.props.openEditor();
-                Haptics.impactAsync();
-              }}
-            />
-            <Ionicons
-              name="ios-trash"
-              style={{...statusColors(this.props.status), ...styles.icon}}
-              onPress={() => {
-                this.props.deleteItem();
-                Haptics.warnAsync();
-              }}
-            />
-          </View>
-
-          <View
-            style={{
-              ...statusColors(this.props.status),
-              ...styles.bottomRow,
-            }}>
-            <Text
+              name={
+                props.positive
+                  ? 'md-checkmark-circle-outline'
+                  : 'md-close-circle-outline'
+              }
               style={{
-                ...statusColors(this.props.status),
-                ...styles.subText,
-              }}>
-              {'Momentum: ' +
-                Math.max(0, Math.round(100 * this.props.status)) +
-                '%'}
-            </Text>
-            <Text
+                ...statusColors(props.status),
+                ...styles.checkbox,
+              }}
+              onPress={() => props.toggleTodayActivity()}
+            />
+          ) : (
+            <Icon
+              name="circle-thin"
               style={{
-                ...statusColors(this.props.status),
-                ...styles.subText,
-              }}>
-              {'Streak: ' + this.props.getStreak() + ' days'}
+                ...statusColors(props.status),
+                ...styles.checkbox,
+                fontSize: 28,
+              }}
+              onPress={() => props.toggleTodayActivity()}
+            />
+          )}
+          <View style={styles.highlight}>
+            <Text style={{...statusColors(props.status), ...styles.title}}>
+              {props.title}
             </Text>
           </View>
+          <Ionicons
+            name="md-create"
+            style={{...statusColors(props.status), ...styles.icon}}
+            onPress={() => {
+              props.openEditor();
+              Haptics.impactAsync();
+            }}
+          />
+          <Ionicons
+            name="ios-trash"
+            style={{...statusColors(props.status), ...styles.icon}}
+            onPress={() => {
+              props.deleteItem();
+              Haptics.warnAsync();
+            }}
+          />
         </View>
-      </TouchableOpacity>
-    );
-  }
 
-  toggleTodayActivity() {
-    let newActivity = [...this.props.activity];
-    newActivity[newActivity.length - 1] =
-      this.props.activity[this.props.activity.length - 1] ^ 1; //bitwise xor toggles between 0 and 1
-    let newHist = this.rewriteHistory([...newActivity], this.props.parameters);
-    this.props.updateItem({activity: newActivity, histValues: newHist});
-    Haptics.impactAsync();
-  }
-
-  refresh() {
-    //Checks activity is up to date, extend activity and historical function as necessary
-    let daysOld = Math.floor(
-      (new Date() - this.props.timeStamp) / (1000 * 60 * 60 * 24), //Full days since morning of creation
-    );
-    let newActivity = [...this.props.activity];
-    let newHist = [...this.props.histValues];
-    if (daysOld + 1 > this.props.activity.length) {
-      while (newActivity.length < daysOld + 1) {
-        newActivity.push(0); //Assume hasnt been done
-      }
-    }
-    if (daysOld + 1 > this.props.histValues.length) {
-      newHist = this.rewriteHistory(newActivity, this.props.parameters);
-    }
-    this.props.updateItem({
-      activity: newActivity,
-      histValues: newHist,
-      dirty: false,
-    });
-  }
-
-  rewriteHistory(activity, params) {
-    let newHistory = [];
-    if (this.props.positive) {
-      for (let i = 0; i < activity.length; i++) {
-        let lastVal = i > 0 ? newHistory[i - 1] : 0;
-        newHistory.push(lastVal * params.r + activity[i] * params.a); //Habit function. Each day is last day * r (<1), then optionally adding a if activity performed
-      }
-    } else {
-      let streak = 0;
-      for (let i = 0; i < activity.length; i++) {
-        streak = activity[i] ? streak + 1 : 0;
-        newHistory.push(1 - Math.exp((-1 * streak) / params.k)); //Asymtotically approaches 1
-      }
-    }
-    return newHistory;
-  }
+        <View
+          style={{
+            ...statusColors(props.status),
+            ...styles.bottomRow,
+          }}>
+          <Text
+            style={{
+              ...statusColors(props.status),
+              ...styles.subText,
+            }}>
+            {'Momentum: ' + Math.max(0, Math.round(100 * props.status)) + '%'}
+          </Text>
+          <Text
+            style={{
+              ...statusColors(props.status),
+              ...styles.subText,
+            }}>
+            {'Streak: ' + props.getStreak() + ' days'}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 }
 
 function statusColors(status) {
@@ -238,3 +173,18 @@ const styles = StyleSheet.create({
     paddingRight: 3,
   },
 });
+
+const mapStateToProps = null;
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.positive ? 'positive/' : 'negative/';
+  return {
+    toggleTodayActivity: () =>
+      dispatch({
+        type: prefix + 'toggle',
+        payload: {id: ownProps.id, date: Date.now()},
+      }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Habit);

@@ -16,8 +16,8 @@ export default (habit, index, positive) => {
       streak = habit.activity[i] ? streak + 1 : 0;
       newHistory.push(1 - Math.exp((-1 * streak) / habit.parameters.k)); //Asymtotically approaches 1
     }
-    let newHabit = JSON.parse(JSON.stringify(habit));
-    newHabit.histValues = newHistory;
   }
+  let newHabit = JSON.parse(JSON.stringify(habit));
+  newHabit.histValues = newHistory;
   return newHabit;
 };
