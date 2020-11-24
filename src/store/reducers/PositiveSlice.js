@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import newHabit from './NewHabit';
 import toggleActivity from './ToggleActivity';
 import recomputeHistory from './ReHistory';
 

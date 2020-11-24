@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import toggleActivity from './ToggleActivity';
+import newHabit from './NewHabit';
 import recomputeHistory from './ReHistory';
 
 export const negativeSlice = createSlice({

@@ -10,9 +10,9 @@ export default (positive) => {
   let habit = {
     positive,
     id: Date.now(),
-    title: '',
+    title: 'New Habit',
     timeStamp: today.getTime(),
-    parameters: this.props.positive
+    parameters: positive
       ? {r: 0.7966, a: 0.4027, max: 1.9797} //For geometric habit function (+ve)
       : {k: 7}, //For exponential momentum function (-ve)
     histValues: [0], //habit-function values at end of day every day since timeStamp

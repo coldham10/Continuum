@@ -7,7 +7,8 @@ import {
   View,
   FlatList,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+
+import {connect} from 'react-redux';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,40 +20,13 @@ import DeleteConfirmModal from './DeleteConfirmModal';
 
 const threshold = 1;
 
-export default class HabitList extends React.Component {
+class HabitList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {data: [], toDelete: null, newAddition: false, dirty: false};
+    this.state = {toDelete: null};
   }
 
   componentDidMount() {
-    //Load saved data for this list from local storage every time focused upon
-    const loadData = () => {
-      this._asyncRequest = AsyncStorage.getItem(this.props.dataKey).then(
-        (jsonValue) => {
-          this._asyncRequest = null;
-          let data = JSON.parse(jsonValue);
-          if (Array.isArray(data)) {
-            data.forEach((element) => {
-              let daysOld = Math.floor(
-                (new Date() - element.timeStamp) / (1000 * 60 * 60 * 24), //Full days since morning of creation
-              );
-              if (daysOld + 1 > element.activity.length) {
-                element.dirty = true;
-              }
-            });
-          }
-          this.setState({
-            data: jsonValue !== null ? data : [],
-          });
-        },
-      );
-    };
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      Haptics.impactAsync();
-      loadData();
-    });
-    loadData();
     this.props.navigation.setOptions({
       headerRight: () => (
         <View style={{backgroundColor: '#0000'}}>
@@ -76,42 +50,20 @@ export default class HabitList extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-    //Handle the addition of a new
-    if (this.state.newAddition) {
-      this.setState({newAddition: false});
-      this.storeData(this.state.data).then(() => {
-        this.props.navigation.navigate('EditModal', {
-          positive: this.props.positive,
-          editing: this.state.data.length - 1,
-          new: true,
-        });
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    if (this._asyncRequest) {
-      this._asyncRequest.cancel();
-    }
-  }
-
   render() {
     var addBtn = (
-      <Button title="Add New Habit" onPress={() => this.addItem('New Habit')} />
+      <Button title="Add New Habit" onPress={() => this.props.addItem()} />
     );
     return (
       <>
         <FlatList
-          data={this.state.data}
+          data={this.props.data}
           style={styles.scroll}
           contentContainerStyle={styles.container}
           renderItem={({item, index}) => {
             return (
               <Habit
                 positive={this.props.positive}
-                deleteItem={this.setState.bind(this, {toDelete: index})}
-                updateItem={this.updateItem.bind(this, index)}
                 getStreak={this.getStreak.bind(this, index)}
                 status={
                   this.props.positive
@@ -144,7 +96,7 @@ export default class HabitList extends React.Component {
           visible={this.state.toDelete !== null}
           name={
             this.state.toDelete !== null
-              ? this.state.data[this.state.toDelete].title
+              ? this.props.data[this.state.toDelete].title
               : ''
           }
           confirm={() => this.deleteItem(this.state.toDelete)}
@@ -154,57 +106,8 @@ export default class HabitList extends React.Component {
     );
   }
 
-  //TODO: remove after using redux.
-  addItem(title) {
-    this.setState(
-      //setState updater function - create new data
-      (prevState) => {
-        let dataCopy = [...prevState.data];
-        let rightNow = new Date();
-        let today = new Date(
-          rightNow.getFullYear(),
-          rightNow.getMonth(),
-          rightNow.getDate(),
-        ); //Set to 00:00 of day created so that new days clock over at midnight
-        dataCopy.push({
-          positive: this.props.positive,
-          id: Date.now() % 1000000, //Random enough, only to keep FlatList happy
-          title: title,
-          timeStamp: today.getTime(),
-          parameters: this.props.positive
-            ? {r: 0.7966, a: 0.4027, max: 1.9797} //For geometric habit function (+ve)
-            : {k: 7}, //For exponential momentum function (-ve)
-          histValues: [0], //habit-function values at end of day every day since timeStamp
-          activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
-          selected: true, //Is selected in overview pane?,
-          dirty: false, //Does it need to be refreshed?
-        });
-        return {data: dataCopy, newAddition: true};
-      },
-    );
-    Haptics.impactAsync();
-  }
-
-  updateItem(idx, data) {
-    //update habit idx by overwiting key-value pairs in 'data'
-    this.setState((prevState) => {
-      let dataCopy = [...prevState.data];
-      dataCopy[idx] = Object.assign({}, prevState.data[idx], data);
-      this.storeData(dataCopy);
-      return {data: dataCopy};
-    });
-  }
-
-  deleteItem(idx) {
-    this.setState((prevState) => {
-      let dataCopy = prevState.data.filter((a, i) => i !== idx); //Remove element to delete
-      this.storeData(dataCopy);
-      return {data: dataCopy};
-    });
-  }
-
   getStreak(idx) {
-    let activity = [...this.state.data[idx].activity];
+    let activity = [...this.props.data[idx].activity];
     let streak = 0;
     while (activity.length > 0) {
       if (activity.pop() === 1) {
@@ -223,19 +126,6 @@ export default class HabitList extends React.Component {
       0.9 * Math.max(0, (lastVal - thresh) / (max - thresh))
     ); //90% of status is fraction of way between threshold and max value (= steady state)
   }
-
-  storeData(data) {
-    //Local storage on device
-    return new Promise((resolve, reject) => {
-      const jsonValue = JSON.stringify(data);
-      AsyncStorage.setItem(this.props.dataKey, jsonValue)
-        .then(() => resolve())
-        .catch((e) => {
-          console.log(e);
-          reject(e);
-        });
-    });
-  }
 }
 
 const styles = StyleSheet.create({
@@ -252,3 +142,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
+
+const mapStateToProps = (state, ownProps) =>
+  ownProps.positive ? {data: state.positiveList} : {data: state.negativeList};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.positive ? 'positive/' : 'negative/';
+  return {
+    addItem: () => dispatch({type: prefix + 'add'}),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HabitList);
