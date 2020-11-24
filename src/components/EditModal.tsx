@@ -15,6 +15,7 @@ import * as Haptics from '../utils/Haptics';
 import {Picker} from '@react-native-community/picker';
 
 import Colors from '../utils/Colors';
+import {positiveListName, negativeListName} from '../utils/Constants';
 
 export default class EditModal extends React.Component {
   constructor(props) {
@@ -39,7 +40,7 @@ export default class EditModal extends React.Component {
     );
     //load data
     AsyncStorage.getItem(
-      this.props.route.params.positive ? 'positiveList' : 'negativeList',
+      this.props.route.params.positive ? positiveListName : negativeListName,
     ).then((jsonValue) => {
       this.setState({
         data: JSON.parse(jsonValue)[this.props.route.params.editing],
@@ -338,8 +339,8 @@ export default class EditModal extends React.Component {
 
   save() {
     let dataList = this.props.route.params.positive
-      ? 'positiveList'
-      : 'negativeList';
+      ? positiveListName
+      : negativeListName;
     let lastPage = this.props.route.params.positive
       ? 'PositiveScreen'
       : 'NegativeScreen';
@@ -363,8 +364,8 @@ export default class EditModal extends React.Component {
       : 'NegativeScreen';
     if (this.props.route.params.new) {
       let dataList = this.props.route.params.positive
-        ? 'positiveList'
-        : 'negativeList';
+        ? positiveListName
+        : negativeListName;
       AsyncStorage.getItem(dataList).then((jsonList) => {
         let data = JSON.parse(jsonList);
         data.pop();
