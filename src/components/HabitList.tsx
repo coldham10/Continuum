@@ -82,6 +82,7 @@ class HabitList extends React.Component {
                     new: false,
                   })
                 }
+                deleteItem={this.setState.bind(this, {toDelete: item.id})}
                 navigation={this.props.navigation}
                 {...item}
               />
@@ -94,12 +95,8 @@ class HabitList extends React.Component {
         />
         <DeleteConfirmModal
           visible={this.state.toDelete !== null}
-          name={
-            this.state.toDelete !== null
-              ? this.props.data[this.state.toDelete].title
-              : ''
-          }
-          confirm={() => this.deleteItem(this.state.toDelete)}
+          id={this.state.toDelete}
+          positive={this.props.positive}
           close={() => this.setState({toDelete: null})}
         />
       </>

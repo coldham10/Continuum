@@ -1,9 +1,9 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
-
+import {connect} from 'react-redux';
 import Modal from 'react-native-modal';
 
-export default function DeleteConfirmModal(props) {
+function DeleteConfirmModal(props) {
   return (
     <Modal
       isVisible={props.visible}
@@ -112,3 +112,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+const mapStateToProps = (state, ownProps) => {
+  let list = ownProps.positive ? state.positiveList : state.negativeList;
+  let index = list.findIndex((h) => h.id === ownProps.id);
+  return {name: index >= 0 ? list[index].name : ''};
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.positive ? 'positive/' : 'negative/';
+  return {
+    confirm: () => dispatch({type: prefix + 'remove', payload: ownProps.id}),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteConfirmModal);

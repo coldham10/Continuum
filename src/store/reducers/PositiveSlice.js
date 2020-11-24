@@ -12,7 +12,7 @@ export const positiveSlice = createSlice({
       state.push(newHabit(true));
     },
     remove: (state, action) => {
-      state.filter((habit) => habit.id !== action.payload);
+      return state.filter((habit) => habit.id !== action.payload);
     },
     toggle: (state, action) => {
       //Toggle and re-calculate (downstream) history and momentum
