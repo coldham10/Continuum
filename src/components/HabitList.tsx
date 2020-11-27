@@ -52,7 +52,17 @@ class HabitList extends React.Component {
 
   render() {
     var addBtn = (
-      <Button title="Add New Habit" onPress={() => this.props.addItem()} />
+      <Button
+        title="Add New Habit"
+        onPress={() => {
+          this.props.addItem();
+          this.props.navigation.navigate('EditModal', {
+            positive: this.props.positive,
+            id: -1,
+            new: true,
+          });
+        }}
+      />
     );
     return (
       <>
@@ -78,7 +88,7 @@ class HabitList extends React.Component {
                 openEditor={() =>
                   this.props.navigation.navigate('EditModal', {
                     positive: this.props.positive,
-                    editing: index,
+                    id: item.id,
                     new: false,
                   })
                 }

@@ -10,24 +10,19 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import * as Haptics from '../utils/Haptics';
 import {Picker} from '@react-native-community/picker';
-
+import {connect} from 'react-redux';
 import {Colors} from '../utils/Constants';
 import {positiveListName, negativeListName} from '../utils/Constants';
 
-export default class EditModal extends React.Component {
+class EditModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       keyboardUp: false,
-      data: {
-        title: 'XXX',
-        parameters: this.props.positive
-          ? {r: 0.7966, a: 0.4027, max: 1.9797}
-          : {k: 7},
-      },
+      title: props.title,
+      parameters: props.parameters,
     };
   }
 
@@ -38,14 +33,6 @@ export default class EditModal extends React.Component {
     Keyboard.addListener('keyboardDidHide', () =>
       this.setState({keyboardUp: false}),
     );
-    //load data
-    AsyncStorage.getItem(
-      this.props.route.params.positive ? positiveListName : negativeListName,
-    ).then((jsonValue) => {
-      this.setState({
-        data: JSON.parse(jsonValue)[this.props.route.params.editing],
-      });
-    });
 
     this.props.navigation.setOptions({
       headerRight: () => (
@@ -87,26 +74,14 @@ export default class EditModal extends React.Component {
           alignItems: 'center',
         }}>
         <View style={styles.modalContent}>
-          <Text style={styles.title}>
-            {'Editing: ' + this.state.data.title}
-          </Text>
+          <Text style={styles.title}>{'Editing: ' + this.state.title}</Text>
           <View style={styles.body}>
             <View style={styles.inputPair}>
               <Text style={styles.label}>Name</Text>
               <TextInput
                 style={styles.input}
-                value={
-                  this.state.data.title === 'New Habit'
-                    ? ''
-                    : this.state.data.title
-                }
-                onChangeText={(title) =>
-                  this.setState((prevState) => {
-                    let data = JSON.parse(JSON.stringify(prevState.data));
-                    data['title'] = title;
-                    return {data: data};
-                  })
-                }
+                value={this.state.title === 'New Habit' ? '' : this.state.title}
+                onChangeText={(title) => this.setState({title: title})}
                 clearButtonMode="always"
               />
             </View>
@@ -118,22 +93,22 @@ export default class EditModal extends React.Component {
                     style={styles.picker}
                     selectedValue={
                       this.props.route.params.positive
-                        ? this.rToFormDays(this.state.data.parameters.r) //Convert from r parameter to number of habit formation days
-                        : this.state.data.parameters.k
+                        ? this.rToFormDays(this.state.parameters.r) //Convert from r parameter to number of habit formation days
+                        : this.state.parameters.k
                     }
                     onValueChange={(val) => {
                       this.setState((prevState) => {
-                        let data = JSON.parse(JSON.stringify(prevState.data));
-                        data['parameters'] = this.props.route.params.positive
-                          ? this.daysToParams(
-                              val,
-                              this.raToLossDays(
-                                this.state.data.parameters.r,
-                                this.state.data.parameters.a,
+                        return this.props.route.params.positive
+                          ? {
+                              parameters: this.daysToParams(
+                                val,
+                                this.raToLossDays(
+                                  prevState.parameters.r,
+                                  prevState.parameters.a,
+                                ),
                               ),
-                            )
-                          : {k: val};
-                        return {data: data};
+                            }
+                          : {parameters: {k: val}};
                       });
                     }}>
                     <Picker.Item label="1 Day" value={1} />
@@ -180,20 +155,17 @@ export default class EditModal extends React.Component {
                         (btnIdx) => {
                           if (btnIdx !== 0) {
                             this.setState((prevState) => {
-                              let data = JSON.parse(
-                                JSON.stringify(prevState.data),
-                              );
-                              data['parameters'] = this.props.route.params
-                                .positive
-                                ? this.daysToParams(
-                                    btnIdx,
-                                    this.raToLossDays(
-                                      this.state.data.parameters.r,
-                                      this.state.data.parameters.a,
-                                    ),
-                                  )
-                                : {k: btnIdx};
-                              return {data: data};
+                              return {
+                                parameters: this.props.route.params.positive
+                                  ? this.daysToParams(
+                                      btnIdx,
+                                      this.raToLossDays(
+                                        prevState.parameters.r,
+                                        prevState.parameters.a,
+                                      ),
+                                    )
+                                  : {k: btnIdx},
+                              };
                             });
                           }
                         },
@@ -201,8 +173,8 @@ export default class EditModal extends React.Component {
                     }>
                     <Text style={styles.IOSpicker}>
                       {this.props.route.params.positive
-                        ? this.rToFormDays(this.state.data.parameters.r) //Convert from r parameter to number of habit formation days
-                        : this.state.data.parameters.k}{' '}
+                        ? this.rToFormDays(this.state.parameters.r) //Convert from r parameter to number of habit formation days
+                        : this.state.parameters.k}{' '}
                       Days
                     </Text>
                   </TouchableOpacity>
@@ -217,17 +189,17 @@ export default class EditModal extends React.Component {
                     <Picker
                       style={styles.picker}
                       selectedValue={this.raToLossDays(
-                        this.state.data.parameters.r,
-                        this.state.data.parameters.a,
+                        this.state.parameters.r,
+                        this.state.parameters.a,
                       )}
                       onValueChange={(val) =>
                         this.setState((prevState) => {
-                          let data = JSON.parse(JSON.stringify(prevState.data));
-                          data['parameters'] = this.daysToParams(
-                            this.rToFormDays(this.state.data.parameters.r),
-                            val,
-                          );
-                          return {data: data};
+                          return {
+                            parameters: this.daysToParams(
+                              this.rToFormDays(prevState.parameters.r),
+                              val,
+                            ),
+                          };
                         })
                       }>
                       <Picker.Item label="1 Day" value={1} />
@@ -264,16 +236,12 @@ export default class EditModal extends React.Component {
                           (btnIdx) => {
                             if (btnIdx !== 0) {
                               this.setState((prevState) => {
-                                let data = JSON.parse(
-                                  JSON.stringify(prevState.data),
-                                );
-                                data['parameters'] = this.daysToParams(
-                                  this.rToFormDays(
-                                    this.state.data.parameters.r,
+                                return {
+                                  parameters: this.daysToParams(
+                                    this.rToFormDays(this.state.parameters.r),
+                                    btnIdx,
                                   ),
-                                  btnIdx,
-                                );
-                                return {data: data};
+                                };
                               });
                             }
                           },
@@ -281,8 +249,8 @@ export default class EditModal extends React.Component {
                       }>
                       <Text style={styles.IOSpicker}>
                         {this.raToLossDays(
-                          this.state.data.parameters.r,
-                          this.state.data.parameters.a,
+                          this.state.parameters.r,
+                          this.state.parameters.a,
                         )}{' '}
                         Days
                       </Text>
@@ -338,44 +306,22 @@ export default class EditModal extends React.Component {
   }
 
   save() {
-    let dataList = this.props.route.params.positive
-      ? positiveListName
-      : negativeListName;
-    let lastPage = this.props.route.params.positive
-      ? 'PositiveScreen'
-      : 'NegativeScreen';
-    AsyncStorage.getItem(dataList).then((jsonData) => {
-      let data = JSON.parse(jsonData);
-      data[this.props.route.params.editing] = Object.assign(
-        {},
-        data[this.props.route.params.editing],
-        this.state.data,
-        {dirty: true},
-      );
-      AsyncStorage.setItem(dataList, JSON.stringify(data)).then(() =>
-        this.props.navigation.navigate(lastPage),
-      );
-    });
+    this.props.storeData(this.state.title, this.state.parameters);
+    this.navigateBack();
   }
 
   cancel() {
+    if (this.props.route.params.new) {
+      this.props.pop();
+    }
+    this.navigateBack();
+  }
+
+  navigateBack() {
     let lastPage = this.props.route.params.positive
       ? 'PositiveScreen'
       : 'NegativeScreen';
-    if (this.props.route.params.new) {
-      let dataList = this.props.route.params.positive
-        ? positiveListName
-        : negativeListName;
-      AsyncStorage.getItem(dataList).then((jsonList) => {
-        let data = JSON.parse(jsonList);
-        data.pop();
-        AsyncStorage.setItem(dataList, JSON.stringify(data)).then(() =>
-          this.props.navigation.navigate(lastPage),
-        );
-      });
-    } else {
-      this.props.navigation.navigate(lastPage);
-    }
+    this.props.navigation.navigate(lastPage);
   }
 }
 
@@ -438,3 +384,45 @@ const styles = StyleSheet.create({
     color: Colors.tint,
   },
 });
+
+const mapStateToProps = (state, ownProps) => {
+  let list = ownProps.route.params.positive
+    ? state.positiveList
+    : state.negativeList;
+  let index;
+  let id;
+  if (ownProps.route.params.id !== -1) {
+    index = list.findIndex((h) => h.id === ownProps.route.params.id);
+    id = ownProps.route.params.id;
+  } else {
+    //If -1, edit last in list
+    index = list.length - 1;
+    id = index >= 0 ? list[index].id : undefined;
+  }
+
+  return index >= 0
+    ? {title: list[index].title, parameters: list[index].parameters, id: id}
+    : {
+        title: '',
+        parameters: {r: 0.7966, a: 0.4027, max: 1.9797, k: 7},
+        id: id,
+      };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.route.params.positive ? 'positive/' : 'negative/';
+  return {
+    storeData: (title, params) =>
+      dispatch({
+        type: prefix + 'edit',
+        payload: {id: ownProps.route.params.id, title: title, params: params},
+      }),
+    pop: () =>
+      dispatch({
+        type: prefix + 'remove',
+        payload: ownProps.route.params.id,
+      }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditModal);

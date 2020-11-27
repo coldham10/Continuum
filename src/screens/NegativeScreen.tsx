@@ -3,11 +3,5 @@ import HabitList from '../components/HabitList';
 import {negativeListName} from '../utils/Constants';
 
 export default function NegativeScreen(props) {
-  return (
-    <HabitList
-      dataKey={negativeListName}
-      positive={false}
-      navigation={props.navigation}
-    />
-  );
+  return <HabitList positive={false} {...props} />;
 }

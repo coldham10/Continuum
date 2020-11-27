@@ -148,7 +148,6 @@ export default class OverviewScreen extends React.Component {
       new Date(date.getTime() - date.getTimezoneOffset() * 60000)
         .toISOString()
         .split('T')[0];
-    console.log(this.state.positiveData);
 
     this.state.positiveData.forEach((pHabit) => {
       let date = new Date(pHabit.timeStamp);

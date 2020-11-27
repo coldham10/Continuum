@@ -5,5 +5,5 @@ import HabitList from '../components/HabitList';
 import {positiveListName} from '../utils/Constants';
 
 export default function PositiveScreen(props) {
-  return <HabitList dataKey={positiveListName} positive={true} {...props} />;
+  return <HabitList positive={true} {...props} />;
 }
