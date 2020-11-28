@@ -7,15 +7,21 @@ import {Colors} from './src/utils/Constants';
 import {Provider} from 'react-redux';
 import RootNavigator from './src/navigation/BottomTabNavigator';
 import store from './src/store/Store';
+import {persistStore} from 'redux-persist';
+import {PersistGate} from 'redux-persist/integration/react';
+
+const persistor = persistStore(store);
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <Provider store={store}>
-        <NavigationContainer>
-          <RootNavigator />
-          <StatusBar backgroundColor={Colors.tint} />
-        </NavigationContainer>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <RootNavigator />
+            <StatusBar backgroundColor={Colors.tint} />
+          </NavigationContainer>
+        </PersistGate>
       </Provider>
     </SafeAreaProvider>
   );
