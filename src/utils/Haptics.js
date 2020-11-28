@@ -1,12 +1,18 @@
 import * as React from 'react';
-import {Vibration} from 'react-native';
+import {Vibration, Platform} from 'react-native';
 
-export function impactAsync() {
-  //TODO implement touch haptic respons
-  return null;
+export function impact() {
+  if (Platform.OS !== 'ios') {
+    Vibration.vibrate(200);
+  } else {
+    Vibration.vibrate();
+  }
 }
 
-export function warnAsync() {
-  //TODO implement warning haptic. 3 pulses for android, ? for ios
-  return null;
+export function warn() {
+  if (Platform.OS !== 'ios') {
+    Vibration.vibrate([200, 200, 200, 200, 200]);
+  } else {
+    Vibration.vibrate([400, 400, 400]);
+  }
 }

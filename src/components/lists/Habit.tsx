@@ -50,7 +50,7 @@ function Habit(props) {
             style={{...statusColors(props.status), ...styles.icon}}
             onPress={() => {
               props.openEditor();
-              Haptics.impactAsync();
+              Haptics.impact();
             }}
           />
           <Ionicons
@@ -58,7 +58,7 @@ function Habit(props) {
             style={{...statusColors(props.status), ...styles.icon}}
             onPress={() => {
               props.deleteItem();
-              Haptics.warnAsync();
+              Haptics.warn();
             }}
           />
         </View>

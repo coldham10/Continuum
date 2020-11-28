@@ -39,7 +39,7 @@ class HabitList extends React.Component {
             style={{borderRadius: 10}}
             onPress={() => {
               this.props.navigation.navigate('HabitHelp');
-              Haptics.impactAsync();
+              Haptics.impact();
             }}>
             <Icon
               style={{margin: 5}}

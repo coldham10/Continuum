@@ -29,7 +29,7 @@ class OverviewScreen extends React.Component {
             style={{borderRadius: 10}}
             onPress={() => {
               this.props.navigation.navigate('OverviewHelp');
-              Haptics.impactAsync();
+              Haptics.impact();
             }}>
             <Icon
               style={{margin: 5}}
@@ -96,7 +96,7 @@ class OverviewScreen extends React.Component {
               style={styles.icon}
               onPress={() => {
                 this.setState({modalVisible: true});
-                Haptics.impactAsync();
+                Haptics.impact();
               }}
             />
           </View>

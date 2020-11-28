@@ -44,7 +44,7 @@ function EditConfirmModal(props) {
                 title="Confirm"
                 onPress={() => {
                   props.toggle();
-                  Haptics.impactAsync();
+                  Haptics.impact();
                   props.close();
                 }}
               />
