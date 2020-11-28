@@ -5,8 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {connect} from 'react-redux';
 
-import * as Haptics from '../utils/Haptics';
-
 import OverviewCalendar from '../components/overview/OverviewCalendar';
 import OverviewModal from '../components/overview/OverviewModal';
 
@@ -95,7 +93,6 @@ class OverviewScreen extends React.Component {
               style={styles.icon}
               onPress={() => {
                 this.setState({modalVisible: true});
-                Haptics.impact();
               }}
             />
           </View>

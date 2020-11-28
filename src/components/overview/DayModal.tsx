@@ -145,8 +145,8 @@ function ListItem(props) {
           activeOpacity={0.6}
           underlayColor="#aaa8"
           onPress={() => {
-            props.edit();
             Haptics.warn();
+            props.edit();
           }}
           style={{
             flex: 1,

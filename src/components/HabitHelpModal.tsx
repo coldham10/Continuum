@@ -3,8 +3,6 @@
 import React from 'react';
 import {StyleSheet, Button, View, Text, ScrollView} from 'react-native';
 
-import * as Haptics from '../utils/Haptics';
-
 export default function HabitHelpModal(props) {
   return (
     <ScrollView style={styles.container}>
