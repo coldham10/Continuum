@@ -4,9 +4,10 @@
 import React from 'react';
 import {StyleSheet, Button, View, Text} from 'react-native';
 import Modal from 'react-native-modal';
+import {connect} from 'react-redux';
 import * as Haptics from '../../utils/Haptics';
 
-export default function EditConfirmModal(props) {
+function EditConfirmModal(props) {
   return (
     <Modal
       isVisible={props.visible}
@@ -42,7 +43,7 @@ export default function EditConfirmModal(props) {
                 style={styles.btn}
                 title="Confirm"
                 onPress={() => {
-                  toggle(props.data);
+                  props.toggle();
                   Haptics.impactAsync();
                   props.close();
                 }}
@@ -56,41 +57,27 @@ export default function EditConfirmModal(props) {
   );
 }
 
-function toggle(data) {
-  if (data === null) {
-    return;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  try {
+    let prefix = ownProps.data.positive ? 'positive/' : 'negative/';
+    let dateToChange = new Date(
+      ownProps.data.dateString.split('-')[0],
+      ownProps.data.dateString.split('-')[1] - 1,
+      ownProps.data.dateString.split('-')[2],
+    );
+    return {
+      toggle: () =>
+        dispatch({
+          type: prefix + 'toggle',
+          payload: {date: dateToChange.getTime(), id: ownProps.data.id},
+        }),
+    };
+  } catch (e) {
+    return {toggle: () => {}};
   }
-  let listName = data.positive ? positiveListName : negativeListName;
-  let dateToChange = new Date(
-    data.dateString.split('-')[0],
-    data.dateString.split('-')[1] - 1,
-    data.dateString.split('-')[2],
-  );
-  AsyncStorage.getItem(listName)
-    .then((jsonData) => {
-      let listData = JSON.parse(jsonData);
-      let modifiedData = listData.map((habit) => {
-        if (habit.id === data.id) {
-          //Found habit to change, all others remain the same.
-          let indexToChange = Math.round(
-            (dateToChange - new Date(habit.timeStamp)) / (1000 * 60 * 60 * 24),
-          );
-          habit.activity = habit.activity.map((val, idx) => {
-            if (idx === indexToChange) {
-              val = 1 - val; //Flip the bit
-            }
-            return val; //Create new activity values with toggled day
-          });
-        }
-        return habit; //Create new habit list with one modified habit
-      });
-      //TODO RECALCULATE staus
-      return JSON.stringify(modifiedData);
-    })
-    .then((jsonData) => {
-      AsyncStorage.setItem(listName, jsonData);
-    });
-}
+};
+
+export default connect(null, mapDispatchToProps)(EditConfirmModal);
 
 const styles = StyleSheet.create({
   spacer: {
