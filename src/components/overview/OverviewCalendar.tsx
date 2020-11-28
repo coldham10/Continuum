@@ -21,8 +21,8 @@ export default function OverviewCalendar(props) {
       showScrollIndicator={true}
       markingType={'period'}
       onDayPress={(day) => {
-        props.selectDay(day);
         Haptics.impact();
+        props.selectDay(day);
       }}
       futureScrollRange={3}
       pastScrollRange={Math.max(

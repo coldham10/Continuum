@@ -13,7 +13,10 @@ function Habit(props) {
     <TouchableOpacity
       style={{...statusColors(props.status), ...styles.habitHL}}
       activeOpacity={0.9}
-      onPress={() => props.toggleTodayActivity()}>
+      onPress={() => {
+        Haptics.impact();
+        props.toggleTodayActivity();
+      }}>
       <View style={{...statusColors(props.status), ...styles.habit}}>
         <View style={{...statusColors(props.status), ...styles.topRow}}>
           {props.activity[props.activity.length - 1] ? (

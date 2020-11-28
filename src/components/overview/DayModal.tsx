@@ -33,7 +33,6 @@ class DayModal extends React.Component {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            Haptics.impact();
             this.props.navigation.navigate('Overview');
           }}>
           <Text style={styles.buttonText}>Close</Text>
@@ -145,8 +144,8 @@ function ListItem(props) {
           activeOpacity={0.6}
           underlayColor="#aaa8"
           onPress={() => {
-            props.edit();
             Haptics.warn();
+            props.edit();
           }}
           style={{
             flex: 1,
