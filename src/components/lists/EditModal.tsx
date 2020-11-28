@@ -1,3 +1,6 @@
+/*Full page modal (on navigation stack) that allows the details of one single
+ *habit to be edited*/
+
 import React from 'react';
 import {
   StyleSheet,

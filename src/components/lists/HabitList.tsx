@@ -1,3 +1,6 @@
+/*The core of both positivelist and negativelist pages. Holds various Habit
+ *objects and shows today's activity and progress for each.*/
+
 import * as React from 'react';
 import {
   StyleSheet,

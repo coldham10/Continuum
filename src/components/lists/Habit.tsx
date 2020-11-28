@@ -1,3 +1,6 @@
+/*The habit item within either the positive or negative habit list pages
+ *Touchable to toggle today's activity, showing a streak and momentum */
+
 import * as React from 'react';
 import {StyleSheet, TouchableOpacity, AppState, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';

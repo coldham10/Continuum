@@ -1,3 +1,5 @@
+/*Full page help screen for PositiveScreen and NegativeScreen */
+
 import React from 'react';
 import {StyleSheet, Button, View, Text, ScrollView} from 'react-native';
 

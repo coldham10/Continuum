@@ -1,3 +1,5 @@
+/*Full screen help modal for overview screen */
+
 import React from 'react';
 import {StyleSheet, Button, View, Text, ScrollView} from 'react-native';
 

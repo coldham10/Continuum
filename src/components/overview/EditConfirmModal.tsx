@@ -1,3 +1,6 @@
+/*Small modal opened from DayModal that confirms the toggling of historical
+ *habit activity */
+
 import React from 'react';
 import {StyleSheet, Button, View, Text} from 'react-native';
 import Modal from 'react-native-modal';

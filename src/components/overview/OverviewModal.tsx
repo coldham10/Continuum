@@ -1,3 +1,7 @@
+/*Small modal for selecting which habits to include in the OverviewScreen
+ *heatmap calendar. Individual habits can be toggled, as well as all positive
+ *and all negative */
+
 import React from 'react';
 import {
   StyleSheet,

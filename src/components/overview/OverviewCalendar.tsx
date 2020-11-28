@@ -1,3 +1,6 @@
+/*The central 'Heatmap' style calendar component of OverviewScreen.  Days are
+ *touchable (opens DayModal)*/
+
 import React from 'react';
 import {CalendarList} from 'react-native-calendars';
 import * as Haptics from '../../utils/Haptics';

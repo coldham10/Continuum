@@ -1,3 +1,6 @@
+/*Fullscreen summary of a historical day. The completion status of habits can be
+ *retroactively toggled via the EditConfirmModal */
+
 import React, {useState} from 'react';
 import {
   StyleSheet,

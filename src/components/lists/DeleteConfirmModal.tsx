@@ -1,3 +1,5 @@
+/*Small modal that confirms a habit deletion within either habit list page */
+
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {connect} from 'react-redux';
