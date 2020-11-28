@@ -1,50 +1,24 @@
 import * as React from 'react';
 import {StyleSheet, TouchableHighlight, Text, View} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import {connect} from 'react-redux';
+
 import * as Haptics from '../utils/Haptics';
-import {positiveListName, negativeListName} from '../utils/Constants';
 
 import OverviewCalendar from '../components/OverviewCalendar';
 import OverviewModal from '../components/OverviewModal';
 
-export default class OverviewScreen extends React.Component {
+class OverviewScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      positiveData: [],
-      negativeData: [],
       modalVisible: false,
-      dataByDate: {},
     };
   }
 
   componentDidMount() {
-    //Load saved data for this list from local storage
-    const loadData = () => {
-      Promise.all([
-        AsyncStorage.getItem(positiveListName).then((jsonValue) => {
-          return jsonValue !== null ? JSON.parse(jsonValue) : [];
-        }),
-        AsyncStorage.getItem(negativeListName).then((jsonValue) => {
-          return jsonValue !== null ? JSON.parse(jsonValue) : [];
-        }),
-      ]).then((bothData) => {
-        this.setState(
-          {positiveData: bothData[0], negativeData: bothData[1]},
-          () => this.byDate(),
-        );
-      });
-    };
-    loadData();
-    //When this tab is focused, reload the data
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      Haptics.impactAsync();
-      loadData();
-      this.setState({modalVisible: false});
-    });
     //Add help icon to top navigation pane
     this.props.navigation.setOptions({
       headerRight: () => (
@@ -69,10 +43,6 @@ export default class OverviewScreen extends React.Component {
     });
   }
 
-  componentWillUnmount() {
-    this._unsubscribe();
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -80,7 +50,7 @@ export default class OverviewScreen extends React.Component {
           <OverviewCalendar
             minDate={this.getMinDate()}
             maxDate={this.getMaxDate()}
-            dataByDate={this.state.dataByDate}
+            dataByDate={this.props.dataByDate}
             selectDay={(day) =>
               this.props.navigation.navigate('DayModal', {day: day})
             }
@@ -94,11 +64,11 @@ export default class OverviewScreen extends React.Component {
                 style={{fontSize: 15}}
               />
               <Text style={styles.statusTxt}>
-                {this.state.positiveData.every((item) => item.selected) &&
-                this.state.positiveData.length > 0
+                {this.props.positiveData.every((item) => item.selected) &&
+                this.props.positiveData.length > 0
                   ? 'All '
                   : ''}
-                {this.state.positiveData.reduce(
+                {this.props.positiveData.reduce(
                   (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
                   0,
                 ) || 'No'}{' '}
@@ -108,11 +78,11 @@ export default class OverviewScreen extends React.Component {
             <View style={styles.statusLine}>
               <Ionicons name="md-close-circle-outline" style={{fontSize: 15}} />
               <Text style={styles.statusTxt}>
-                {this.state.negativeData.every((item) => item.selected) &&
-                this.state.negativeData.length > 0
+                {this.props.negativeData.every((item) => item.selected) &&
+                this.props.negativeData.length > 0
                   ? 'All '
                   : ''}
-                {this.state.negativeData.reduce(
+                {this.props.negativeData.reduce(
                   (acc, item) => (acc = acc + (item.selected ? 1 : 0)),
                   0,
                 ) || 'No'}{' '}
@@ -134,100 +104,19 @@ export default class OverviewScreen extends React.Component {
         <OverviewModal
           visible={this.state.modalVisible}
           close={() => this.setState({modalVisible: false})}
-          positiveData={this.state.positiveData}
-          negativeData={this.state.negativeData}
-          toggleSelected={(id) => this.toggleSelected(id)}
         />
       </View>
     );
   }
 
-  byDate() {
-    let dataByDate = {};
-    let dateString = (date) =>
-      new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-        .toISOString()
-        .split('T')[0];
-
-    this.state.positiveData.forEach((pHabit) => {
-      let date = new Date(pHabit.timeStamp);
-      pHabit.histValues.forEach((val, index) => {
-        if (typeof dataByDate[dateString(date)] === 'undefined') {
-          dataByDate[dateString(date)] = [];
-        }
-        dataByDate[dateString(date)].push({
-          id: pHabit.id,
-          status:
-            0.1 * Math.min(1, val) +
-            0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
-          completed: pHabit.activity[index],
-          data: pHabit,
-        });
-        date.setDate(date.getDate() + 1);
-      });
-    });
-    this.state.negativeData.forEach((nHabit) => {
-      let date = new Date(nHabit.timeStamp);
-      nHabit.histValues.forEach((val, index) => {
-        if (typeof dataByDate[dateString(date)] === 'undefined') {
-          dataByDate[dateString(date)] = [];
-        }
-        dataByDate[dateString(date)].push({
-          id: nHabit.id,
-          status: val,
-          completed: nHabit.activity[index],
-          data: nHabit,
-        });
-      });
-    });
-    this.setState({dataByDate: dataByDate});
-  }
-
-  toggleSelected(id) {
-    let dataCopy;
-    if (this.state.positiveData.filter((habit) => habit.id === id).length > 0) {
-      //Positive
-      this.setState(
-        (prevState) => {
-          dataCopy = prevState.positiveData.map((habit) => {
-            let newHabit = {...habit};
-            if (habit.id === id) {
-              newHabit.selected = !habit.selected;
-            }
-            return newHabit;
-          });
-          this.storeData(positiveListName, dataCopy);
-          return {positiveData: dataCopy};
-        },
-        () => this.byDate(),
-      );
-    } else {
-      //Negative
-      this.setState(
-        (prevState) => {
-          dataCopy = prevState.negativeData.map((habit) => {
-            let newHabit = {...habit};
-            if (habit.id === id) {
-              newHabit.selected = !habit.selected;
-            }
-            return newHabit;
-          });
-          this.storeData(negativeListName, dataCopy);
-          return {negativeData: dataCopy};
-        },
-        () => this.byDate(),
-      );
-    }
-  }
-
   getMinDate() {
     let minNeg =
-      this.state.negativeData.length > 0
-        ? Math.min(...this.state.negativeData.map((item) => item.timeStamp))
+      this.props.negativeData.length > 0
+        ? Math.min(...this.props.negativeData.map((item) => item.timeStamp))
         : new Date().getTime();
     let minPos =
-      this.state.positiveData.length > 0
-        ? Math.min(...this.state.positiveData.map((item) => item.timeStamp))
+      this.props.positiveData.length > 0
+        ? Math.min(...this.props.positiveData.map((item) => item.timeStamp))
         : new Date().getTime();
     let returnDate = new Date(Math.min(minNeg, minPos));
     returnDate.setDate(1);
@@ -241,6 +130,63 @@ export default class OverviewScreen extends React.Component {
     return d;
   }
 }
+
+function byDate(positiveData, negativeData) {
+  let dataByDate = {};
+  let dateString = (date) =>
+    new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split('T')[0];
+
+  positiveData.forEach((pHabit) => {
+    let date = new Date(pHabit.timeStamp);
+    pHabit.histValues.forEach((val, index) => {
+      if (typeof dataByDate[dateString(date)] === 'undefined') {
+        dataByDate[dateString(date)] = [];
+      }
+      dataByDate[dateString(date)].push({
+        id: pHabit.id,
+        status:
+          0.1 * Math.min(1, val) +
+          0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+        completed: pHabit.activity[index],
+        data: pHabit,
+      });
+      date.setDate(date.getDate() + 1);
+    });
+  });
+  negativeData.forEach((nHabit) => {
+    let date = new Date(nHabit.timeStamp);
+    nHabit.histValues.forEach((val, index) => {
+      if (typeof dataByDate[dateString(date)] === 'undefined') {
+        dataByDate[dateString(date)] = [];
+      }
+      dataByDate[dateString(date)].push({
+        id: nHabit.id,
+        status: val,
+        completed: nHabit.activity[index],
+        data: nHabit,
+      });
+    });
+  });
+  return dataByDate;
+}
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    positiveData: state.positiveList,
+    negativeData: state.negativeList,
+    dataByDate: byDate(state.positiveList, state.negativeList),
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    toggleSelected: (id) => dispatch({type: 'selection/toggle', payload: id}),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OverviewScreen);
 
 const styles = StyleSheet.create({
   container: {

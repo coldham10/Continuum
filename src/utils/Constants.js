@@ -7,6 +7,3 @@ export const Colors = {
   tabIconDefault: '#ccc',
   tabIconSelected: continuumBlue,
 };
-
-export const positiveListName = 'positiveList';
-export const negativeListName = 'negativeList';

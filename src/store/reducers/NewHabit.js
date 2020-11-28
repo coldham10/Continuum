@@ -17,6 +17,7 @@ export default (positive) => {
       : {k: 7}, //For exponential momentum function (-ve)
     histValues: [0], //habit-function values at end of day every day since timeStamp
     activity: [0], //Binary array since timeStamp day, 0="not done", 1="done"
+    selected: true,
   };
   return habit;
 };
