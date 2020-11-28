@@ -1,4 +1,4 @@
-package com.continuum;
+package com.tripconey.continuum;
 
 import com.facebook.react.ReactActivity;
 
