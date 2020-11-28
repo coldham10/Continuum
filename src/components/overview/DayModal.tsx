@@ -11,17 +11,16 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import * as Haptics from '../../utils/Haptics';
-
+import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import EditConfirmModal from './EditConfirmModal';
 
-export default class DayModal extends React.Component {
+class DayModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {confirm: null, day: this.props.route.params.day, data: null};
-    this.loadDayData(this.props.route.params.day);
+    this.state = {confirm: null};
   }
   render() {
     return (
@@ -31,31 +30,31 @@ export default class DayModal extends React.Component {
           <View style={styles.content}>
             <View style={styles.header}>
               <Text style={styles.title}>
-                {this.state.day === null
+                {this.props.day === null
                   ? ''
                   : 'Overview of ' +
                     new Date(
-                      this.state.day.year,
-                      this.state.day.month - 1,
-                      this.state.day.day,
+                      this.props.day.year,
+                      this.props.day.month - 1,
+                      this.props.day.day,
                     ).toDateString()}
               </Text>
             </View>
             <View style={styles.body}>
               <FlatList
-                data={this.state.data}
+                data={this.props.data}
                 renderItem={({item}) => (
                   <ListItem
                     title={item.title}
                     completed={item.completed}
                     status={item.status}
-                    day={this.state.day}
+                    day={this.props.day}
                     positive={item.positive}
                     edit={() =>
                       this.setState({
                         confirm: {
                           id: item.id,
-                          dateString: this.state.day.dateString,
+                          dateString: this.props.day.dateString,
                           positive: item.positive,
                         },
                       })
@@ -116,64 +115,6 @@ export default class DayModal extends React.Component {
         />
       </>
     );
-  }
-
-  loadDayData(day) {
-    let viewingDate = new Date(day.year, day.month - 1, day.day);
-    Promise.all([
-      //Get and process positive data
-      AsyncStorage.getItem(positiveListName).then((jsonData) => {
-        return JSON.parse(jsonData)
-          .filter((pHabit) => {
-            //Select habits that had been created by viewingDate
-            let dateCreated = new Date(pHabit.timeStamp);
-            return dateCreated <= viewingDate;
-          })
-          .map((pHabit) => {
-            let dateCreated = new Date(pHabit.timeStamp);
-            let index = Math.round(
-              (viewingDate - dateCreated) / (1000 * 60 * 60 * 24),
-            );
-            let val = pHabit.histValues[index];
-            return {
-              id: pHabit.id,
-              title: pHabit.title,
-              positive: true,
-              status:
-                0.1 * Math.min(1, val) +
-                0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
-              completed: pHabit.activity[index],
-            };
-          });
-      }),
-      //Get and process negative data
-      AsyncStorage.getItem(negativeListName).then((jsonData) => {
-        return JSON.parse(jsonData)
-          .filter((nHabit) => {
-            //Select habits that had been created by viewingDate
-            let dateCreated = new Date(nHabit.timeStamp);
-            return dateCreated <= viewingDate;
-          })
-          .map((nHabit) => {
-            let dateCreated = new Date(nHabit.timeStamp);
-            let index = Math.round(
-              (viewingDate - dateCreated) / (1000 * 60 * 60 * 24),
-            );
-            let val = nHabit.histValues[index];
-            return {
-              id: nHabit.id,
-              title: nHabit.title,
-              positive: false,
-              status: val,
-              completed: nHabit.activity[index],
-            };
-          });
-      }),
-    ]).then((dataList) => {
-      this.setState({data: dataList[0].concat(dataList[1])});
-    });
-
-    return null;
   }
 }
 
@@ -253,6 +194,61 @@ function ListItem(props) {
     </View>
   );
 }
+
+const mapStateToProps = (state, ownProps) => {
+  let now = new Date();
+  let day = ownProps.route.params.day;
+  let viewingDate = new Date(day.year, day.month - 1, day.day);
+  let positiveData = state.positiveList
+    .filter((pHabit) => {
+      //Select habits that had been created by viewingDate
+      let dateCreated = new Date(pHabit.timeStamp);
+      return dateCreated <= viewingDate && viewingDate <= now;
+    })
+    .map((pHabit) => {
+      let dateCreated = new Date(pHabit.timeStamp);
+      let index = Math.round(
+        (viewingDate - dateCreated) / (1000 * 60 * 60 * 24),
+      );
+      let val = pHabit.histValues[index];
+      return {
+        id: pHabit.id,
+        title: pHabit.title,
+        positive: true,
+        status:
+          0.1 * Math.min(1, val) +
+          0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+        completed: pHabit.activity[index],
+      };
+    });
+  let negativeData = state.negativeList
+    .filter((nHabit) => {
+      //Select habits that had been created by viewingDate
+      let dateCreated = new Date(nHabit.timeStamp);
+      return dateCreated <= viewingDate && viewingDate <= now;
+    })
+    .map((nHabit) => {
+      let dateCreated = new Date(nHabit.timeStamp);
+      let index = Math.round(
+        (viewingDate - dateCreated) / (1000 * 60 * 60 * 24),
+      );
+      let val = nHabit.histValues[index];
+      return {
+        id: nHabit.id,
+        title: nHabit.title,
+        positive: false,
+        status: val,
+        completed: nHabit.activity[index],
+      };
+    });
+  return {data: positiveData.concat(negativeData), day};
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DayModal);
 
 const styles = StyleSheet.create({
   container: {
