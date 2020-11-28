@@ -29,7 +29,6 @@ class OverviewScreen extends React.Component {
             style={{borderRadius: 10}}
             onPress={() => {
               this.props.navigation.navigate('OverviewHelp');
-              Haptics.impact();
             }}>
             <Icon
               style={{margin: 5}}

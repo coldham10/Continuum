@@ -51,7 +51,6 @@ class EditModal extends React.Component {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            Haptics.impact();
             this.cancel();
           }}>
           <Text style={styles.buttonText}>Cancel</Text>

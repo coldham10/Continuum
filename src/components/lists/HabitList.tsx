@@ -39,7 +39,6 @@ class HabitList extends React.Component {
             style={{borderRadius: 10}}
             onPress={() => {
               this.props.navigation.navigate('HabitHelp');
-              Haptics.impact();
             }}>
             <Icon
               style={{margin: 5}}
@@ -58,6 +57,7 @@ class HabitList extends React.Component {
       <Button
         title="Add New Habit"
         onPress={() => {
+          Haptics.impact();
           this.props.addItem();
           this.props.navigation.navigate('EditModal', {
             positive: this.props.positive,

@@ -3,16 +3,14 @@ import {Vibration, Platform} from 'react-native';
 
 export function impact() {
   if (Platform.OS !== 'ios') {
-    Vibration.vibrate(200);
+    Vibration.vibrate(25);
   } else {
-    Vibration.vibrate();
   }
 }
 
 export function warn() {
   if (Platform.OS !== 'ios') {
-    Vibration.vibrate([200, 200, 200, 200, 200]);
+    Vibration.vibrate([0, 30, 50, 30, 50, 30]);
   } else {
-    Vibration.vibrate([400, 400, 400]);
   }
 }

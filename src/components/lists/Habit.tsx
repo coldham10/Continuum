@@ -27,7 +27,10 @@ function Habit(props) {
                 ...statusColors(props.status),
                 ...styles.checkbox,
               }}
-              onPress={() => props.toggleTodayActivity()}
+              onPress={() => {
+                Haptics.impact();
+                props.toggleTodayActivity();
+              }}
             />
           ) : (
             <Icon
@@ -37,7 +40,10 @@ function Habit(props) {
                 ...styles.checkbox,
                 fontSize: 28,
               }}
-              onPress={() => props.toggleTodayActivity()}
+              onPress={() => {
+                Haptics.impact();
+                props.toggleTodayActivity();
+              }}
             />
           )}
           <View style={styles.highlight}>
