@@ -54,6 +54,21 @@ function DeleteConfirmModal(props) {
   );
 }
 
+const mapStateToProps = (state, ownProps) => {
+  let list = ownProps.positive ? state.positiveList : state.negativeList;
+  let index = list.findIndex((h) => h.id === ownProps.id);
+  return {name: index >= 0 ? list[index].name : ''};
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.positive ? 'positive/' : 'negative/';
+  return {
+    confirm: () => dispatch({type: prefix + 'remove', payload: ownProps.id}),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteConfirmModal);
+
 const styles = StyleSheet.create({
   spacer: {
     flex: 3,
@@ -114,18 +129,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-const mapStateToProps = (state, ownProps) => {
-  let list = ownProps.positive ? state.positiveList : state.negativeList;
-  let index = list.findIndex((h) => h.id === ownProps.id);
-  return {name: index >= 0 ? list[index].name : ''};
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  let prefix = ownProps.positive ? 'positive/' : 'negative/';
-  return {
-    confirm: () => dispatch({type: prefix + 'remove', payload: ownProps.id}),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteConfirmModal);

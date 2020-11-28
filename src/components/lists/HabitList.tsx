@@ -138,6 +138,18 @@ class HabitList extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) =>
+  ownProps.positive ? {data: state.positiveList} : {data: state.negativeList};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.positive ? 'positive/' : 'negative/';
+  return {
+    addItem: () => dispatch({type: prefix + 'add'}),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HabitList);
+
 const styles = StyleSheet.create({
   scroll: {
     minWidth: '100%',
@@ -152,15 +164,3 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-
-const mapStateToProps = (state, ownProps) =>
-  ownProps.positive ? {data: state.positiveList} : {data: state.negativeList};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  let prefix = ownProps.positive ? 'positive/' : 'negative/';
-  return {
-    addItem: () => dispatch({type: prefix + 'add'}),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(HabitList);

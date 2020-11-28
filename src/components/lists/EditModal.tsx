@@ -327,6 +327,48 @@ class EditModal extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  let list = ownProps.route.params.positive
+    ? state.positiveList
+    : state.negativeList;
+  let index;
+  let id;
+  if (ownProps.route.params.id !== -1) {
+    index = list.findIndex((h) => h.id === ownProps.route.params.id);
+    id = ownProps.route.params.id;
+  } else {
+    //If -1, edit last in list
+    index = list.length - 1;
+    id = index >= 0 ? list[index].id : undefined;
+  }
+
+  return index >= 0
+    ? {title: list[index].title, parameters: list[index].parameters, id: id}
+    : {
+        title: '',
+        parameters: {r: 0.7966, a: 0.4027, max: 1.9797, k: 7},
+        id: id,
+      };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.route.params.positive ? 'positive/' : 'negative/';
+  return {
+    storeData: (title, params) =>
+      dispatch({
+        type: prefix + 'edit',
+        payload: {id: ownProps.route.params.id, title: title, params: params},
+      }),
+    pop: () =>
+      dispatch({
+        type: prefix + 'remove',
+        payload: ownProps.route.params.id,
+      }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditModal);
+
 const styles = StyleSheet.create({
   modalView: {
     marginTop: 20,
@@ -386,45 +428,3 @@ const styles = StyleSheet.create({
     color: Colors.tint,
   },
 });
-
-const mapStateToProps = (state, ownProps) => {
-  let list = ownProps.route.params.positive
-    ? state.positiveList
-    : state.negativeList;
-  let index;
-  let id;
-  if (ownProps.route.params.id !== -1) {
-    index = list.findIndex((h) => h.id === ownProps.route.params.id);
-    id = ownProps.route.params.id;
-  } else {
-    //If -1, edit last in list
-    index = list.length - 1;
-    id = index >= 0 ? list[index].id : undefined;
-  }
-
-  return index >= 0
-    ? {title: list[index].title, parameters: list[index].parameters, id: id}
-    : {
-        title: '',
-        parameters: {r: 0.7966, a: 0.4027, max: 1.9797, k: 7},
-        id: id,
-      };
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  let prefix = ownProps.route.params.positive ? 'positive/' : 'negative/';
-  return {
-    storeData: (title, params) =>
-      dispatch({
-        type: prefix + 'edit',
-        payload: {id: ownProps.route.params.id, title: title, params: params},
-      }),
-    pop: () =>
-      dispatch({
-        type: prefix + 'remove',
-        payload: ownProps.route.params.id,
-      }),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditModal);

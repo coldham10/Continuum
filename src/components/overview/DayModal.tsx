@@ -247,11 +247,7 @@ const mapStateToProps = (state, ownProps) => {
   return {data: positiveData.concat(negativeData), day};
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DayModal);
+export default connect(mapStateToProps, null)(DayModal);
 
 const styles = StyleSheet.create({
   container: {

@@ -117,6 +117,21 @@ function statusColors(status) {
   }
 }
 
+const mapStateToProps = null;
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  let prefix = ownProps.positive ? 'positive/' : 'negative/';
+  return {
+    toggleTodayActivity: () =>
+      dispatch({
+        type: prefix + 'toggle',
+        payload: {id: ownProps.id, date: Date.now()},
+      }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Habit);
+
 const styles = StyleSheet.create({
   habitHL: {
     minHeight: 80,
@@ -176,18 +191,3 @@ const styles = StyleSheet.create({
     paddingRight: 3,
   },
 });
-
-const mapStateToProps = null;
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-  let prefix = ownProps.positive ? 'positive/' : 'negative/';
-  return {
-    toggleTodayActivity: () =>
-      dispatch({
-        type: prefix + 'toggle',
-        payload: {id: ownProps.id, date: Date.now()},
-      }),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Habit);
