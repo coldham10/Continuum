@@ -1,6 +1,5 @@
 import * as React from 'react';
-import HabitList from '../components/HabitList';
-import {negativeListName} from '../utils/Constants';
+import HabitList from '../components/lists/HabitList';
 
 export default function NegativeScreen(props) {
   return <HabitList positive={false} {...props} />;

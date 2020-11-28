@@ -7,11 +7,11 @@ import {
   Text,
 } from 'react-native';
 import Modal from 'react-native-modal';
-
+import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function OverviewModal(props) {
+function OverviewModal(props) {
   return (
     <Modal
       isVisible={props.visible}
@@ -131,9 +131,21 @@ function SectionHeader(props) {
   );
 }
 
-function allSelected(data) {
-  return data.every((habit) => habit.selected);
-}
+const mapStateToProps = (state, ownProps) => {
+  return {
+    positiveData: state.positiveList,
+    negativeData: state.negativeList,
+    dataByDate: byDate(state.positiveList, state.negativeList),
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    toggleSelected: (id) => dispatch({type: 'selection/toggle', payload: id}),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OverviewModal);
 
 const styles = StyleSheet.create({
   spacer: {

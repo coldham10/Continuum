@@ -7,8 +7,8 @@ import {connect} from 'react-redux';
 
 import * as Haptics from '../utils/Haptics';
 
-import OverviewCalendar from '../components/OverviewCalendar';
-import OverviewModal from '../components/OverviewModal';
+import OverviewCalendar from '../components/overview/OverviewCalendar';
+import OverviewModal from '../components/overview/OverviewModal';
 
 class OverviewScreen extends React.Component {
   constructor(props) {

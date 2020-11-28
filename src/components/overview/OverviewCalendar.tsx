@@ -1,6 +1,6 @@
-import React from "react";
-import { CalendarList } from "react-native-calendars";
-import * as Haptics from "../utils/Haptics";
+import React from 'react';
+import {CalendarList} from 'react-native-calendars';
+import * as Haptics from '../../utils/Haptics';
 
 export default function OverviewCalendar(props) {
   /*futureScrollRange={1}
@@ -16,7 +16,7 @@ export default function OverviewCalendar(props) {
       pagingEnabled={true}
       firstDay={1}
       showScrollIndicator={true}
-      markingType={"period"}
+      markingType={'period'}
       onDayPress={(day) => {
         props.selectDay(day);
         Haptics.impactAsync();
@@ -24,7 +24,7 @@ export default function OverviewCalendar(props) {
       futureScrollRange={3}
       pastScrollRange={Math.max(
         12,
-        Math.ceil((Date.now() - props.minDate) / (1000 * 60 * 60 * 24 * 30.4))
+        Math.ceil((Date.now() - props.minDate) / (1000 * 60 * 60 * 24 * 30.4)),
       )}
     />
   );
@@ -37,30 +37,30 @@ function getMarkings(dataByDate) {
     let daySummary = habits.reduce(
       (acc, habit) => {
         if (habit.data.selected) {
-          return { sum: acc.sum + habit.status, n: acc.n + 1 };
+          return {sum: acc.sum + habit.status, n: acc.n + 1};
         } else {
           return acc;
         }
       },
-      { sum: 0, n: 0 }
+      {sum: 0, n: 0},
     );
     if (daySummary.n === 0) {
-      markings[dateStr] = { selected: false };
+      markings[dateStr] = {selected: false};
     } else {
       let score = daySummary.sum / daySummary.n;
       let color =
-        "#" +
+        '#' +
         Math.round(255 * (1 - score)) //r
           .toString(16)
-          .padStart(2, "0") +
+          .padStart(2, '0') +
         Math.round(10 + 170 * Math.pow(score, 1.5)) //g
           .toString(16)
-          .padStart(2, "0") +
+          .padStart(2, '0') +
         Math.round(255 * score) //b
           .toString(16)
-          .padStart(2, "0") +
-        "c0"; //a
-      markings[dateStr] = { color: color };
+          .padStart(2, '0') +
+        'c0'; //a
+      markings[dateStr] = {color: color};
     }
   });
   return markings;

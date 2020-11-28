@@ -10,11 +10,10 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import * as Haptics from '../utils/Haptics';
+import * as Haptics from '../../utils/Haptics';
 import {Picker} from '@react-native-community/picker';
 import {connect} from 'react-redux';
-import {Colors} from '../utils/Constants';
-import {positiveListName, negativeListName} from '../utils/Constants';
+import {Colors} from '../../utils/Constants';
 
 class EditModal extends React.Component {
   constructor(props) {

@@ -1,9 +1,7 @@
 import React from 'react';
 import {StyleSheet, Button, View, Text} from 'react-native';
 import Modal from 'react-native-modal';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as Haptics from '../utils/Haptics';
-import {positiveListName, negativeListName} from '../utils/Constants';
+import * as Haptics from '../../utils/Haptics';
 
 export default function EditConfirmModal(props) {
   return (

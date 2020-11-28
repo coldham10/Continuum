@@ -10,14 +10,12 @@ import {
   FlatList,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as Haptics from '../utils/Haptics';
+import * as Haptics from '../../utils/Haptics';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import {positiveListName, negativeListName} from '../utils/Constants';
-import EditConfirmModal from '../components/EditConfirmModal';
+import EditConfirmModal from './EditConfirmModal';
 
 export default class DayModal extends React.Component {
   constructor(props) {

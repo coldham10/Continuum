@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, AppState, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
-import * as Haptics from '../utils/Haptics';
+import * as Haptics from '../../utils/Haptics';
 
 function Habit(props) {
   return (

@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import * as Haptics from '../utils/Haptics';
+import * as Haptics from '../../utils/Haptics';
 
 import Habit from './Habit';
 import DeleteConfirmModal from './DeleteConfirmModal';
