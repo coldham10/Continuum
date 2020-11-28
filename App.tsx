@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {StatusBar} from 'react-native';
 import {Colors} from './src/utils/Constants';
@@ -10,6 +10,14 @@ import store from './src/store/Store';
 import {persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
 
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    notification: Colors.badge,
+  },
+};
+
 const persistor = persistStore(store);
 
 const App = () => {
@@ -17,9 +25,9 @@ const App = () => {
     <SafeAreaProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <NavigationContainer>
+          <NavigationContainer theme={theme}>
             <RootNavigator />
-            <StatusBar backgroundColor={Colors.tint} />
+            <StatusBar backgroundColor={Colors.statusBar} />
           </NavigationContainer>
         </PersistGate>
       </Provider>

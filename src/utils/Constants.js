@@ -4,6 +4,8 @@ export const Colors = {
   text: '#000',
   background: '#fff',
   tint: continuumBlue,
-  tabIconDefault: '#ccc',
-  tabIconSelected: continuumBlue,
+  tabIconDefault: '#6baac7',
+  tabIconSelected: '#004666',
+  badge: '#e44c00',
+  statusBar: continuumBlue,
 };

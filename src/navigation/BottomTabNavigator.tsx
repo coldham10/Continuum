@@ -2,7 +2,7 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-
+import {connect} from 'react-redux';
 import OverviewScreen from '../screens/OverviewScreen';
 import PositiveScreen from '../screens/PositiveScreen';
 import NegativeScreen from '../screens/NegativeScreen';
@@ -30,7 +30,7 @@ function PositiveNavigator() {
         options={{
           headerTitle: 'Positive Habits',
           headerStyle: {
-            backgroundColor: '#009BE4',
+            backgroundColor: Colors.tint,
           },
         }}
       />
@@ -49,7 +49,7 @@ function NegativeNavigator() {
         options={{
           headerTitle: 'Negative Habits',
           headerStyle: {
-            backgroundColor: '#009BE4',
+            backgroundColor: Colors.tint,
           },
         }}
       />
@@ -68,7 +68,7 @@ function OverviewNavigator() {
         options={{
           headerTitle: 'Overview',
           headerStyle: {
-            backgroundColor: '#009BE4',
+            backgroundColor: Colors.tint,
           },
         }}
       />
@@ -79,15 +79,20 @@ function OverviewNavigator() {
 //All stack navigators in one Tab navigator
 const BTNav = createBottomTabNavigator();
 
-function BTNavigator() {
+function BTNavigator(props) {
   return (
-    <BTNav.Navigator>
+    <BTNav.Navigator
+      tabBarOptions={{
+        activeTintColor: Colors.tabIconSelected,
+      }}>
       <BTNav.Screen
         name="Positive"
         options={{
           tabBarIcon: ({color, size}) => (
             <Ionicons name="ios-add" color={color} size={size} />
           ),
+          tabBarBadgeStyle: {fontSize: 14},
+          tabBarBadge: props.positiveTodo,
         }}
         component={PositiveNavigator}
       />
@@ -113,14 +118,24 @@ function BTNavigator() {
   );
 }
 
-const RootNav = createStackNavigator();
+const mapStateToProps = (state, ownProps) => {
+  return {
+    positiveTodo:
+      state.positiveList.filter(
+        (habit) => habit.activity[habit.activity.length - 1] !== 1,
+      ).length || undefined,
+  };
+};
 
+const ConnectedBTNavigator = connect(mapStateToProps, null)(BTNavigator);
+
+const RootNav = createStackNavigator();
 export default function RootNavigator() {
   return (
     <RootNav.Navigator>
       <RootNav.Screen
         name="BTNav"
-        component={BTNavigator}
+        component={ConnectedBTNavigator}
         options={{headerShown: false}}
       />
       <RootNav.Screen

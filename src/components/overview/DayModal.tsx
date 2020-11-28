@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SectionList,
   TouchableHighlight,
+  TouchableOpacity,
   Button,
   Platform,
   View,
@@ -17,7 +18,7 @@ import * as Haptics from '../../utils/Haptics';
 import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import {Colors} from '../../utils/Constants';
 import EditConfirmModal from './EditConfirmModal';
 
 class DayModal extends React.Component {
@@ -25,6 +26,22 @@ class DayModal extends React.Component {
     super(props);
     this.state = {confirm: null};
   }
+
+  componentDidMount() {
+    this.props.navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            Haptics.impactAsync();
+            this.props.navigation.navigate('Overview');
+          }}>
+          <Text style={styles.buttonText}>Close</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }
+
   render() {
     return (
       <>
@@ -92,21 +109,6 @@ class DayModal extends React.Component {
                     </Text>
                   </View>
                 }
-              />
-            </View>
-            {Platform.OS === 'ios' ? (
-              <Button
-                title="Close"
-                onPress={() => this.props.navigation.navigate('OverviewScreen')}
-              />
-            ) : null}
-            <View style={styles.footer}>
-              <Button
-                title="Close"
-                onPress={() => {
-                  Haptics.impactAsync();
-                  this.props.navigation.navigate('OverviewScreen');
-                }}
               />
             </View>
           </View>
@@ -333,5 +335,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+  },
+  button: {
+    padding: 15,
+  },
+  buttonText: {
+    fontSize: 16.5,
+    color: Colors.tint,
   },
 });
