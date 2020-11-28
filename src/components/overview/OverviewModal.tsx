@@ -37,21 +37,34 @@ function OverviewModal(props) {
           <View style={styles.listContainer}>
             <SectionList
               sections={[
-                {title: 'Positive', data: props.positiveData},
-                {title: 'Negative', data: props.negativeData},
+                {title: 'Positive', positive: true, data: props.positiveData},
+                {title: 'Negative', positive: false, data: props.negativeData},
               ]}
               keyExtractor={(item, index) => item + index}
-              renderSectionHeader={({section: {title, data}}) => (
-                <SectionHeader
-                  title={title}
-                  data={data}
-                  toggleSelected={(id) => props.toggleSelected(id)}
-                />
-              )}
+              renderSectionHeader={({section: {title, positive, data}}) => {
+                let allSelected = positive
+                  ? props.allPositiveSelected
+                  : props.allNegativeSelected;
+                return (
+                  <SectionHeader
+                    title={title}
+                    toggleAll={() => {
+                      if (allSelected) {
+                        props.deselectAll(positive);
+                      } else {
+                        props.selectAll(positive);
+                      }
+                    }}
+                    allSelected={allSelected}
+                  />
+                );
+              }}
               renderItem={({item}) => (
                 <ListItem
                   item={item}
-                  toggleSelected={(id) => props.toggleSelected(id)}
+                  toggleSelected={(id, positive) =>
+                    props.toggleSelected(id, positive)
+                  }
                 />
               )}
               ListEmptyComponent={
@@ -73,20 +86,26 @@ function ListItem(props) {
         style={styles.liHL}
         activeOpacity={0.6}
         underlayColor="#aaa8"
-        onPress={() => props.toggleSelected(props.item.id)}>
+        onPress={() =>
+          props.toggleSelected(props.item.id, props.item.positive)
+        }>
         <Text style={styles.liTxt}>{props.item.title}</Text>
       </TouchableHighlight>
       {props.item.selected ? (
         <Ionicons
           name="md-checkmark-circle-outline"
           style={styles.checkBox}
-          onPress={() => props.toggleSelected(props.item.id)}
+          onPress={() =>
+            props.toggleSelected(props.item.id, props.item.positive)
+          }
         />
       ) : (
         <Icon
           name="circle-thin"
           style={styles.checkBox}
-          onPress={() => props.toggleSelected(props.item.id)}
+          onPress={() =>
+            props.toggleSelected(props.item.id, props.item.positive)
+          }
         />
       )}
     </View>
@@ -94,54 +113,65 @@ function ListItem(props) {
 }
 
 function SectionHeader(props) {
-  const toggleAll = (data) => {
-    if (allSelected(props.data)) {
-      props.data.forEach((habit) => props.toggleSelected(habit.id));
-    } else {
-      props.data.forEach((habit) => {
-        if (!habit.selected) {
-          props.toggleSelected(habit.id);
-        }
-      });
-    }
-  };
   return (
     <View style={styles.secHeader}>
       <TouchableHighlight
         style={styles.shHL}
         activeOpacity={0.6}
         underlayColor="#aaa8"
-        onPress={() => toggleAll(props.data)}>
+        onPress={() => props.toggleAll()}>
         <Text style={styles.shTxt}>{props.title}</Text>
       </TouchableHighlight>
-      {allSelected(props.data) ? (
+      {props.allSelected ? (
         <Ionicons
           name="md-checkmark-circle-outline"
           style={styles.checkBox}
-          onPress={() => toggleAll(props.data)}
+          onPress={() => props.toggleAll()}
         />
       ) : (
         <Icon
           name="circle-thin"
           style={styles.checkBox}
-          onPress={() => toggleAll(props.data)}
+          onPress={() => props.toggleAll()}
         />
       )}
     </View>
   );
 }
 
+function checkAllSelected(data) {
+  let answer;
+  try {
+    answer = data.every((habit) => habit.selected);
+  } catch (err) {
+    answer = false;
+  }
+  return answer;
+}
+
 const mapStateToProps = (state, ownProps) => {
   return {
     positiveData: state.positiveList,
     negativeData: state.negativeList,
-    dataByDate: byDate(state.positiveList, state.negativeList),
+    allPositiveSelected: checkAllSelected(state.positiveList),
+    allNegativeSelected: checkAllSelected(state.negativeList),
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    toggleSelected: (id) => dispatch({type: 'selection/toggle', payload: id}),
+    toggleSelected: (id, positive) => {
+      let prefix = positive ? 'positive/' : 'negative/';
+      dispatch({type: prefix + 'toggleSelected', payload: id});
+    },
+    selectAll: (positive) => {
+      let prefix = positive ? 'positive/' : 'negative/';
+      dispatch({type: prefix + 'selectAll'});
+    },
+    deselectAll: (positive) => {
+      let prefix = positive ? 'positive/' : 'negative/';
+      dispatch({type: prefix + 'deselectAll'});
+    },
   };
 };
 
@@ -156,6 +186,7 @@ const styles = StyleSheet.create({
     flex: 3,
     borderRadius: 5,
     alignItems: 'center',
+    backgroundColor: '#FFF',
   },
   oval: {
     width: 15,

@@ -26,7 +26,6 @@ export const positiveSlice = createSlice({
       }
     },
     edit: (state, action) => {
-      console.log(action);
       //Change title and parameters of habit. Recalculate values (TODO: if necessary)
       let index;
       if (action.payload.id === -1) {
@@ -40,9 +39,30 @@ export const positiveSlice = createSlice({
         state[index] = recomputeHistory(state[index], 0, true);
       }
     },
+    toggleSelected: (state, action) => {
+      //Toggle if a habit is shown in the overview
+      let index = state.findIndex((habit) => habit.id === action.payload);
+      if (index !== -1) {
+        state[index].selected = !state[index].selected;
+      }
+    },
+    selectAll: (state) => {
+      state.forEach((habit) => (habit.selected = true));
+    },
+    deselectAll: (state) => {
+      state.forEach((habit) => (habit.selected = false));
+    },
   },
 });
 
-export const {add, remove, toggle, edit} = positiveSlice.actions;
+export const {
+  add,
+  remove,
+  toggle,
+  edit,
+  toggleSelected,
+  selectAll,
+  deselcetAll,
+} = positiveSlice.actions;
 
 export default positiveSlice.reducer;
