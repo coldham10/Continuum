@@ -7,6 +7,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import positiveReducer from './reducers/PositiveSlice';
 import negativeReducer from './reducers/NegativeSlice';
+import extendHabit from './reducers/ExtendHabit';
 import {persistReducer, createTransform} from 'redux-persist';
 
 const reducers = combineReducers({
@@ -24,10 +25,19 @@ const selectAllOnRehydrate = createTransform(
   {whitelist: ['positiveList', 'negativeList']},
 );
 
+const extendHistOnRehydrate = createTransform(
+  null,
+  (state) => {
+    let newState = state.map((habit) => extendHabit(habit));
+    return newState;
+  },
+  {whitelist: ['positiveList', 'negativeList']},
+);
+
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  transforms: [selectAllOnRehydrate],
+  transforms: [selectAllOnRehydrate, extendHistOnRehydrate],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
 

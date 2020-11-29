@@ -12,6 +12,7 @@ import {
   View,
   Text,
   FlatList,
+  ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import * as Haptics from '../../utils/Haptics';
@@ -45,72 +46,90 @@ class DayModal extends React.Component {
     return (
       <>
         <View style={styles.container}>
-          <View style={styles.oval} />
-          <View style={styles.content}>
-            <View style={styles.header}>
-              <Text style={styles.title}>
-                {this.props.day === null
-                  ? ''
-                  : 'Overview of ' +
-                    new Date(
-                      this.props.day.year,
-                      this.props.day.month - 1,
-                      this.props.day.day,
-                    ).toDateString()}
-              </Text>
+          <ScrollView
+            style={styles.carousel}
+            horizontal={true}
+            contentContainerStyle={{width: '250%'}}
+            snapToInterval={300 /*FIXME: needs to be programaatic*/}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={200}
+            decelerationRate="fast"
+            pagingEnabled>
+            <View style={styles.content}>
+              <Text>Test</Text>
             </View>
-            <View style={styles.body}>
-              <FlatList
-                data={this.props.data}
-                renderItem={({item}) => (
-                  <ListItem
-                    title={item.title}
-                    completed={item.completed}
-                    status={item.status}
-                    day={this.props.day}
-                    positive={item.positive}
-                    edit={() =>
-                      this.setState({
-                        confirm: {
-                          id: item.id,
-                          dateString: this.props.day.dateString,
-                          positive: item.positive,
-                        },
-                      })
-                    }
-                  />
-                )}
-                keyExtractor={(item) => 'id' + item.id}
-                ListHeaderComponent={
-                  <View style={styles.listHdr}>
-                    <View style={{flex: 3, alignItems: 'center'}}>
-                      <Text style={{fontSize: 20, paddingRight: '10%'}}>
-                        Title
+            <View style={styles.content}>
+              <View style={styles.header}>
+                <Text style={styles.title}>
+                  {this.props.day === null
+                    ? ''
+                    : 'Overview of ' +
+                      new Date(
+                        this.props.day.year,
+                        this.props.day.month - 1,
+                        this.props.day.day,
+                      ).toDateString()}
+                </Text>
+              </View>
+              <View style={styles.body}>
+                <FlatList
+                  data={this.props.data}
+                  renderItem={({item}) => (
+                    <ListItem
+                      title={item.title}
+                      completed={item.completed}
+                      status={item.status}
+                      day={this.props.day}
+                      positive={item.positive}
+                      edit={() =>
+                        this.setState({
+                          confirm: {
+                            id: item.id,
+                            dateString: this.props.day.dateString,
+                            positive: item.positive,
+                          },
+                        })
+                      }
+                    />
+                  )}
+                  keyExtractor={(item) => 'id' + item.id}
+                  ListHeaderComponent={
+                    <View style={styles.listHdr}>
+                      <View style={{flex: 2, alignItems: 'center'}}>
+                        <Text style={{fontSize: 20, paddingRight: '10%'}}>
+                          Title
+                        </Text>
+                      </View>
+                      <View style={{flex: 1}} />
+                      <View style={{flex: 2, alignItems: 'center'}}>
+                        <Text adjustsFontSizeToFit style={{fontSize: 17}}>
+                          Achieved/
+                        </Text>
+                        <Text adjustsFontSizeToFit style={{fontSize: 17}}>
+                          Momentum
+                        </Text>
+                      </View>
+                      <View style={{flex: 1, alignItems: 'flex-end'}}>
+                        <Text style={{fontSize: 17, paddingRight: 5}}>
+                          Edit
+                        </Text>
+                      </View>
+                    </View>
+                  }
+                  ListEmptyComponent={
+                    <View style={styles.empty}>
+                      <Text style={styles.emptyTxt}>
+                        No habits available for this day
                       </Text>
                     </View>
-                    <View style={{flex: 2, alignItems: 'center'}}>
-                      <Text adjustsFontSizeToFit style={{fontSize: 17}}>
-                        Achieved/
-                      </Text>
-                      <Text adjustsFontSizeToFit style={{fontSize: 17}}>
-                        Momentum
-                      </Text>
-                    </View>
-                    <View style={{flex: 1, alignItems: 'flex-end'}}>
-                      <Text style={{fontSize: 17, paddingRight: 5}}>Edit</Text>
-                    </View>
-                  </View>
-                }
-                ListEmptyComponent={
-                  <View style={styles.empty}>
-                    <Text style={styles.emptyTxt}>
-                      No habits available for this day
-                    </Text>
-                  </View>
-                }
-              />
+                  }
+                />
+              </View>
             </View>
-          </View>
+            <View style={styles.content}>
+              <Text>Test2</Text>
+            </View>
+          </ScrollView>
         </View>
         <EditConfirmModal
           visible={this.state.confirm !== null}
@@ -258,17 +277,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
-  oval: {
-    width: 15,
-    height: 4,
-    backgroundColor: '#aaa0',
-    margin: 4,
-    borderRadius: 3,
-  },
+  carousel: {},
   content: {
     alignItems: 'center',
-    flex: 1,
     padding: 5,
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 5,
+    flex: 1,
   },
   header: {
     flex: 1,
@@ -282,12 +299,12 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 6,
-    borderWidth: 1,
+    borderTopWidth: 1,
     minWidth: '100%',
     borderRadius: 3,
     padding: 1,
     marginBottom: 5,
-    borderColor: '#aaa8',
+    borderColor: '#aaa',
   },
   li: {
     flexDirection: 'row',
