@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import newHabit from './NewHabit';
 import toggleActivity from './ToggleActivity';
 import recomputeHistory from './ReHistory';
+import extendHabit from './ExtendHabit';
 
 export const positiveSlice = createSlice({
   name: 'positive',
@@ -51,6 +52,10 @@ export const positiveSlice = createSlice({
     },
     deselectAll: (state) => {
       state.forEach((habit) => (habit.selected = false));
+    },
+    extendAll: (state) => {
+      let newState = state.map((habit) => extendHabit(habit));
+      return newState;
     },
   },
 });

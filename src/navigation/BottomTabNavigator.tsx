@@ -11,7 +11,7 @@ import HabitHelpModal from '../components/HabitHelpModal';
 import OverviewHelpModal from '../components/OverviewHelpModal';
 import EditModal from '../components/lists/EditModal';
 import DayModal from '../components/overview/DayModal';
-
+import UpdateTimer from '../utils/UpdateTimer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -132,62 +132,65 @@ const ConnectedBTNavigator = connect(mapStateToProps, null)(BTNavigator);
 const RootNav = createStackNavigator();
 export default function RootNavigator() {
   return (
-    <RootNav.Navigator>
-      <RootNav.Screen
-        name="BTNav"
-        component={ConnectedBTNavigator}
-        options={{headerShown: false}}
-      />
-      <RootNav.Screen
-        name="HabitHelp"
-        component={HabitHelpModal}
-        mode="modal"
-        options={{
-          headerTitle: 'Habit Help',
-          headerStyle: {
-            backgroundColor: '#eee',
-            borderBottomWidth: 1,
-            borderBottomColor: '#888',
-          },
-        }}
-      />
-      <RootNav.Screen
-        name="OverviewHelp"
-        component={OverviewHelpModal}
-        mode="modal"
-        options={{
-          headerTitle: 'Overview Help',
-          headerStyle: {
-            backgroundColor: '#eee',
-            borderBottomWidth: 1,
-            borderBottomColor: '#888',
-          },
-        }}
-      />
-      <RootNav.Screen
-        name="EditModal"
-        component={EditModal}
-        options={{
-          headerTitle: '',
-          headerStyle: {
-            backgroundColor: '#eee',
-            borderBottomWidth: 1,
-            borderBottomColor: '#888',
-          },
-        }}
-      />
-      <RootNav.Screen
-        name="DayModal"
-        component={DayModal}
-        options={{
-          headerTitle: '',
-          headerStyle: {
-            backgroundColor: '#eee',
-            borderBottomWidth: 1,
-            borderBottomColor: '#888',
-          },
-        }}
-      />
-    </RootNav.Navigator>
+    <>
+      <UpdateTimer />
+      <RootNav.Navigator>
+        <RootNav.Screen
+          name="BTNav"
+          component={ConnectedBTNavigator}
+          options={{headerShown: false}}
+        />
+        <RootNav.Screen
+          name="HabitHelp"
+          component={HabitHelpModal}
+          mode="modal"
+          options={{
+            headerTitle: 'Habit Help',
+            headerStyle: {
+              backgroundColor: '#eee',
+              borderBottomWidth: 1,
+              borderBottomColor: '#888',
+            },
+          }}
+        />
+        <RootNav.Screen
+          name="OverviewHelp"
+          component={OverviewHelpModal}
+          mode="modal"
+          options={{
+            headerTitle: 'Overview Help',
+            headerStyle: {
+              backgroundColor: '#eee',
+              borderBottomWidth: 1,
+              borderBottomColor: '#888',
+            },
+          }}
+        />
+        <RootNav.Screen
+          name="EditModal"
+          component={EditModal}
+          options={{
+            headerTitle: '',
+            headerStyle: {
+              backgroundColor: '#eee',
+              borderBottomWidth: 1,
+              borderBottomColor: '#888',
+            },
+          }}
+        />
+        <RootNav.Screen
+          name="DayModal"
+          component={DayModal}
+          options={{
+            headerTitle: '',
+            headerStyle: {
+              backgroundColor: '#eee',
+              borderBottomWidth: 1,
+              borderBottomColor: '#888',
+            },
+          }}
+        />
+      </RootNav.Navigator>
+    </>
   );
 }
