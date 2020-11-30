@@ -8,6 +8,8 @@ target 'Continuum' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
+
   target 'ContinuumTests' do
     inherit! :complete
     # Pods for testing

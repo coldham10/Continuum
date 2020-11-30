@@ -12,19 +12,22 @@ import {
   View,
   Text,
   FlatList,
-  ScrollView,
+  Dimensions,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import ViewPager from '@react-native-community/viewpager';
 import * as Haptics from '../../utils/Haptics';
 import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Colors} from '../../utils/Constants';
 import EditConfirmModal from './EditConfirmModal';
+import {StackActions} from '@react-navigation/native';
 
 class DayModal extends React.Component {
   constructor(props) {
     super(props);
+    this.windowWidth = Dimensions.get('window').width;
     this.state = {confirm: null};
   }
 
@@ -46,90 +49,143 @@ class DayModal extends React.Component {
     return (
       <>
         <View style={styles.container}>
-          <ScrollView
+          <ViewPager
             style={styles.carousel}
-            horizontal={true}
-            contentContainerStyle={{width: '250%'}}
-            snapToInterval={300 /*FIXME: needs to be programaatic*/}
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={200}
-            decelerationRate="fast"
-            pagingEnabled>
-            <View style={styles.content}>
-              <Text>Test</Text>
-            </View>
-            <View style={styles.content}>
-              <View style={styles.header}>
-                <Text style={styles.title}>
-                  {this.props.day === null
-                    ? ''
-                    : 'Overview of ' +
-                      new Date(
-                        this.props.day.year,
-                        this.props.day.month - 1,
-                        this.props.day.day,
-                      ).toDateString()}
-                </Text>
-              </View>
-              <View style={styles.body}>
-                <FlatList
-                  data={this.props.data}
-                  renderItem={({item}) => (
-                    <ListItem
-                      title={item.title}
-                      completed={item.completed}
-                      status={item.status}
-                      day={this.props.day}
-                      positive={item.positive}
-                      edit={() =>
-                        this.setState({
-                          confirm: {
-                            id: item.id,
-                            dateString: this.props.day.dateString,
-                            positive: item.positive,
-                          },
-                        })
-                      }
-                    />
-                  )}
-                  keyExtractor={(item) => 'id' + item.id}
-                  ListHeaderComponent={
-                    <View style={styles.listHdr}>
-                      <View style={{flex: 2, alignItems: 'center'}}>
-                        <Text style={{fontSize: 20, paddingRight: '10%'}}>
-                          Title
-                        </Text>
-                      </View>
-                      <View style={{flex: 1}} />
-                      <View style={{flex: 2, alignItems: 'center'}}>
-                        <Text adjustsFontSizeToFit style={{fontSize: 17}}>
-                          Achieved/
-                        </Text>
-                        <Text adjustsFontSizeToFit style={{fontSize: 17}}>
-                          Momentum
-                        </Text>
-                      </View>
-                      <View style={{flex: 1, alignItems: 'flex-end'}}>
-                        <Text style={{fontSize: 17, paddingRight: 5}}>
-                          Edit
-                        </Text>
-                      </View>
-                    </View>
-                  }
-                  ListEmptyComponent={
-                    <View style={styles.empty}>
-                      <Text style={styles.emptyTxt}>
-                        No habits available for this day
-                      </Text>
-                    </View>
-                  }
-                />
+            initialPage={1}
+            onPageScroll={() => console.log('Scrolling')}
+            onPageSelected={(e) => {
+              let newDate = new Date(
+                this.props.day.year,
+                this.props.day.month - 1,
+                this.props.day.day - 1 + e.nativeEvent.position,
+              );
+              switch (e.nativeEvent.position) {
+                case 0:
+                case 2:
+                  this.props.navigation.dispatch(
+                    StackActions.replace('DayModal', {
+                      day: {
+                        year: newDate.getFullYear(),
+                        month: newDate.getMonth() + 1,
+                        day: newDate.getDate(),
+                        dateString:
+                          '' +
+                          newDate.getFullYear() +
+                          '-' +
+                          (newDate.getMonth() + 1) +
+                          '-' +
+                          newDate.getDate(),
+                      },
+                    }),
+                  );
+                  break;
+              }
+            }}>
+            <View style={styles.page}>
+              <View key="0" style={styles.content}>
+                <View style={styles.header}>
+                  <Text style={styles.title}>
+                    {this.props.day === null
+                      ? ''
+                      : 'Overview of ' +
+                        new Date(
+                          this.props.day.year,
+                          this.props.day.month - 1,
+                          this.props.day.day - 1,
+                        ).toDateString()}
+                  </Text>
+                </View>
+                <View style={styles.body} />
               </View>
             </View>
-            <View style={styles.content}>
-              <Text>Test2</Text>
+            <View style={styles.page}>
+              <View style={styles.content} key="1">
+                <View style={styles.header}>
+                  <Text style={styles.title}>
+                    {this.props.day === null
+                      ? ''
+                      : 'Overview of ' +
+                        new Date(
+                          this.props.day.year,
+                          this.props.day.month - 1,
+                          this.props.day.day,
+                        ).toDateString()}
+                  </Text>
+                </View>
+                <View style={styles.body}>
+                  <FlatList
+                    data={this.props.data}
+                    renderItem={({item}) => (
+                      <ListItem
+                        title={item.title}
+                        completed={item.completed}
+                        status={item.status}
+                        day={this.props.day}
+                        positive={item.positive}
+                        edit={() =>
+                          this.setState({
+                            confirm: {
+                              id: item.id,
+                              dateString: this.props.day.dateString,
+                              positive: item.positive,
+                            },
+                          })
+                        }
+                      />
+                    )}
+                    keyExtractor={(item) => 'id' + item.id}
+                    ListHeaderComponent={
+                      <View style={styles.listHdr}>
+                        <View style={{flex: 2, alignItems: 'center'}}>
+                          <Text style={{fontSize: 20, paddingRight: '10%'}}>
+                            Title
+                          </Text>
+                        </View>
+                        <View style={{flex: 1}} />
+                        <View style={{flex: 2, alignItems: 'center'}}>
+                          <Text adjustsFontSizeToFit style={{fontSize: 17}}>
+                            Achieved/
+                          </Text>
+                          <Text adjustsFontSizeToFit style={{fontSize: 17}}>
+                            Momentum
+                          </Text>
+                        </View>
+                        <View style={{flex: 1, alignItems: 'flex-end'}}>
+                          <Text style={{fontSize: 17, paddingRight: 5}}>
+                            Edit
+                          </Text>
+                        </View>
+                      </View>
+                    }
+                    ListEmptyComponent={
+                      <View style={styles.empty}>
+                        <Text style={styles.emptyTxt}>
+                          No habits available for this day
+                        </Text>
+                      </View>
+                    }
+                  />
+                </View>
+              </View>
             </View>
-          </ScrollView>
+            <View style={styles.page}>
+              <View key="0" style={styles.content}>
+                <View style={styles.header}>
+                  <Text style={styles.title}>
+                    {this.props.day === null
+                      ? ''
+                      : 'Overview of ' +
+                        new Date(
+                          this.props.day.year,
+                          this.props.day.month - 1,
+                          this.props.day.day + 1,
+                        ).toDateString()}
+                  </Text>
+                </View>
+                <View style={styles.body} />
+              </View>
+            </View>
+          </ViewPager>
         </View>
         <EditConfirmModal
           visible={this.state.confirm !== null}
@@ -272,16 +328,22 @@ export default connect(mapStateToProps, null)(DayModal);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 10,
     marginTop: 25,
     marginBottom: 25,
     borderRadius: 5,
     alignItems: 'center',
   },
-  carousel: {},
+  carousel: {
+    height: '100%',
+    width: '95%',
+  },
+  page: {},
   content: {
     alignItems: 'center',
     padding: 5,
-    margin: 10,
+    marginLeft: 5,
+    marginRight: 5,
     borderWidth: 1,
     borderColor: '#aaa',
     borderRadius: 5,

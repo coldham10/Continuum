@@ -48,6 +48,7 @@ class OverviewScreen extends React.Component {
             minDate={this.getMinDate()}
             maxDate={this.getMaxDate()}
             dataByDate={this.props.dataByDate}
+            navigation={this.props.navigation}
             selectDay={(day) =>
               this.props.navigation.navigate('DayModal', {day: day})
             }

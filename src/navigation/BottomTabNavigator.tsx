@@ -182,6 +182,7 @@ export default function RootNavigator() {
           name="DayModal"
           component={DayModal}
           options={{
+            animationEnabled: false,
             headerTitle: '',
             headerStyle: {
               backgroundColor: '#eee',
