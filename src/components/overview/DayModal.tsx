@@ -52,7 +52,6 @@ class DayModal extends React.Component {
           <ViewPager
             style={styles.carousel}
             initialPage={1}
-            onPageScroll={() => console.log('Scrolling')}
             onPageSelected={(e) => {
               let newDate = new Date(
                 this.props.day.year,
@@ -62,21 +61,25 @@ class DayModal extends React.Component {
               switch (e.nativeEvent.position) {
                 case 0:
                 case 2:
-                  this.props.navigation.dispatch(
-                    StackActions.replace('DayModal', {
-                      day: {
-                        year: newDate.getFullYear(),
-                        month: newDate.getMonth() + 1,
-                        day: newDate.getDate(),
-                        dateString:
-                          '' +
-                          newDate.getFullYear() +
-                          '-' +
-                          (newDate.getMonth() + 1) +
-                          '-' +
-                          newDate.getDate(),
-                      },
-                    }),
+                  setTimeout(
+                    () =>
+                      this.props.navigation.dispatch(
+                        StackActions.replace('DayModal', {
+                          day: {
+                            year: newDate.getFullYear(),
+                            month: newDate.getMonth() + 1,
+                            day: newDate.getDate(),
+                            dateString:
+                              '' +
+                              newDate.getFullYear() +
+                              '-' +
+                              (newDate.getMonth() + 1) +
+                              '-' +
+                              newDate.getDate(),
+                          },
+                        }),
+                      ),
+                    150,
                   );
                   break;
               }

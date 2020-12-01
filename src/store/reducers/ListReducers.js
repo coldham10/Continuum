@@ -52,8 +52,8 @@ export default (positive) => {
       state.forEach((habit) => (habit.selected = false));
     },
     extendAll: (state) => {
-      let newState = state.map((habit) => extendHabit(habit));
-      return newState;
+      let newState = JSON.parse(JSON.stringify(state));
+      return newState.map((habit) => extendHabit(habit));
     },
   };
 };

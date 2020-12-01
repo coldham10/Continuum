@@ -13,7 +13,7 @@ class UpdateTimer extends React.Component {
     let millis = midnight - new Date(); //Milliseconds until new day
     setTimeout(() => {
       this.props.updateAll();
-      this.sheduleUpdate(); //Call again for next day
+      this.scheduleUpdate(); //Call again for next day
     }, millis);
   }
 
