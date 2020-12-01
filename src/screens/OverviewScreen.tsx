@@ -45,9 +45,6 @@ class OverviewScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.calendar}>
           <OverviewCalendar
-            minDate={this.getMinDate()}
-            maxDate={this.getMaxDate()}
-            dataByDate={this.props.dataByDate}
             navigation={this.props.navigation}
             selectDay={(day) =>
               this.props.navigation.navigate('DayModal', {day: day})
@@ -105,75 +102,12 @@ class OverviewScreen extends React.Component {
       </View>
     );
   }
-
-  getMinDate() {
-    let minNeg =
-      this.props.negativeData.length > 0
-        ? Math.min(...this.props.negativeData.map((item) => item.timeStamp))
-        : new Date().getTime();
-    let minPos =
-      this.props.positiveData.length > 0
-        ? Math.min(...this.props.positiveData.map((item) => item.timeStamp))
-        : new Date().getTime();
-    let returnDate = new Date(Math.min(minNeg, minPos));
-    returnDate.setDate(1);
-    return returnDate;
-  }
-
-  getMaxDate() {
-    let d = new Date();
-    d.setMonth(d.getMonth() + 1);
-    d.setDate(0);
-    return d;
-  }
-}
-
-function byDate(positiveData, negativeData) {
-  let dataByDate = {};
-  let dateString = (date) =>
-    new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-      .toISOString()
-      .split('T')[0];
-
-  positiveData.forEach((pHabit) => {
-    let date = new Date(pHabit.timeStamp);
-    pHabit.histValues.forEach((val, index) => {
-      if (typeof dataByDate[dateString(date)] === 'undefined') {
-        dataByDate[dateString(date)] = [];
-      }
-      dataByDate[dateString(date)].push({
-        id: pHabit.id,
-        status:
-          0.1 * Math.min(1, val) +
-          0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
-        completed: pHabit.activity[index],
-        data: pHabit,
-      });
-      date.setDate(date.getDate() + 1);
-    });
-  });
-  negativeData.forEach((nHabit) => {
-    let date = new Date(nHabit.timeStamp);
-    nHabit.histValues.forEach((val, index) => {
-      if (typeof dataByDate[dateString(date)] === 'undefined') {
-        dataByDate[dateString(date)] = [];
-      }
-      dataByDate[dateString(date)].push({
-        id: nHabit.id,
-        status: val,
-        completed: nHabit.activity[index],
-        data: nHabit,
-      });
-    });
-  });
-  return dataByDate;
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
     positiveData: state.positiveList,
     negativeData: state.negativeList,
-    dataByDate: byDate(state.positiveList, state.negativeList),
   };
 };
 
