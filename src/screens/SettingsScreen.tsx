@@ -2,7 +2,7 @@ import * as React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import {connect} from 'react-redux';
 
-function AccountScreen(props) {
+function SettingsScreen(props) {
   return (
     <View style={styles.container}>
       <Text>{props.premium ? 'Premium' : 'Free'}</Text>
@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);
 
 const styles = StyleSheet.create({
   container: {

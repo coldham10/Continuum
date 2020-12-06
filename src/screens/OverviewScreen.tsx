@@ -20,7 +20,21 @@ class OverviewScreen extends React.Component {
     //Add help icon to top navigation pane
     this.props.navigation.setOptions({
       headerRight: () => (
-        <View style={{backgroundColor: '#0000'}}>
+        <View style={{backgroundColor: '#0000', flexDirection: 'row'}}>
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor="#aaa8"
+            style={{borderRadius: 10}}
+            onPress={() => {
+              this.props.navigation.navigate('SettingsScreen');
+            }}>
+            <Ionicons
+              style={{margin: 5, marginRight: 10}}
+              name="md-settings"
+              size={24}
+              color="black"
+            />
+          </TouchableHighlight>
           <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#aaa8"

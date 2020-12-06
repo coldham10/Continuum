@@ -1,17 +1,9 @@
 /*Full screen help modal for overview screen */
 
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Button,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Button, View, Text, ScrollView} from 'react-native';
 
 export default function OverviewHelpModal(props) {
-  const [presses, setPresses] = useState(0);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
@@ -30,23 +22,13 @@ export default function OverviewHelpModal(props) {
             blue: you're doing great!).
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.secretTouch}
-          activeOpacity={0.9}
-          onPress={() => {
-            setPresses(presses + 1);
-            if (presses > 10) {
-              props.navigation.navigate('AccountScreen');
-            }
-          }}>
-          <Text style={styles.pgphTxt}>
-            You can press the days in the calendar to see a summary of that day.
-            For each of your habits you can see if you completed/abstained that
-            day and the momentum you had. You can also press the{' '}
-            <Text style={styles.bold}>edit button</Text> for each habit to
-            retroactively change whether you achieved/abstained that day or not.
-          </Text>
-        </TouchableOpacity>
+        <Text style={styles.pgphTxt}>
+          You can press the days in the calendar to see a summary of that day.
+          For each of your habits you can see if you completed/abstained that
+          day and the momentum you had. You can also press the{' '}
+          <Text style={styles.bold}>edit button</Text> for each habit to
+          retroactively change whether you achieved/abstained that day or not.
+        </Text>
       </View>
     </ScrollView>
   );

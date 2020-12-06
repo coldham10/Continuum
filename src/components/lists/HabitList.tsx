@@ -4,7 +4,7 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Button,
+  TouchableOpacity,
   TouchableHighlight,
   Text,
   View,
@@ -20,6 +20,7 @@ import * as Haptics from '../../utils/Haptics';
 
 import Habit from './Habit';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import {Colors} from '../../utils/Constants';
 
 const threshold = 1;
 
@@ -32,7 +33,21 @@ class HabitList extends React.Component {
   componentDidMount() {
     this.props.navigation.setOptions({
       headerRight: () => (
-        <View style={{backgroundColor: '#0000'}}>
+        <View style={{backgroundColor: '#0000', flexDirection: 'row'}}>
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor="#aaa8"
+            style={{borderRadius: 10}}
+            onPress={() => {
+              this.props.navigation.navigate('SettingsScreen');
+            }}>
+            <Ionicons
+              style={{margin: 5, marginRight: 10}}
+              name="md-settings"
+              size={24}
+              color="black"
+            />
+          </TouchableHighlight>
           <TouchableHighlight
             activeOpacity={0.6}
             underlayColor="#aaa8"
@@ -41,7 +56,7 @@ class HabitList extends React.Component {
               this.props.navigation.navigate('HabitHelp');
             }}>
             <Icon
-              style={{margin: 5}}
+              style={{margin: 5, marginRight: 10}}
               name="question-circle-o"
               size={24}
               color="black"
@@ -54,8 +69,9 @@ class HabitList extends React.Component {
 
   render() {
     var addBtn = (
-      <Button
-        title="Add New Habit"
+      <TouchableOpacity
+        style={styles.add}
+        activeOpacity={0.8}
         onPress={() => {
           Haptics.impact();
           this.props.addItem();
@@ -64,8 +80,9 @@ class HabitList extends React.Component {
             id: -1,
             new: true,
           });
-        }}
-      />
+        }}>
+        <Ionicons name="ios-add" color={'black'} size={45} />
+      </TouchableOpacity>
     );
     return (
       <>
@@ -103,7 +120,7 @@ class HabitList extends React.Component {
           keyExtractor={(item) => 'id' + item.id}
           ListEmptyComponent={<Text>No habits added yet</Text>}
           ListFooterComponent={addBtn}
-          ListFooterComponentStyle={styles.add}
+          ListFooterComponentStyle={styles.footer}
         />
         <DeleteConfirmModal
           visible={this.state.toDelete !== null}
@@ -158,8 +175,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  footer: {
+    margin: 80,
+    marginBottom: 90,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   add: {
-    margin: 20,
-    borderRadius: 20,
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    backgroundColor: Colors.tint,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
