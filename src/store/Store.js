@@ -7,12 +7,14 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import positiveReducer from './reducers/PositiveSlice';
 import negativeReducer from './reducers/NegativeSlice';
+import accountReducer from './reducers/AccountSlice';
 import extendHabit from './reducers/ExtendHabit';
 import {persistReducer, createTransform} from 'redux-persist';
 
 const reducers = combineReducers({
   positiveList: positiveReducer,
   negativeList: negativeReducer,
+  account: accountReducer,
 });
 
 const selectAllOnRehydrate = createTransform(

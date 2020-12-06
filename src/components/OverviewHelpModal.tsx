@@ -1,9 +1,17 @@
 /*Full screen help modal for overview screen */
 
-import React from 'react';
-import {StyleSheet, Button, View, Text, ScrollView} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Button,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 
 export default function OverviewHelpModal(props) {
+  const [presses, setPresses] = useState(0);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
@@ -22,7 +30,15 @@ export default function OverviewHelpModal(props) {
             blue: you're doing great!).
           </Text>
         </View>
-        <View style={styles.pgph}>
+        <TouchableOpacity
+          style={styles.secretTouch}
+          activeOpacity={0.9}
+          onPress={() => {
+            setPresses(presses + 1);
+            if (presses > 10) {
+              props.navigation.navigate('AccountScreen');
+            }
+          }}>
           <Text style={styles.pgphTxt}>
             You can press the days in the calendar to see a summary of that day.
             For each of your habits you can see if you completed/abstained that
@@ -30,7 +46,7 @@ export default function OverviewHelpModal(props) {
             <Text style={styles.bold}>edit button</Text> for each habit to
             retroactively change whether you achieved/abstained that day or not.
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -50,6 +66,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 10,
   },
+  secretTouch: {padding: 5, paddingBottom: 10, marginBottom: 10},
   pgphTxt: {
     fontSize: 18,
   },

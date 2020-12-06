@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import OverviewScreen from '../screens/OverviewScreen';
 import PositiveScreen from '../screens/PositiveScreen';
 import NegativeScreen from '../screens/NegativeScreen';
+import AccountScreen from '../screens/AccountScreen';
 
 import HabitHelpModal from '../components/HabitHelpModal';
 import OverviewHelpModal from '../components/OverviewHelpModal';
@@ -184,6 +185,18 @@ export default function RootNavigator() {
           options={{
             animationEnabled: false,
             headerTitle: '',
+            headerStyle: {
+              backgroundColor: '#eee',
+              borderBottomWidth: 1,
+              borderBottomColor: '#888',
+            },
+          }}
+        />
+        <RootNav.Screen
+          name="AccountScreen"
+          component={AccountScreen}
+          options={{
+            headerTitle: 'Account',
             headerStyle: {
               backgroundColor: '#eee',
               borderBottomWidth: 1,

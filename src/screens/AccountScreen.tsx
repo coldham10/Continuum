@@ -1,0 +1,40 @@
+import * as React from 'react';
+import {View, Text, StyleSheet, Button} from 'react-native';
+import {connect} from 'react-redux';
+
+function AccountScreen(props) {
+  return (
+    <View style={styles.container}>
+      <Text>{props.premium ? 'Premium' : 'Free'}</Text>
+      {props.premium ? (
+        <Button title="Set Free" onPress={() => props.setPremium(false)} />
+      ) : (
+        <Button
+          title="Set Premium"
+          onPress={() => {
+            props.setPremium(true);
+          }}
+        />
+      )}
+    </View>
+  );
+}
+
+const mapStateToProps = (state, ownProps) => ({premium: state.account.premium});
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  setPremium: (state) => {
+    dispatch({
+      type: state ? 'account/setPremium' : 'account/setFree',
+    });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen);
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+});

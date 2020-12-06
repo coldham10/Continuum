@@ -96,7 +96,6 @@ class HabitList extends React.Component {
                   })
                 }
                 deleteItem={this.setState.bind(this, {toDelete: item.id})}
-                navigation={this.props.navigation}
                 {...item}
               />
             );

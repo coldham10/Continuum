@@ -45,7 +45,6 @@ class OverviewScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.calendar}>
           <OverviewCalendar
-            navigation={this.props.navigation}
             selectDay={(day) =>
               this.props.navigation.navigate('DayModal', {day: day})
             }
