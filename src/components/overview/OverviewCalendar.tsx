@@ -7,10 +7,6 @@ import {connect} from 'react-redux';
 import * as Haptics from '../../utils/Haptics';
 
 function OverviewCalendar(props) {
-  /*futureScrollRange={1}
-  pastScrollRange={Math.ceil(
-    (Date.now() - props.minDate) / (1000 * 60 * 60 * 24 * 30.4)
-  )}*/
   return (
     <CalendarList
       minDate={props.minDate}

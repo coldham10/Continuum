@@ -3,9 +3,8 @@
 import reHistory from './ReHistory';
 
 export default (habit) => {
-  let daysOld = Math.floor(
-    (Date.now() - habit.timeStamp) / (1000 * 60 * 60 * 24),
-  );
+  let dateCreated = new Date(habit.timeStamp);
+  let daysOld = Math.floor((Date.now() - dateCreated) / (1000 * 60 * 60 * 24));
   let daysStale = daysOld + 1 - habit.activity.length;
   if (daysStale > 0) {
     habit.activity = habit.activity.concat(new Array(daysStale).fill(0));

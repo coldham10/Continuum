@@ -2,6 +2,14 @@
 //of index, given up-to-date activity
 
 export default (habit, index, positive) => {
+  let newHabit = reHistory(habit, index, positive);
+  if (isNaN(newHabit.histValues[newHabit.histValues.length - 1])) {
+    newHabit = reHistory(habit, 0, positive);
+  }
+  return newHabit;
+};
+
+const reHistory = (habit, index, positive) => {
   index = index < 0 ? 0 : index;
   let newHistory = habit.histValues.slice(0, index);
   if (positive) {

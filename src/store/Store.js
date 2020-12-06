@@ -7,15 +7,27 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import positiveReducer from './reducers/PositiveSlice';
 import negativeReducer from './reducers/NegativeSlice';
-import accountReducer from './reducers/AccountSlice';
+import metaReducer from './reducers/MetaSlice';
 import extendHabit from './reducers/ExtendHabit';
 import {persistReducer, createTransform} from 'redux-persist';
 
 const reducers = combineReducers({
   positiveList: positiveReducer,
   negativeList: negativeReducer,
-  account: accountReducer,
+  meta: metaReducer,
 });
+
+const setTimezoneOnRehydrate = createTransform(
+  null,
+  (state) => {
+    let newState = JSON.parse(JSON.stringify(state));
+    newState.forEach(
+      (habit) => (habit.timeStamp = new Date(habit.timeStamp).setHours(0)),
+    );
+    return newState;
+  },
+  {whitelist: ['positiveList', 'negativeList']},
+);
 
 const selectAllOnRehydrate = createTransform(
   null,
@@ -39,7 +51,11 @@ const extendHistOnRehydrate = createTransform(
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  transforms: [selectAllOnRehydrate, extendHistOnRehydrate],
+  transforms: [
+    selectAllOnRehydrate,
+    extendHistOnRehydrate,
+    setTimezoneOnRehydrate,
+  ],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
 

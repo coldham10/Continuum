@@ -105,24 +105,38 @@ function statusColors(status) {
     let tstat = (status - 0.1) / 0.9; //status above the threshold
     return {
       backgroundColor:
-        'rgb(' +
+        'rgba(' +
         Math.max(0, Math.round(255 * (1 - 2 * tstat))) +
         ',' +
         Math.round(55 + (1 - tstat) * 200) +
         ',' +
         Math.round(200 + 55 * (1 - tstat)) +
+        ', 0.' +
+        Math.round(90 + 5 * tstat) +
         ')',
       color:
         'rgb(' +
-        Math.round(200 * (1 - tstat) + (tstat < 0.6 ? -70 : 160)) +
+        Math.round(
+          200 * (1 - tstat) +
+            (tstat < 0.6 ? -70 : 160) +
+            (tstat < 0.3 ? -100 * (1 - tstat / 0.3) : 0),
+        ) +
         ',' +
-        Math.round(200 * (1 - tstat) + (tstat < 0.6 ? -70 : 160)) +
+        Math.round(
+          200 * (1 - tstat) +
+            (tstat < 0.6 ? -70 : 160) +
+            (tstat < 0.3 ? -100 * (1 - tstat / 0.3) : 0),
+        ) +
         ',' +
-        Math.round(200 * (1 - tstat) + (tstat < 0.6 ? -70 : 160)) +
+        Math.round(
+          200 * (1 - tstat) +
+            (tstat < 0.6 ? -70 : 160) +
+            (tstat < 0.3 ? -100 * (1 - tstat / 0.3) : 0),
+        ) +
         ')',
     };
   } else {
-    return {backgroundColor: '#eee', color: '#000'};
+    return {backgroundColor: 'rgba(238,238,238,0.8)', color: '#000'};
   }
 }
 
@@ -164,10 +178,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 2,
     flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   bottomHL: {
     flex: 1,
     width: '100%',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   bottomRow: {
     flexDirection: 'row',
@@ -175,28 +191,34 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     padding: 3,
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   highlight: {
     flex: 8,
     borderRadius: 5,
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   subText: {
     fontSize: 14,
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   icon: {
     fontSize: 30,
     flex: 1,
     padding: 5,
     paddingLeft: 10,
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   checkbox: {
     fontSize: 30,
     flex: 1,
     margin: 5,
     paddingRight: 3,
+    backgroundColor: 'rgba(0,0,0,0)',
   },
 });

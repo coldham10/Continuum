@@ -20,11 +20,11 @@ function AccountScreen(props) {
   );
 }
 
-const mapStateToProps = (state, ownProps) => ({premium: state.account.premium});
+const mapStateToProps = (state, ownProps) => ({premium: state.meta.premium});
 const mapDispatchToProps = (dispatch, ownProps) => ({
   setPremium: (state) => {
     dispatch({
-      type: state ? 'account/setPremium' : 'account/setFree',
+      type: state ? 'meta/setPremium' : 'meta/setFree',
     });
   },
 });
