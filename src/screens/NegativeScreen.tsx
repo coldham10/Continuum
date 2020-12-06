@@ -1,13 +1,20 @@
 import * as React from 'react';
 import {ImageBackground} from 'react-native';
+import {connect} from 'react-redux';
 import HabitList from '../components/lists/HabitList';
+import {imageList} from '../utils/Constants';
 
-export default function NegativeScreen(props) {
+function NegativeScreen(props) {
   return (
     <ImageBackground
       style={{width: '100%', height: '100%'}}
-      source={require('../../assets/images/backgrounds/andrea-zanenga-pI_rKZJcEXI-unsplash.jpg')}>
+      source={imageList[props.bgIndex]}>
       <HabitList positive={false} {...props} />
     </ImageBackground>
   );
 }
+const mapStateToProps = (state, ownProps) => ({
+  bgIndex: state.settings.background,
+});
+
+export default connect(mapStateToProps, null)(NegativeScreen);

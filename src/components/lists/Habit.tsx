@@ -112,7 +112,7 @@ function statusColors(status) {
         ',' +
         Math.round(200 + 55 * (1 - tstat)) +
         ', 0.' +
-        Math.round(90 + 5 * tstat) +
+        Math.round(80 + 15 * tstat) +
         ')',
       color:
         'rgb(' +
@@ -136,7 +136,7 @@ function statusColors(status) {
         ')',
     };
   } else {
-    return {backgroundColor: 'rgba(238,238,238,0.8)', color: '#000'};
+    return {backgroundColor: 'rgba(238,238,238,0.85)', color: '#000'};
   }
 }
 

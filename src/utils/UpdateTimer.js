@@ -1,9 +1,11 @@
 /*Invisible Component that maintains a timer that refreshes the data at midnight*/
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {LogBox} from 'react-native';
 
 class UpdateTimer extends React.Component {
   constructor(props) {
+    LogBox.ignoreLogs(['Setting a timer']);
     super(props);
   }
 

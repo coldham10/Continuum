@@ -7,14 +7,14 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import positiveReducer from './reducers/PositiveSlice';
 import negativeReducer from './reducers/NegativeSlice';
-import metaReducer from './reducers/MetaSlice';
+import settingsReducer from './reducers/SettingsSlice';
 import extendHabit from './reducers/ExtendHabit';
 import {persistReducer, createTransform} from 'redux-persist';
 
 const reducers = combineReducers({
   positiveList: positiveReducer,
   negativeList: negativeReducer,
-  meta: metaReducer,
+  settings: settingsReducer,
 });
 
 const setTimezoneOnRehydrate = createTransform(
