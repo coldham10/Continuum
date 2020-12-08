@@ -17,3 +17,5 @@ export const imageList = [
   require('../../assets/images/backgrounds/robert-ritchie-iUnebsZ6GZg-unsplash.jpg'),
   require('../../assets/images/backgrounds/valentin-lacoste-tiXa-tZZkjg-unsplash.jpg'),
 ];
+
+export const maxFreeHabits = 4;

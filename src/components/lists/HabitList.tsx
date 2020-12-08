@@ -20,7 +20,7 @@ import * as Haptics from '../../utils/Haptics';
 
 import Habit from './Habit';
 import DeleteConfirmModal from './DeleteConfirmModal';
-import {Colors} from '../../utils/Constants';
+import {Colors, maxFreeHabits} from '../../utils/Constants';
 
 const threshold = 1;
 
@@ -74,12 +74,18 @@ class HabitList extends React.Component {
         activeOpacity={0.8}
         onPress={() => {
           Haptics.impact();
-          this.props.addItem();
-          this.props.navigation.navigate('EditModal', {
-            positive: this.props.positive,
-            id: -1,
-            new: true,
-          });
+          if (!this.props.premium && this.props.data.length >= maxFreeHabits) {
+            this.props.navigation.navigate('GetPremium', {
+              reason: 'Adding more than ' + maxFreeHabits + ' habits',
+            });
+          } else {
+            this.props.addItem();
+            this.props.navigation.navigate('EditModal', {
+              positive: this.props.positive,
+              id: -1,
+              new: true,
+            });
+          }
         }}>
         <Ionicons name="ios-add" color={'black'} size={45} />
       </TouchableOpacity>
@@ -154,8 +160,12 @@ class HabitList extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) =>
-  ownProps.positive ? {data: state.positiveList} : {data: state.negativeList};
+const mapStateToProps = (state, ownProps) => {
+  return {
+    premium: state.settings.premium,
+    data: ownProps.positive ? state.positiveList : state.negativeList,
+  };
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   let prefix = ownProps.positive ? 'positive/' : 'negative/';

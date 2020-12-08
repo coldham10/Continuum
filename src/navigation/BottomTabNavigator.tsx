@@ -12,6 +12,7 @@ import HabitHelpModal from '../components/HabitHelpModal';
 import OverviewHelpModal from '../components/OverviewHelpModal';
 import EditModal from '../components/lists/EditModal';
 import DayModal from '../components/overview/DayModal';
+import GetPremiumModal from '../components/settings/GetPremiumModal';
 import UpdateTimer from '../utils/UpdateTimer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -197,6 +198,18 @@ export default function RootNavigator() {
           component={SettingsScreen}
           options={{
             headerTitle: 'Settings',
+            headerStyle: {
+              backgroundColor: '#eee',
+              borderBottomWidth: 1,
+              borderBottomColor: '#888',
+            },
+          }}
+        />
+        <RootNav.Screen
+          name="GetPremium"
+          component={GetPremiumModal}
+          options={{
+            headerTitle: 'Get Premium',
             headerStyle: {
               backgroundColor: '#eee',
               borderBottomWidth: 1,
