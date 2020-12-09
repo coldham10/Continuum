@@ -124,7 +124,11 @@ class HabitList extends React.Component {
             );
           }}
           keyExtractor={(item) => 'id' + item.id}
-          ListEmptyComponent={<Text>No habits added yet</Text>}
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <Text style={{fontSize: 15}}>No habits added yet</Text>
+            </View>
+          }
           ListFooterComponent={addBtn}
           ListFooterComponentStyle={styles.footer}
         />
@@ -199,5 +203,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.tint,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  empty: {
+    margin: 10,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: '#eee6',
   },
 });

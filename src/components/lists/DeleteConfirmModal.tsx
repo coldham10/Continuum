@@ -40,8 +40,8 @@ function DeleteConfirmModal(props) {
               <TouchableOpacity
                 style={styles.del}
                 onPress={() => {
-                  props.confirm();
                   props.close();
+                  props.confirm();
                 }}>
                 <Text style={styles.delTxt}>Delete</Text>
               </TouchableOpacity>

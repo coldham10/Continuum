@@ -14,8 +14,13 @@ function GetPremiumModal(props) {
       </View>
       <View style={styles.paragraph}>
         <Text style={styles.text}>
-          With premium you can... (backgrounds more additions, back-extend,
-          download history (excel))
+          With premium you can add as many habits as you like; change the
+          background; and download your data to analyze in a spreadsheet.
+        </Text>
+      </View>
+      <View style={styles.paragraph}>
+        <Text style={styles.text}>
+          It also supports the independent developer 😊
         </Text>
       </View>
       <View syle={styles.paragraph}>
@@ -48,7 +53,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(GetPremiumModal);
 
 const styles = StyleSheet.create({
-  container: {height: '100%', width: '100%', padding: 10},
+  container: {height: '100%', width: '100%', padding: 15},
   paragraph: {margin: 5, marginBottom: 15},
   text: {fontSize: 16},
 });
