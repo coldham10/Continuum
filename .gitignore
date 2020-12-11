@@ -1,5 +1,6 @@
 node_modules/**/*
-android/**
+assets/**/*
+android/**/*
 ios/**
 npm-debug.*
 *.jks

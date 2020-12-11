@@ -8,7 +8,7 @@ function NegativeScreen(props) {
   return (
     <ImageBackground
       style={{width: '100%', height: '100%'}}
-      source={imageList[props.bgIndex]}>
+      source={imageList[props.bgIndex].image}>
       <HabitList positive={false} {...props} />
     </ImageBackground>
   );

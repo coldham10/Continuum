@@ -14,6 +14,7 @@ import EditModal from '../components/lists/EditModal';
 import DayModal from '../components/overview/DayModal';
 import GetPremiumModal from '../components/settings/GetPremiumModal';
 import UpdateTimer from '../utils/UpdateTimer';
+import PremiumListener from '../utils/PremiumListener';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -135,6 +136,7 @@ const RootNav = createStackNavigator();
 export default function RootNavigator() {
   return (
     <>
+      <PremiumListener />
       <UpdateTimer />
       <RootNav.Navigator>
         <RootNav.Screen

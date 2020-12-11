@@ -50,9 +50,10 @@ function SettingsScreen(props) {
         <FlatList
           horizontal
           data={imageList}
+          keyExtractor={(item) => item.key.toString()}
           renderItem={({item, index}) => {
             let type;
-            if (index === props.backgroundSelected) {
+            if (item.key === props.backgroundSelected) {
               type = 'SELECTED';
             } else if (props.premium) {
               type = 'UNSELECTED';
@@ -61,7 +62,7 @@ function SettingsScreen(props) {
             }
             return (
               <BackgroundCard
-                source={item}
+                source={item.image}
                 type={type}
                 onSelect={props.chooseBackground.bind(
                   this,
