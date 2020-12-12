@@ -34,3 +34,6 @@ export const imageList = [
 ];
 
 export const maxFreeHabits = 4;
+
+// XXX:
+export const premiumSKU = 'com.tripconey.continuum.test_iap_001';

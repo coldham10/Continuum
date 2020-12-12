@@ -9,8 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {imageList} from '../utils/Constants';
+import RNIap from 'react-native-iap';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {imageList, premiumSKU} from '../utils/Constants';
+import BuyPremiumButton from '../components/settings/BuyPremiumButton';
 
 function SettingsScreen(props) {
   return (
@@ -28,19 +30,7 @@ function SettingsScreen(props) {
             </Text>
           </View>
           <View style={{flex: 1}}>
-            {props.premium ? (
-              <Button
-                title="Set Free"
-                onPress={() => props.setPremium(false)}
-              />
-            ) : (
-              <Button
-                title="Buy Premium"
-                onPress={() => {
-                  props.setPremium(true);
-                }}
-              />
-            )}
+            <BuyPremiumButton />
           </View>
         </View>
       </View>
@@ -142,11 +132,6 @@ const mapStateToProps = (state, ownProps) => ({
   backgroundSelected: state.settings.background,
 });
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  setPremium: (isFree) => {
-    dispatch({
-      type: isFree ? 'settings/setPremium' : 'settings/setFree',
-    });
-  },
   chooseBackground: (premium, index) => {
     if (premium) {
       dispatch({type: 'settings/setBackground', payload: index});
