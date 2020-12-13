@@ -54,7 +54,6 @@ class PremiumListener extends React.Component {
           .then(() => {
             //Update price for display
             RNIap.getProducts([premiumSKU]).then((prods) => {
-              console.log(prods);
               this.props.setPrice(prods[0].localizedPrice);
             });
           })

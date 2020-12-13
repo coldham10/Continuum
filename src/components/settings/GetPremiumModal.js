@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native'; //TODO TouchableOpacity
 import {connect} from 'react-redux';
+import BuyPremiumButton from './BuyPremiumButton';
 
 //TODO pretty pictures
 
@@ -24,24 +25,12 @@ function GetPremiumModal(props) {
         </Text>
       </View>
       <View syle={styles.paragraph}>
-        {props.premium ? (
-          <Button title="Set Free" onPress={() => props.setPremium(false)} />
-        ) : (
-          <Button
-            title="Buy Premium"
-            onPress={() => {
-              props.setPremium(true);
-            }}
-          />
-        )}
+        <BuyPremiumButton />
       </View>
     </View>
   );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  premium: state.settings.premium,
-});
 const mapDispatchToProps = (dispatch, ownProps) => ({
   setPremium: (isFree) => {
     dispatch({
@@ -50,7 +39,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetPremiumModal);
+export default connect(null, mapDispatchToProps)(GetPremiumModal);
 
 const styles = StyleSheet.create({
   container: {height: '100%', width: '100%', padding: 15},
