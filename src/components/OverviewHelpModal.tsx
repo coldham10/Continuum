@@ -44,7 +44,7 @@ export default function OverviewHelpModal(props) {
         <View style={styles.image2Container}>
           <Image source={vignettes.daily} style={styles.image2} />
         </View>
-        <Text>
+        <Text style={styles.pgphTxt}>
           You can also press the <Text style={styles.bold}>edit button</Text>{' '}
           for each habit to retroactively change whether you achieved/abstained
           that day or not.
@@ -67,6 +67,9 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingBottom: 10,
     marginBottom: 10,
+  },
+  pgphTxt: {
+    fontSize: 18,
   },
   bold: {
     fontWeight: 'bold',

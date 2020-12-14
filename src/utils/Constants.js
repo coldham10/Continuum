@@ -41,4 +41,6 @@ export const imageList = [
 export const vignettes = {
   calendar: require('../../assets/images/vignettes/calendarchroma.jpg'),
   daily: require('../../assets/images/vignettes/habitreview.jpg'),
+  habit: require('../../assets/images/vignettes/habitmain.jpg'),
+  edit: require('../../assets/images/vignettes/habitedit.jpg'),
 };

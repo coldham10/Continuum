@@ -1,7 +1,16 @@
 /*Full page help screen for PositiveScreen and NegativeScreen */
 
 import React from 'react';
-import {StyleSheet, Button, View, Text, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Button,
+  View,
+  Text,
+  ScrollView,
+  Image,
+  Dimensions,
+} from 'react-native';
+import {vignettes} from '../utils/Constants';
 
 export default function HabitHelpModal(props) {
   return (
@@ -14,6 +23,9 @@ export default function HabitHelpModal(props) {
             you have successfully performed the habit. Negative habits get a
             cross when you successfully abstain for a day.
           </Text>
+          <View style={styles.image1Container}>
+            <Image source={vignettes.habit} style={styles.image1} />
+          </View>
         </View>
         <View style={styles.pgph}>
           <Text style={styles.pgphTxt}>
@@ -25,14 +37,21 @@ export default function HabitHelpModal(props) {
             <Text style={styles.bold}>Formation Time</Text>, the day you fail to
             abstain, you immediately fall back to 0 momentum.
           </Text>
+          <View style={styles.image2Container}>
+            <Image source={vignettes.edit} style={styles.image2} />
+          </View>
         </View>
         <View style={styles.pgph}>
           <Text style={styles.pgphTxt}>
-            If you need to retroactively change a habit's completion status for
-            a missed day, click on that day in the calendar in the{' '}
-            <Text style={styles.bold}>Overview</Text> tab. Note that you cannot
-            extend habits back before the date you created them. Press the help
-            button in the overview tab for more information
+            To retroactively change a habit's completion status, click on that
+            day in the calendar on the <Text style={styles.bold}>Overview</Text>{' '}
+            screen. Note that you cannot extend habits back before the date you
+            created them.
+          </Text>
+        </View>
+        <View style={styles.pgph}>
+          <Text style={styles.pgphTxt}>
+            Press the help button in the Overview screen for more information
           </Text>
         </View>
       </View>
@@ -59,5 +78,38 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: 'bold',
+  },
+  image1Container: {
+    alignSelf: 'center',
+    width: 0.8 * Dimensions.get('window').width,
+    height: 0.27 * Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#888',
+  },
+  image1: {
+    resizeMode: 'center',
+    width: 0.8 * Dimensions.get('window').width - 20,
+    height: 0.27 * Dimensions.get('window').width - 20,
+    borderRadius: 10,
+  },
+  image2Container: {
+    alignSelf: 'center',
+    width: 0.8 * Dimensions.get('window').width,
+    height: 0.8 * Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#888',
+  },
+  image2: {
+    resizeMode: 'center',
+    width: 0.8 * Dimensions.get('window').width - 30,
+    height: 0.8 * Dimensions.get('window').width - 30,
   },
 });
