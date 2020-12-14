@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, PermissionsAndroid} from 'react-native';
+import {Button, PermissionsAndroid, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import RNIap from 'react-native-iap';
 import RNFS from 'react-native-fs';
@@ -18,11 +18,9 @@ function ExportDataButton(props) {
         if (props.premium) {
           export_csv(props.data);
         } else {
-          /*props.navigation.navigate('GetPremium', {
+          props.navigation.navigate('GetPremium', {
             reason: 'Exporting habit data',
-          });*/
-          //XXX
-          export_csv(props.data);
+          });
         }
       }}
     />
@@ -115,7 +113,6 @@ const export_csv = async (data) => {
 };
 
 const write_file = async (text, fname) => {
-  console.log('writing:\n' + text);
   var path = RNFS.DownloadDirectoryPath + '/' + fname;
   // write the file
   try {
@@ -132,13 +129,23 @@ const write_file = async (text, fname) => {
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       RNFS.writeFile(path, text, 'utf8')
         .then((success) => {
-          console.log('FILE WRITTEN!');
+          Alert.alert(
+            'Export Complete',
+            'File written to ' + path,
+            [{text: 'OK'}],
+            {cancelable: false},
+          );
         })
         .catch((err) => {
-          console.log(err.message);
+          console.warn(err);
         });
     } else {
-      console.log('Write permission denied');
+      Alert.alert(
+        'Write permission denied',
+        'Please allow storage access',
+        [{text: 'CANCEL'}],
+        {cancelable: false},
+      );
     }
   } catch (err) {
     console.warn(err);
