@@ -21,6 +21,7 @@ import {connect} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Colors} from '../../utils/Constants';
+import {displayPositiveMomentum} from '../../utils/Functions';
 import EditConfirmModal from './EditConfirmModal';
 import {StackActions} from '@react-navigation/native';
 
@@ -297,9 +298,7 @@ const mapStateToProps = (state, ownProps) => {
         id: pHabit.id,
         title: pHabit.title,
         positive: true,
-        status:
-          0.1 * Math.min(1, val) +
-          0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+        status: displayPositiveMomentum(val, pHabit.parameters.max),
         completed: pHabit.activity[index],
       };
     });

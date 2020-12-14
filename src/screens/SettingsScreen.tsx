@@ -13,6 +13,7 @@ import RNIap from 'react-native-iap';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {imageList, premiumSKU} from '../utils/Constants';
 import BuyPremiumButton from '../components/settings/BuyPremiumButton';
+import ExportDataButton from '../components/settings/ExportDataButton';
 
 function SettingsScreen(props) {
   return (
@@ -65,6 +66,18 @@ function SettingsScreen(props) {
           }}
           style={styles.cardList}
         />
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Export Data</Text>
+        <Text style={styles.text}>Export habit data to spreadsheet</Text>
+        <View
+          style={{
+            padding: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ExportDataButton navigation={props.navigation} />
+        </View>
       </View>
     </View>
   );

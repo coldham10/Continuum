@@ -10,6 +10,11 @@ export const Colors = {
   statusBar: continuumBlue,
 };
 
+export const maxFreeHabits = 4;
+
+// XXX:
+export const premiumSKU = 'com.tripconey.continuum.testing.3premium_003';
+
 export const imageList = [
   {
     key: 0,
@@ -33,7 +38,7 @@ export const imageList = [
   },
 ];
 
-export const maxFreeHabits = 4;
-
-// XXX:
-export const premiumSKU = 'com.tripconey.continuum.testing.3premium_003';
+export const vignettes = {
+  calendar: require('../../assets/images/vignettes/calendarchroma.jpg'),
+  daily: require('../../assets/images/vignettes/habitreview.jpg'),
+};

@@ -6,7 +6,6 @@ import {premiumSKU} from '../../utils/Constants';
 
 function BuyPremiumButton(props) {
   if (props.pending) {
-    //XXX remove setfree
     return (
       <Button
         title="Transaction Pending..."
@@ -43,7 +42,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }),
   unsetPending: () =>
     dispatch({
-      //XXX remove
       type: 'settings/unsetPending',
     }),
 });

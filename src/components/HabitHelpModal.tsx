@@ -17,14 +17,13 @@ export default function HabitHelpModal(props) {
         </View>
         <View style={styles.pgph}>
           <Text style={styles.pgphTxt}>
-            Positive Habits have two options as well as a name.{' '}
+            For positive habits you can set two options:{' '}
             <Text style={styles.bold}>Habit Formation Time</Text> is how
-            difficult it is to "get into" a habit.{' '}
+            difficult it is to "get into" a habit;{' '}
             <Text style={styles.bold}>Habit Loss time</Text> is how quickly you
-            will "get out of the habit" if you stop for a while . Negative
-            habits have only a <Text style={styles.bold}>Formation Time</Text> .
-            The day you fail to abstain, you immediately fall back to 0
-            momentum.
+            will "get out of the habit" if you stop. Negative habits have only a{' '}
+            <Text style={styles.bold}>Formation Time</Text>, the day you fail to
+            abstain, you immediately fall back to 0 momentum.
           </Text>
         </View>
         <View style={styles.pgph}>

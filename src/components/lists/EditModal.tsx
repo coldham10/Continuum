@@ -17,6 +17,7 @@ import * as Haptics from '../../utils/Haptics';
 import {Picker} from '@react-native-community/picker';
 import {connect} from 'react-redux';
 import {Colors} from '../../utils/Constants';
+import {rToFormDays, raToLossDays} from '../../utils/Functions';
 
 class EditModal extends React.Component {
   constructor(props) {
@@ -94,7 +95,7 @@ class EditModal extends React.Component {
                     style={styles.picker}
                     selectedValue={
                       this.props.route.params.positive
-                        ? this.rToFormDays(this.state.parameters.r) //Convert from r parameter to number of habit formation days
+                        ? rToFormDays(this.state.parameters.r) //Convert from r parameter to number of habit formation days
                         : this.state.parameters.k
                     }
                     onValueChange={(val) => {
@@ -103,7 +104,7 @@ class EditModal extends React.Component {
                           ? {
                               parameters: this.daysToParams(
                                 val,
-                                this.raToLossDays(
+                                raToLossDays(
                                   prevState.parameters.r,
                                   prevState.parameters.a,
                                 ),
@@ -160,7 +161,7 @@ class EditModal extends React.Component {
                                 parameters: this.props.route.params.positive
                                   ? this.daysToParams(
                                       btnIdx,
-                                      this.raToLossDays(
+                                      raToLossDays(
                                         prevState.parameters.r,
                                         prevState.parameters.a,
                                       ),
@@ -174,7 +175,7 @@ class EditModal extends React.Component {
                     }>
                     <Text style={styles.IOSpicker}>
                       {this.props.route.params.positive
-                        ? this.rToFormDays(this.state.parameters.r) //Convert from r parameter to number of habit formation days
+                        ? rToFormDays(this.state.parameters.r) //Convert from r parameter to number of habit formation days
                         : this.state.parameters.k}{' '}
                       Days
                     </Text>
@@ -189,7 +190,7 @@ class EditModal extends React.Component {
                   {Platform.OS !== 'ios' ? (
                     <Picker
                       style={styles.picker}
-                      selectedValue={this.raToLossDays(
+                      selectedValue={raToLossDays(
                         this.state.parameters.r,
                         this.state.parameters.a,
                       )}
@@ -197,7 +198,7 @@ class EditModal extends React.Component {
                         this.setState((prevState) => {
                           return {
                             parameters: this.daysToParams(
-                              this.rToFormDays(prevState.parameters.r),
+                              rToFormDays(prevState.parameters.r),
                               val,
                             ),
                           };
@@ -239,7 +240,7 @@ class EditModal extends React.Component {
                               this.setState((prevState) => {
                                 return {
                                   parameters: this.daysToParams(
-                                    this.rToFormDays(this.state.parameters.r),
+                                    rToFormDays(this.state.parameters.r),
                                     btnIdx,
                                   ),
                                 };
@@ -249,7 +250,7 @@ class EditModal extends React.Component {
                         )
                       }>
                       <Text style={styles.IOSpicker}>
-                        {this.raToLossDays(
+                        {raToLossDays(
                           this.state.parameters.r,
                           this.state.parameters.a,
                         )}{' '}
@@ -264,18 +265,6 @@ class EditModal extends React.Component {
         </View>
       </ScrollView>
     );
-  }
-
-  rToFormDays(r) {
-    //From r value of geometric function to number of habit formation days
-    return Math.round(Math.log(1 - r) / Math.log(r));
-  }
-
-  raToLossDays(r, a) {
-    //Convert r & a values from habit function to Loss/dropoff days
-    let fd = this.rToFormDays(r);
-    let z = Math.log(a) / Math.log(r);
-    return Math.round(fd - z);
   }
 
   //Convert from formation days and loss days to r, a and max parameter object

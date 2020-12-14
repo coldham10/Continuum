@@ -5,6 +5,7 @@ import React from 'react';
 import {CalendarList} from 'react-native-calendars';
 import {connect} from 'react-redux';
 import * as Haptics from '../../utils/Haptics';
+import {displayPositiveMomentum} from '../../utils/Functions';
 
 function OverviewCalendar(props) {
   return (
@@ -82,9 +83,7 @@ function byDate(positiveData, negativeData) {
       }
       dataByDate[dateString(date)].push({
         id: pHabit.id,
-        status:
-          0.1 * Math.min(1, val) +
-          0.9 * Math.max(0, (val - 1) / (pHabit.parameters.max - 1)),
+        status: displayPositiveMomentum(val, pHabit.parameters.max),
         completed: pHabit.activity[index],
         data: pHabit,
       });
