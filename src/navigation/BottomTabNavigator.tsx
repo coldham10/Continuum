@@ -87,7 +87,8 @@ function BTNavigator(props) {
     <BTNav.Navigator
       tabBarOptions={{
         activeTintColor: Colors.tabIconSelected,
-      }}>
+      }}
+      lazy={false}>
       <BTNav.Screen
         name="Positive"
         options={{

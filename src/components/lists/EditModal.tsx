@@ -182,6 +182,11 @@ class EditModal extends React.Component {
                   </TouchableOpacity>
                 )}
               </View>
+              <View>
+                <Text style={styles.subtext}>
+                  Number of days it will take to get into the habit
+                </Text>
+              </View>
             </View>
             {this.props.route.params.positive ? (
               <View style={styles.inputPair}>
@@ -258,6 +263,11 @@ class EditModal extends React.Component {
                       </Text>
                     </TouchableOpacity>
                   )}
+                </View>
+                <View>
+                  <Text style={styles.subtext}>
+                    Number of days it will take to get out of the habit
+                  </Text>
                 </View>
               </View>
             ) : null}
@@ -381,8 +391,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
     minWidth: '90%',
-    marginTop: 3,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 15,
   },
   label: {
     fontSize: 20,
@@ -396,6 +406,12 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     borderWidth: 1,
     minWidth: '100%',
+  },
+  subtext: {
+    marginLeft: 10,
+    marginBottom: 5,
+    fontSize: 14,
+    color: '#686868',
   },
   picker: {
     minWidth: '100%',

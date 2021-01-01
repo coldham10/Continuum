@@ -205,18 +205,25 @@ function ListItem(props) {
   return (
     <View style={styles.li}>
       <Text style={styles.liTxt}>{props.title}</Text>
-      {props.completed ? (
-        <Ionicons
-          name={
-            props.positive
-              ? 'md-checkmark-circle-outline'
-              : 'md-close-circle-outline'
-          }
-          style={styles.checkBox}
-        />
-      ) : (
-        <Icon name="circle-thin" style={styles.checkBox} />
-      )}
+      <TouchableOpacity
+        style={styles.checkBoxBox}
+        onPress={() => {
+          Haptics.warn();
+          props.edit();
+        }}>
+        {props.completed ? (
+          <Ionicons
+            name={
+              props.positive
+                ? 'md-checkmark-circle-outline'
+                : 'md-close-circle-outline'
+            }
+            style={styles.checkBox}
+          />
+        ) : (
+          <Icon name="circle-thin" style={styles.checkBox} />
+        )}
+      </TouchableOpacity>
       <Text style={styles.liPct}>{Math.round(100 * props.status)}%</Text>
       <View style={{flex: 3, backgroundColor: '#0000'}}>
         <TouchableHighlight
@@ -398,8 +405,10 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   checkBox: {
-    flex: 3,
     fontSize: 20,
+  },
+  checkBoxBox: {
+    flex: 3,
   },
   empty: {
     padding: 10,
