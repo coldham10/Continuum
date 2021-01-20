@@ -15,6 +15,7 @@ import DayModal from '../components/overview/DayModal';
 import GetPremiumModal from '../components/settings/GetPremiumModal';
 import UpdateTimer from '../utils/UpdateTimer';
 import PremiumListener from '../utils/PremiumListener';
+import ReminderHandler from '../utils/ReminderHandler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -138,6 +139,7 @@ export default function RootNavigator() {
   return (
     <>
       <PremiumListener />
+      <ReminderHandler />
       <UpdateTimer />
       <RootNav.Navigator>
         <RootNav.Screen

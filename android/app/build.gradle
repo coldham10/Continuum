@@ -1,4 +1,9 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
+
+/**
+ * Steps to support multidex have been taken here, in app/build.gradle and in app/src/main/java/com/tripconey/continuum/MainApplication.java
+ */
 
 import com.android.build.OutputFile
 
@@ -132,8 +137,9 @@ android {
         applicationId "com.tripconey.continuum"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "1.1.4"
+        versionCode 9
+        versionName "1.1.5"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -181,6 +187,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'  // <-- ADD THIS DEPENDENCY
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

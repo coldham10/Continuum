@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native'; //TODO TouchableOpacity
-import {connect} from 'react-redux';
 import BuyPremiumButton from './BuyPremiumButton';
 
 //TODO pretty pictures
@@ -31,15 +30,7 @@ function GetPremiumModal(props) {
   );
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  setPremium: (isFree) => {
-    dispatch({
-      type: isFree ? 'settings/setPremium' : 'settings/setFree',
-    });
-  },
-});
-
-export default connect(null, mapDispatchToProps)(GetPremiumModal);
+export default GetPremiumModal;
 
 const styles = StyleSheet.create({
   container: {height: '100%', width: '100%', padding: 15},

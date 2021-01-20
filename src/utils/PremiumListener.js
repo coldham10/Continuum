@@ -1,4 +1,4 @@
-/*Invisible Component that maintains a timer that refreshes the data at midnight*/
+/*Invisible Component that checks if premium has been bought and restores features*/
 import * as React from 'react';
 import {Text} from 'react-native';
 import {connect} from 'react-redux';

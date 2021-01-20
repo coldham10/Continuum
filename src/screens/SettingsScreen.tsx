@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {
   View,
+  ScrollView,
   Text,
   StyleSheet,
   Button,
+  Switch,
   Image,
   FlatList,
   TouchableOpacity,
@@ -11,13 +13,15 @@ import {
 import {connect} from 'react-redux';
 import RNIap from 'react-native-iap';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {imageList, premiumSKU} from '../utils/Constants';
 import BuyPremiumButton from '../components/settings/BuyPremiumButton';
 import ExportDataButton from '../components/settings/ExportDataButton';
 
 function SettingsScreen(props) {
+  const [showDTP, setShowDTP] = useState(false);
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.outer} contentContainerstyle={styles.container}>
       <View style={styles.section}>
         <Text style={styles.sectionHeader}>Account</Text>
         <View
@@ -34,6 +38,60 @@ function SettingsScreen(props) {
             <BuyPremiumButton />
           </View>
         </View>
+      </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Reminder</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+          <View style={{flex: 1}}>
+            <Text style={styles.text}>Daily reminder</Text>
+          </View>
+          <View style={{flex: 1}}>
+            <Switch
+              value={props.reminder}
+              onValueChange={(val) => props.setReminder(val)}
+            />
+          </View>
+        </View>
+        {props.reminder ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flex: 1}}>
+              <Text style={styles.text}>Reminder time</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                padding: 1,
+                marginRight: 8,
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+              }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#ddd',
+                  borderRadius: 5,
+                  padding: 5,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                onPress={() => setShowDTP(!showDTP)}>
+                <Text style={{fontSize: 18, color: '#222', marginRight: 15}}>
+                  {formatAMPM(props.reminderHour, props.reminderMinute)}{' '}
+                </Text>
+                <Ionicons name="md-arrow-dropdown" size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionHeader}>Background</Text>
@@ -79,7 +137,19 @@ function SettingsScreen(props) {
           <ExportDataButton navigation={props.navigation} />
         </View>
       </View>
-    </View>
+      {showDTP ? (
+        <DateTimePicker
+          mode="time"
+          value={new Date(2000, 0, 1, props.reminderHour, props.reminderMinute)}
+          onChange={(e, val) => {
+            setShowDTP(false);
+            if (e.type === 'set') {
+              props.setReminderTime(val);
+            }
+          }}
+        />
+      ) : null}
+    </ScrollView>
   );
 }
 
@@ -140,8 +210,28 @@ function Overlay(props) {
   }
 }
 
+function formatAMPM(hour, minute) {
+  let ampm = 'AM';
+  let hr_fmt = hour;
+  let min_fmt = minute;
+  if (hour >= 12) {
+    ampm = 'PM';
+    hr_fmt = hour % 12;
+  }
+  if (hr_fmt === 0) {
+    hr_fmt = 12;
+  }
+  if (String(minute).length < 2) {
+    min_fmt = '0' + String(minute);
+  }
+  return hr_fmt + ':' + min_fmt + ' ' + ampm;
+}
+
 const mapStateToProps = (state, ownProps) => ({
   premium: state.settings.premium,
+  reminder: state.settings.reminder,
+  reminderHour: state.settings.reminderHour,
+  reminderMinute: state.settings.reminderMinute,
   backgroundSelected: state.settings.background,
 });
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -152,15 +242,31 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       ownProps.navigation.navigate('PositiveScreen');
     }
   },
+  setReminder: (on) => {
+    if (on) {
+      dispatch({type: 'settings/setReminder'});
+    } else {
+      dispatch({type: 'settings/unsetReminder'});
+    }
+  },
+  setReminderTime: (time) => {
+    let dt = new Date(time);
+    dispatch({
+      type: 'settings/setReminderTime',
+      payload: {hour: dt.getHours(), minute: dt.getMinutes()},
+    });
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);
 
 const styles = StyleSheet.create({
+  outer: {
+    padding: 5,
+    flex: 1,
+  },
   container: {
     alignItems: 'center',
-    flex: 1,
-    padding: 5,
   },
   section: {
     width: '100%',
@@ -186,6 +292,5 @@ const styles = StyleSheet.create({
     zIndex: 1,
     padding: 10,
   },
-
   cardImage: {resizeMode: 'contain', width: 120, height: 180},
 });
