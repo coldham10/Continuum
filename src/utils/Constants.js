@@ -13,7 +13,7 @@ export const Colors = {
 export const maxFreeHabits = 4;
 
 // XXX:
-export const premiumSKU = 'com.tripconey.continuum.testing.3premium_003';
+export const premiumSKU = 'com.tripconey.continuum.premium_001';
 
 export const imageList = [
   {

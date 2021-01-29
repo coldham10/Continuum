@@ -51,6 +51,7 @@ const extendHistOnRehydrate = createTransform(
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  version: 0,
   transforms: [
     selectAllOnRehydrate,
     extendHistOnRehydrate,
