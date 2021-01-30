@@ -140,11 +140,15 @@ function SettingsScreen(props) {
       {showDTP ? (
         <DateTimePicker
           mode="time"
-          value={new Date(2000, 0, 1, props.reminderHour, props.reminderMinute)}
+          value={new Date(2000, 2, 2, props.reminderHour, props.reminderMinute)}
           onChange={(e, val) => {
             setShowDTP(false);
-            if (e.type === 'set') {
-              props.setReminderTime(val);
+            if (
+              e.type === 'set' &&
+              Object.prototype.toString.call(val) === '[object Date]' &&
+              !isNaN(val.getTime())
+            ) {
+              props.setReminderTime(val.getHours(), val.getMinutes());
             }
           }}
         />
@@ -249,11 +253,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       dispatch({type: 'settings/unsetReminder'});
     }
   },
-  setReminderTime: (time) => {
-    let dt = new Date(time);
+  setReminderTime: (hours, minutes) => {
     dispatch({
       type: 'settings/setReminderTime',
-      payload: {hour: dt.getHours(), minute: dt.getMinutes()},
+      payload: {hour: hours, minute: minutes},
     });
   },
 });
