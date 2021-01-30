@@ -29,11 +29,20 @@ export const settingsSlice = createSlice({
     unsetPending: (state) => Object.assign({}, state, {pending: false}),
     setReminder: (state) => Object.assign({}, state, {reminder: true}),
     unsetReminder: (state) => Object.assign({}, state, {reminder: false}),
-    setReminderTime: (state, action) =>
-      Object.assign({}, state, {
-        reminderHour: action.payload.hour,
-        reminderMinute: action.payload.minute,
-      }),
+    setReminderTime: (state, action) => {
+      let hr = action.payload.hour;
+      if (typeof hr !== 'number' || hr < 0 || hr > 23) {
+        hr = state.reminderHour;
+      }
+      let min = action.payload.minute;
+      if (typeof min !== 'number' || min < 0 || min > 59) {
+        min = state.reminderMinute;
+      }
+      return Object.assign({}, state, {
+        reminderHour: hr,
+        reminderMinute: min,
+      });
+    },
   },
 });
 
