@@ -30,12 +30,17 @@ class EditModal extends React.Component {
   }
 
   componentDidMount() {
-    Keyboard.addListener('keyboardDidShow', () =>
-      this.setState({keyboardUp: true}),
-    );
-    Keyboard.addListener('keyboardDidHide', () =>
-      this.setState({keyboardUp: false}),
-    );
+    this._mounted = true;
+    this._keybUpListener = Keyboard.addListener('keyboardDidShow', () => {
+      if (this._mounted) {
+        this.setState({keyboardUp: true});
+      }
+    });
+    this._keybDownListener = Keyboard.addListener('keyboardDidHide', () => {
+      if (this._mounted) {
+        this.setState({keyboardUp: false});
+      }
+    });
 
     this.props.navigation.setOptions({
       headerRight: () => (
@@ -61,8 +66,11 @@ class EditModal extends React.Component {
   }
 
   componentWillUnmount() {
-    Keyboard.removeListener('keyboardDidShow');
-    Keyboard.removeListener('keyboardDidHide');
+    this._mounted = false;
+    this._keybUpListener.remove();
+    this._keybDownListener.remove();
+    //Keyboard.removeListener('keyboardDidShow');
+    //Keyboard.removeListener('keyboardDidHide');
   }
 
   render() {
