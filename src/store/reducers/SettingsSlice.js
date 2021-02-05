@@ -7,8 +7,8 @@ export const settingsSlice = createSlice({
     background: 0,
     price: '',
     pending: false,
-    reminder: false,
-    reminderHour: 9,
+    reminder: true,
+    reminderHour: 10,
     reminderMinute: 0,
   },
   reducers: {
